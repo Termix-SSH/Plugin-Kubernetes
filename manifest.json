@@ -9,6 +9,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/Termix-SSH/Plugin-Kubernetes",
   "docs": "https://docs.termix.site/plugins/kubernetes",
+  "video": "https://www.youtube.com/watch?v=cuOnAbfsO3I",
   "category": "Infrastructure",
   "icon": "ShipWheel",
   "features": [

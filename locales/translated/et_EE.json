@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Halda Kubernetesi klustreid oma hostidelt SSH kaudu, kasutades logisid, meetrikaid, YAML-i ja käsuread."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetesi paneel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetesi kasutamine",
+      "description": "Ava Kubernetesi vaade ja podide käsuread hostidel, kus Kubernetes on lubatud."
+    },
+    "secrets": {
+      "title": "Kubernetesi saladuste kuvamine",
+      "description": "Kuva Kubernetesi saladuste dekodeeritud väärtused. Iga kuvamine salvestatakse auditi logi."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Luba Kubernetes",
+        "description": "Käivita kubectl sellel hostil SSH kaudu, et hallata klustrit, millele ta pääseb."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetesi variant",
+        "description": "Milline käsk käivitab kubectl'i sellel hostil.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfigi asukoht",
+        "description": "Jäta tühjaks, et kasutada SSH-kasutaja vaikimisi asukohta (~/.kube/config või KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Vaikimisi kontekst",
+        "description": "Jäta tühjaks, et kasutada kubeconfigi praegust konteksti. Kontekste saad vahetada Kubernetesi vahekaardil.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Vaikimisi nimetruum",
+        "description": "Nimetruum, millega Kubernetesi vahekaart avaneb.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Käivita sudo-ga",
+        "description": "Käivita kubectl käsk sudo -n abil, mis sobib k3s ja MicroK8s seadistustele, kus ainult root kasutaja saab klatri konfiguratsiooni lugeda. SSH-kasutajal peab olema paroolita sudo õigus."
+      },
+      "readOnly": {
+        "label": "Ainult lugemiseks",
+        "description": "Ainult vaatamine. Blokeerib kõigi selle hosti kasutajate jaoks skaaleerimise, taaskäivitused, kustutamised, YAML-i muudatused, Helm-i muudatused ja podide shellid."
+      },
+      "showPanel": {
+        "label": "Kuva Kubernetesi paneel terminalides",
+        "description": "Luba sellel hostil avada Kubernetesi paneel SSH-terminaalide kõrval."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Ava Kubernetesi paneel koos uute terminalidega",
+        "description": "Kuva Kubernetesi paneel kõigi SSH-terminaalide kõrval, kus Kubernetes on sisse lülitatud. Paneeli saab ikka avada ja sulgeda paremal serval olevast nupust."
+      },
+      "companionSide": {
+        "label": "Kubernetesi paneeli asukoht",
+        "description": "Kus Kubernetesi paneel terminali kõrval asub.",
+        "right": "Parem",
+        "left": "Vasak",
+        "bottom": "Alumine"
+      },
+      "companionSize": {
+        "label": "Kubernetesi paneeli suurus",
+        "description": "Laius pikslites või kõrgus, kui paneel on all. Saad selle serva ka lohistades muuta."
+      },
+      "companionEdgeButton": {
+        "label": "Näita paneeri nuppu",
+        "description": "Näita terminali paremal serval väikest nuppu, mis avab Kubernetesi paneeli."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes ei ole selle hosti jaoks lubatud",
+    "notEnabledHint": "Luba Kubernetes selle hosti seadetes, et hallata selle klustrit.",
+    "validating": "Klustri kontrollimine...",
+    "connecting": "Ühenduse loomine...",
+    "error": "Viga",
+    "errorCode": "Veakood: {{code}}",
+    "connectionFailed": "Ühenduse loomine ebaõnnestus",
+    "totpVerificationFailed": "Kontrollimine ebaõnnestus. Palun proovi uuesti.",
+    "verificationCodePrompt": "Sisesta kinnituskood",
+    "browserSignInFailed": "Sisselogimine ebaõnnestus. Palun proovi uuesti.",
+    "noHostSelected": "Ühtegi peremeesmasinat ei ole valitud",
+    "refresh": "Värskenda"
+  },
+  "cluster": {
+    "loading": "Laadimine...",
+    "empty": "Siin pole ühtegi {{kind}}",
+    "noMatches": "Ükski ei vasta sinu filtritele",
+    "readOnly": "Ainult lugemiseks"
+  },
+  "sections": {
+    "workloads": "Koormused",
+    "network": "Võrk",
+    "config": "Seaded",
+    "cluster": "Klaster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Podid"
+    },
+    "deployments": {
+      "one": "Paigutus",
+      "many": "Paigutused"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSetid"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSetid"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSetid"
+    },
+    "jobs": {
+      "one": "Töö",
+      "many": "Tööd"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobid"
+    },
+    "services": {
+      "one": "Teenus",
+      "many": "Teenused"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingressid"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMapid"
+    },
+    "secrets": {
+      "one": "Saladus",
+      "many": "Saladused"
+    },
+    "pvcs": {
+      "one": "Mahtude nõue",
+      "many": "Mahtude nõuded"
+    },
+    "pvs": {
+      "one": "Püsimaht",
+      "many": "Püsimahtud"
+    },
+    "nodes": {
+      "one": "Sõlm",
+      "many": "Sõlmed"
+    },
+    "namespaces": {
+      "one": "Nimeruum",
+      "many": "Nimeruumid"
+    },
+    "events": {
+      "one": "Sündmus",
+      "many": "Sündmused"
+    }
+  },
+  "filters": {
+    "all": "Kõik",
+    "healthy": "Töökorras",
+    "problem": "Probleemid",
+    "idle": "Ootel"
+  },
+  "toolbar": {
+    "namespace": "Nimeruum",
+    "allNamespaces": "Kõik nimeruumid",
+    "context": "Kontekst",
+    "kind": "Resursi liik",
+    "search": "Otsi..."
+  },
+  "columns": {
+    "name": "Nimi",
+    "namespace": "Nimeruum",
+    "status": "Olek",
+    "age": "Vanus",
+    "ready": "Valmis",
+    "restarts": "Taaskäivitused",
+    "node": "Sõlm",
+    "ip": "IP",
+    "owner": "Omanik",
+    "upToDate": "Uuendatud",
+    "available": "Saadaval",
+    "images": "Pildid",
+    "completions": "Lõpetamised",
+    "duration": "Kestus",
+    "schedule": "Ajakava",
+    "active": "Aktiivne",
+    "lastSchedule": "Viimane käivitamine",
+    "type": "Tüüp",
+    "clusterIP": "Klatri IP",
+    "externalIP": "Väline IP",
+    "ports": "Pordid",
+    "class": "Klass",
+    "hosts": "Peremeesmasinad",
+    "address": "Aadress",
+    "tls": "TLS",
+    "keys": "Võtmed",
+    "capacity": "Mahtuvus",
+    "access": "Juurdepääs",
+    "storageClass": "Salvestusklass",
+    "volume": "Salvestusmaht",
+    "reclaim": "Taastamine",
+    "claim": "Nõue",
+    "roles": "Rollid",
+    "version": "Versioon",
+    "internalIP": "Sisemine IP",
+    "os": "Operatsioonisüsteem",
+    "cpu": "CPU",
+    "memory": "Mälu",
+    "reason": "Põhjus",
+    "object": "Objekt",
+    "message": "Sõnum",
+    "count": "Kogus",
+    "cpuUsage": "CPU kasutus",
+    "memoryUsage": "Mälu kasutus",
+    "container": "Konteiner",
+    "chart": "Diagramm",
+    "appVersion": "Rakenduse versioon",
+    "revision": "Revisjon"
+  },
+  "actions": {
+    "logs": "Logid",
+    "console": "Kest",
+    "scale": {
+      "label": "Skaleeri",
+      "title": "Skaleeri {{name}}",
+      "replicas": "Replikad",
+      "hint": "Praegu töötab: {{current}}",
+      "done": "{{name}} skaleeritud"
+    },
+    "restart": {
+      "label": "Taaskäivita",
+      "confirmTitle": "Käivitada {{name}} uuesti?",
+      "confirmText": "Iga selle {{kind}} pod asendatakse ükshaaval.",
+      "done": "Käivitan {{name}} uuesti"
+    },
+    "undo": {
+      "label": "Taasta eelmine versioon",
+      "done": "Taastasin {{name}} eelmine versioon"
+    },
+    "setImage": {
+      "label": "Muuda pilti",
+      "title": "Muuda {{name}} pilti",
+      "image": "Pilt",
+      "hint": "Podid asendatakse uue pildiga.",
+      "done": "Muutsin {{name}} pilti"
+    },
+    "suspend": {
+      "label": "Peata",
+      "confirmTitle": "Peata {{name}}?",
+      "confirmText": "See {{kind}} ei käivita uusi tööjooksu, kuni selle jätkad.",
+      "done": "{{name}} peatatud"
+    },
+    "resume": {
+      "label": "Jätka",
+      "done": "{{name}} jätkatud"
+    },
+    "trigger": {
+      "label": "Käivita kohe",
+      "done": "Alustasin ülesannet allikast {{name}}"
+    },
+    "cordon": {
+      "label": "Keela kasutamine",
+      "confirmTitle": "Keela {{name}} kasutamine?",
+      "confirmText": "Sellele {{kind}} ei planeerita uusi podisid. Seal juba olevad podid jätkavad tööd.",
+      "done": "{{name}} on piiratud"
+    },
+    "uncordon": {
+      "label": "Piirangu eemaldamine",
+      "done": "{{name}} piirang on eemaldatud"
+    },
+    "drain": {
+      "label": "Tühjendamine",
+      "title": "{{name}} tühjendamine",
+      "text": "Piirab {{name}} ja evikueerib selle podid, et need liiguksid teistele sõlmedele. DaemonSeti podid jäävad alles.",
+      "emptyDir": "Kustuta emptyDir andmed",
+      "emptyDirHint": "Evikueeri podid, mis hoiavad andmeid emptyDir mahutites. Need andmed kaovad.",
+      "force": "Sunniviisiline",
+      "forceHint": "Evakueerige ka need podid, mida ükski kontrollija ei haldada. Neid ei luua uuesti.",
+      "done": "{{name}} tühjendatud"
+    },
+    "delete": {
+      "label": "Kustuta",
+      "confirmTitle": "Kas kustutada {{name}}?",
+      "confirmText": "See {{kind}} eemaldatast klustrist.",
+      "managedPodText": "See pod kuulub kontrollijale, mis asendab selle uuega.",
+      "namespaceText": "Kõik selle nimeruumi sisu kustutatakse samuti. Seda ei saa tagasi pöörata.",
+      "done": "{{name}} kustutatud"
+    }
+  },
+  "detail": {
+    "loading": "Laadimine...",
+    "noDescribe": "Kirjeldust pole",
+    "noPods": "Podisid puuduvad",
+    "noEvents": "Sündmused puuduvad",
+    "tabs": {
+      "overview": "Ülevaade",
+      "pods": "Podid",
+      "logs": "Logid",
+      "console": "Kest",
+      "metrics": "Statistika",
+      "history": "Ajalugu",
+      "data": "Andmed",
+      "yaml": "YAML",
+      "events": "Sündmused"
+    }
+  },
+  "history": {
+    "none": "Käivitamise ajalugu puudub",
+    "noCause": "Muutuse põhjus puudub",
+    "current": "Praegune",
+    "rollBack": "Taasta",
+    "confirmTitle": "Kas taastada versioon {{revision}}?",
+    "confirmText": "{{name}} naaseb selle versiooni podi malli juurde.",
+    "rolledBack": "Taastati versioonile {{revision}}"
+  },
+  "data": {
+    "empty": "Andmed puuduvad",
+    "reveal": "Kuva",
+    "hide": "Peida",
+    "copy": "Kopeeri",
+    "copied": "Kopeeritud",
+    "secretHint": "Väärtused jäävad peidetud, kuni need avad. Avamine kantakse auditilogi.",
+    "secretNoPermission": "Sa näed võtmeid, kuid mitte väärtusi. Palu administraatoril anda luba Kubernetesi saladuste avamiseks."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Mälu",
+    "collecting": "Näidiste kogumine...",
+    "unavailable": "Mõõdikud pole saadaval",
+    "unavailableHint": "CPU ja mälu kasutuse nägemiseks paigalda klüstrisse metrics-server.",
+    "cpuUsage": "CPU kasutus",
+    "memoryUsage": "Mälu kasutus",
+    "podInformation": "Podi teave",
+    "containers": "Konteinerid",
+    "cpuHistory": "CPU ajalugu",
+    "memoryHistory": "Mälu ajalugu",
+    "loading": "Statistika laadimine...",
+    "error": "Viga statistika laadimisel",
+    "startPod": "Käivita pod, et näha selle statistikat.",
+    "noLimit": "piirangut pole",
+    "of": {
+      "limit": "piirang",
+      "node": "sõlm"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Kontrolli",
+    "diff": "Võrdle",
+    "save": "Salvesta",
+    "reload": "Laadi uuesti",
+    "unsaved": "Salvestamata muudatused",
+    "valid": "Näeb hea välja. Need muutuksid:",
+    "noChanges": "Muudatusi pole",
+    "saved": "Salvestatud {{count}} ressursi"
+  },
+  "apply": {
+    "title": "Rakenda YAML",
+    "apply": "Rakenda",
+    "hint": "Kleepige üks või mitu manifesti. Kontroll käivitab kuivkäigu serveris ja Erinevus näitab tehtavaid muudatusi. Midagi ei muutu enne, kui rakendate.",
+    "namespace": "Nimesse {{namespace}}",
+    "defaultNamespace": "Vaikimisi nimesse"
+  },
+  "helm": {
+    "none": "Helm-i väljalaskeid pole",
+    "revision": "Versioon {{revision}}",
+    "tabs": {
+      "history": "Ajalugu",
+      "values": "Väärtused",
+      "manifest": "Manifest"
+    },
+    "allValues": "Kaasa ka diagrammi vaikimisi väärtused",
+    "allValuesHint": "Kuva kõik väärtused, mitte ainult need, mis on paigaldamisel määratud.",
+    "rollbackTitle": "Kas taastada {{name}} versioonile {{revision}}?",
+    "rollbackText": "Helm loob uue versiooni, kasutades vanemat seadeid.",
+    "rolledBack": "Taastati {{name}} versioonile {{revision}}",
+    "uninstall": "Eemalda",
+    "uninstallTitle": "Kas eemaldada {{name}}?",
+    "uninstallText": "Helm kustutab selle väljaande kõik ressursid.",
+    "uninstalled": "Eemaldati {{name}}"
+  },
+  "logs": {
+    "container": "Konteiner",
+    "allContainers": "Kõik konteinerid",
+    "previous": "Eelmine käivitamine",
+    "filter": "Logide filtreerimine...",
+    "lines": "rida",
+    "last50": "Viimased 50",
+    "last100": "Viimased 100",
+    "last500": "Viimased 500",
+    "last1000": "Viimased 1000",
+    "all": "Kõik",
+    "timestamps": "Aeglid",
+    "autoRefresh": "Jälgi",
+    "copy": "Kopeeri logid",
+    "download": "Laadi alla",
+    "clear": "Tühjenda",
+    "none": "Logid puuduvad",
+    "noneMatching": "Päringule \"{{query}}\" ei vasta ühtegi logi",
+    "copied": "Kopeeritud {{count}} rida",
+    "failedToCopy": "Logide kopeerimine ebaõnnestus",
+    "downloaded": "Logid laaditud alla",
+    "failedToDownload": "Logide alla laadimine ebaõnnestus: {{error}}",
+    "failedToFetch": "Logide laadimine ebaõnnestus: {{error}}"
+  },
+  "console": {
+    "connect": "Ühendu",
+    "disconnect": "Katkesta ühendus",
+    "connecting": "Ühenduse loomine...",
+    "connectingTo": "Ühenduse loomine seadmega {{name}}...",
+    "connectedTo": "Ühendatud seadmega {{name}}",
+    "notConnected": "Ühendus puudub",
+    "clickToConnect": "Valige käsurea keskkond ja klõpsake nupul Ühendu",
+    "disconnected": "Ühendus katkenud",
+    "consoleError": "Kestaviga",
+    "errorMessage": "Viga: {{message}}",
+    "failedToConnect": "Ühenduse loomine podiga ebaõnnestus",
+    "failedToConnectWithError": "Ühenduse loomine ebaõnnestus: {{error}}",
+    "selectShell": "Kest",
+    "copyConsole": "Kopeeri väljund",
+    "consoleCopied": "Väljund kopeeritud",
+    "clear": "Tühjenda",
+    "podMustBeRunning": "Pod peab olema käivitatud",
+    "podNotRunning": "Pod ei tööta",
+    "podNotRunningHint": "Käivita pod, et avada selles kest.",
+    "readOnly": "Kest on välja lülitatud",
+    "readOnlyHint": "See host on ainult lugemiseks, seetõttu on podide kestad välja lülitatud."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Lõikelaualt lugemine ebaõnnestus. Veendu, et lõikelaua lubad on antud.",
+    "clipboardWriteFailed": "Lõikelauale kopeerimine ebaõnnestus. Veendu, et lehekülg on teenindatud HTTPS-i või localhosti kaudu."
+  },
+  "errors": {
+    "remoteServerRequired": "Nõutav on kaugserver. Ühenda seadistustes kaugserver, et kasutada seda ühenduse tüüpi."
+  },
+  "hosts": {
+    "docsLink": "Vaata dokumentatsiooni",
+    "hostNotFound": "Hosti ei leitud",
+    "loadingHost": "Hosti laadimine..."
+  }
+}

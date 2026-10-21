@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Tvarkykite Kubernetes klasterius per SSH iš savo serverių, naudodami žurnalus, metrikas, YAML ir komandų eilutę."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes skydelis"
+  },
+  "permissions": {
+    "use": {
+      "title": "Naudoti Kubernetes",
+      "description": "Atidaryti Kubernetes vaizdą ir pod komandų eilutes serveriuose, kuriuose įjungtas Kubernetes."
+    },
+    "secrets": {
+      "title": "Rodyti Kubernetes slaptažodžius",
+      "description": "Rodyti iššifruotas Kubernetes slaptažodžių reikšmes. Kiekvienas atskleidimas įrašomas į audito žurnalą."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Įjungti Kubernetes",
+        "description": "Vykdyti kubectl šiame serveryje per SSH, kad tvarkytumėte prieinamą klasterį."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes versija",
+        "description": "Kuri komanda paleidžia kubectl šiame serveryje.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig kelias",
+        "description": "Palikite tuščią, kad būtų naudojama numatytoji SSH vartotojo reikšmė (~/.kube/config arba KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Numatytasis kontekstas",
+        "description": "Palikite tuščią, kad būtų naudojamas dabartinis kontekstas kubeconfig faile. Kontekstus galite keisti „Kubernetes“ skirtuke.",
+        "placeholder": "mano-klasteris"
+      },
+      "namespace": {
+        "label": "Numatytasis vardynas",
+        "description": "Vardynas, kuris atidaromas „Kubernetes“ skirtuke.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Vykdyti su sudo",
+        "description": "Vykdyti kubectl su sudo -n, skirta k3s ir MicroK8s konfigūracijoms, kuriose klasterio konfigūraciją gali skaityti tik root vartotojas. SSH vartotojui turi būti įgalintas slaptažodžio nereikalaujantis sudo."
+      },
+      "readOnly": {
+        "label": "Tik skaitymui",
+        "description": "Tik peržiūra. Blokuoja mastelio keitimą, paleidimus iš naujo, šalinimą, YAML pakeitimus, Helm pakeitimus ir podų shell prieigą visiems šio hosto vartotojams."
+      },
+      "showPanel": {
+        "label": "Rodyti „Kubernetes“ skydelį terminaluose",
+        "description": "Leisti atidaryti „Kubernetes“ skydelį šalia „SSH“ terminalų šiame serveryje."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Atidaryti „Kubernetes“ skydelį su naujais terminalais",
+        "description": "Rodyti „Kubernetes“ skydelį šalia kiekvieno „SSH“ terminalo, kuriame įjungtas „Kubernetes“. Jį visada galite atidaryti ir uždaryti mygtuku dešiniajame krašte."
+      },
+      "companionSide": {
+        "label": "„Kubernetes“ skydelio padėtis",
+        "description": "Kur „Kubernetes“ skydelis rodomas šalia terminalo.",
+        "right": "Dešinėje",
+        "left": "Kairėje",
+        "bottom": "Apačioje"
+      },
+      "companionSize": {
+        "label": "„Kubernetes“ skydelio dydis",
+        "description": "Plotis pikseliais arba aukštis, kai skydelis yra apačioje. Taip pat galite vilkti jo kraštą."
+      },
+      "companionEdgeButton": {
+        "label": "Rodyti skydelo mygtuką",
+        "description": "Rodyti mažą mygtuką terminalo dešiniajame krašte, kuris atidaro „Kubernetes“ skydelį."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Šiam kompiuteriui „Kubernetes“ nėra įjungtas",
+    "notEnabledHint": "Įjunkite „Kubernetes“ šio kompiuterio nustatymuose, kad valdytumėte jo klasterį.",
+    "validating": "Tikrinamas klasteris...",
+    "connecting": "Jungiama...",
+    "error": "Klaida",
+    "errorCode": "Klaidos kodas: {{code}}",
+    "connectionFailed": "Nepavyko prisijungti",
+    "totpVerificationFailed": "Patikrinimas nepavyko. Bandykite dar kartą.",
+    "verificationCodePrompt": "Įveskite patvirtinimo kodą",
+    "browserSignInFailed": "Prisijungimas nepavyko. Bandykite dar kartą.",
+    "noHostSelected": "Nepasirinktas joks hostas",
+    "refresh": "Atnaujinti"
+  },
+  "cluster": {
+    "loading": "Įkeliamas...",
+    "empty": "Čia nėra {{kind}}",
+    "noMatches": "Nieko neatitinka jūsų filtrų",
+    "readOnly": "Tik skaitymui"
+  },
+  "sections": {
+    "workloads": "Darbo krovos",
+    "network": "Tinklas",
+    "config": "Konfigūracija",
+    "cluster": "Klasteris",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Podas",
+      "many": "Podai"
+    },
+    "deployments": {
+      "one": "Išdėstymas",
+      "many": "Išdėstymai"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingressai"
+    },
+    "configmaps": {
+      "one": "Konfigūracijos žemėlapis",
+      "many": "Konfigūracijos žemėlapiai"
+    },
+    "secrets": {
+      "one": "Slaptas duomenys",
+      "many": "Slapti duomenys"
+    },
+    "pvcs": {
+      "one": "Tomo reikalavimas",
+      "many": "Tomų reikalavimai"
+    },
+    "pvs": {
+      "one": "Nuolatinis tomas",
+      "many": "Nuolatiniai tomų"
+    },
+    "nodes": {
+      "one": "Mazgas",
+      "many": "Mazgai"
+    },
+    "namespaces": {
+      "one": "Vardų erdvė",
+      "many": "Vardų erdvės"
+    },
+    "events": {
+      "one": "Įvykis",
+      "many": "Įvykiai"
+    }
+  },
+  "filters": {
+    "all": "Visi",
+    "healthy": "Veikiantys",
+    "problem": "Problemos",
+    "idle": "Nenaudojami"
+  },
+  "toolbar": {
+    "namespace": "Vardų erdvė",
+    "allNamespaces": "Visos vardų erdvės",
+    "context": "Kontekstas",
+    "kind": "Ištekliaus tipas",
+    "search": "Ieškoti..."
+  },
+  "columns": {
+    "name": "Pavadinimas",
+    "namespace": "Vardų erdvė",
+    "status": "Būsena",
+    "age": "Amžius",
+    "ready": "Pasiruošę",
+    "restarts": "Paleidimai iš naujo",
+    "node": "Mazgas",
+    "ip": "IP",
+    "owner": "Savininkas",
+    "upToDate": "Atnaujinta",
+    "available": "Prieinama",
+    "images": "Atvaizdai",
+    "completions": "Užbaigti",
+    "duration": "Trukmė",
+    "schedule": "Tvarkaraštis",
+    "active": "Aktyvus",
+    "lastSchedule": "Paskutinį kartą paleista",
+    "type": "Tipas",
+    "clusterIP": "Klasterio IP",
+    "externalIP": "Išorinis IP",
+    "ports": "Prievadai",
+    "class": "Klasė",
+    "hosts": "Serveriai",
+    "address": "Adresas",
+    "tls": "TLS",
+    "keys": "Raktai",
+    "capacity": "Talpa",
+    "access": "Prieiga",
+    "storageClass": "Laikmenos klasė",
+    "volume": "Tomas",
+    "reclaim": "Atkūrimas",
+    "claim": "Pareikalavimas",
+    "roles": "Vaidmenys",
+    "version": "Versija",
+    "internalIP": "Vidinis IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Atmintis",
+    "reason": "Priežastis",
+    "object": "Objektas",
+    "message": "Žinutė",
+    "count": "Skaičius",
+    "cpuUsage": "CPU naudojimas",
+    "memoryUsage": "Atminties naudojimas",
+    "container": "Konteineris",
+    "chart": "Grafikas",
+    "appVersion": "Programos versija",
+    "revision": "Peržiūra"
+  },
+  "actions": {
+    "logs": "Žurnalai",
+    "console": "Komandų eilutė",
+    "scale": {
+      "label": "Mastelio keitimas",
+      "title": "Keisti mastelį: {{name}}",
+      "replicas": "Kopijos",
+      "hint": "Šiuo metu veikia: {{current}}",
+      "done": "Mastelis pakeistas: {{name}}"
+    },
+    "restart": {
+      "label": "Perkrauti",
+      "confirmTitle": "Perkrauti „{{name}}“?",
+      "confirmText": "Kiekvienas šio „{{kind}}“ podas yra pakeičiamas po vieną.",
+      "done": "Kraunamas iš naujo „{{name}}“"
+    },
+    "undo": {
+      "label": "Atstatyti",
+      "done": "„{{name}}“ atstatytas"
+    },
+    "setImage": {
+      "label": "Keisti vaizdą",
+      "title": "Keisti „{{name}}“ vaizdą",
+      "image": "Vaizdas",
+      "hint": "Podai bus pakeisti nauju vaizdu.",
+      "done": "„{{name}}“ vaizdas pakeistas"
+    },
+    "suspend": {
+      "label": "Sustabdyti",
+      "confirmTitle": "Sustabdyti „{{name}}“?",
+      "confirmText": "Šis {{kind}} nebepradės naujų vykdymų, kol jį atnaujinsite.",
+      "done": "„{{name}}“ sustabdytas"
+    },
+    "resume": {
+      "label": "Atnaujinti",
+      "done": "„{{name}}“ atnaujintas"
+    },
+    "trigger": {
+      "label": "Vykdyti dabar",
+      "done": "Pradėtas darbas iš „{{name}}“"
+    },
+    "cordon": {
+      "label": "Izoliuoti",
+      "confirmTitle": "Izoliuoti „{{name}}“?",
+      "confirmText": "Ant šio {{kind}} nebeplanuojami nauji podai. Jau veikiančiai paskirstyti podai tęsia darbą.",
+      "done": "{{name}} izoliuotas"
+    },
+    "uncordon": {
+      "label": "Atšaukti izoliavimą",
+      "done": "{{name}} izoliavimas atšauktas"
+    },
+    "drain": {
+      "label": "Išvalyti",
+      "title": "Išvalyti {{name}}",
+      "text": "Izoliuoja {{name}} ir pašalina jo podus, kad jie būtų perkelti į kitus mazgus. DaemonSet podai lieka.",
+      "emptyDir": "Ištrinti emptyDir duomenis",
+      "emptyDirHint": "Pašalinti podus, kurie saugo duomenis emptyDir tomuose. Šie duomenys bus prarasti.",
+      "force": "Priverstinai",
+      "forceHint": "Taip pat išstumti poodus, kurių valdo joks valdiklis. Jie nebus sukurti iš naujo.",
+      "done": "Ištuštinta {{name}}"
+    },
+    "delete": {
+      "label": "Ištrinti",
+      "confirmTitle": "Ištrinti {{name}}?",
+      "confirmText": "Šis {{kind}} bus pašalintas iš klasterio.",
+      "managedPodText": "Šis poodas priklauso valdikliui, kuris jo vietoje sukurs naują.",
+      "namespaceText": "Viskas šiame vardų erdvėje taip pat bus ištrinta. To negalima atšaukti.",
+      "done": "Ištrinta {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Įkeliama...",
+    "noDescribe": "Aprašymo nėra",
+    "noPods": "Nėra podų",
+    "noEvents": "Nėra įvykių",
+    "tabs": {
+      "overview": "Apžvalga",
+      "pods": "Podai",
+      "logs": "Žurnalai",
+      "console": "Komandų eilutė",
+      "metrics": "Statistika",
+      "history": "Istorija",
+      "data": "Duomenys",
+      "yaml": "YAML",
+      "events": "Įvykiai"
+    }
+  },
+  "history": {
+    "none": "Nėra išleidimų istorijos",
+    "noCause": "Nėra pakeitimo priežasties",
+    "current": "Dabartinė",
+    "rollBack": "Atstatyti",
+    "confirmTitle": "Atstatyti iki peržiūros {{revision}}?",
+    "confirmText": "{{name}} grįžta prie tos peržiūros pod šablono.",
+    "rolledBack": "Atstatyta iki peržiūros {{revision}}"
+  },
+  "data": {
+    "empty": "Nėra duomenų",
+    "reveal": "Rodyti",
+    "hide": "Paslėpti",
+    "copy": "Kopijuoti",
+    "copied": "Nukopijuota",
+    "secretHint": "Reikšmės lieka paslėptos, kol jas atskleisite. Atskleidimas užrašomas į audito žurnalą.",
+    "secretNoPermission": "Matote raktus, bet ne reikšmes. Paprašykite administratoriaus suteikti leidimą „Atskleisti Kubernetes slaptažodžius“."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Atmintis",
+    "collecting": "Renkami duomenys...",
+    "unavailable": "Metrikos nepasiekiamos",
+    "unavailableHint": "Įdiekite metrics-server klasteriuje, kad matytumėte CPU ir atminties naudojimą.",
+    "cpuUsage": "CPU naudojimas",
+    "memoryUsage": "Atminties naudojimas",
+    "podInformation": "Pod informacija",
+    "containers": "Konteineriai",
+    "cpuHistory": "CPU istorija",
+    "memoryHistory": "Atminties istorija",
+    "loading": "Įkeliamos statistikos...",
+    "error": "Klaida įkeliant statistiką",
+    "startPod": "Paleiskite pod, kad pamatytumėte jo statistiką.",
+    "noLimit": "be apribojimo",
+    "of": {
+      "limit": "limitas",
+      "node": "mazgas"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Patikrinti",
+    "diff": "Skirtumai",
+    "save": "Išsaugoti",
+    "reload": "Perkrauti",
+    "unsaved": "Neišsaugoti pakeitimai",
+    "valid": "Viskas tvarkoje. Šie dalykai būtų pakeisti:",
+    "noChanges": "Nėra pakeitimų",
+    "saved": "Išsaugota {{count}} išteklių"
+  },
+  "apply": {
+    "title": "Taikyti YAML",
+    "apply": "Taikyti",
+    "hint": "Įklijuokite vieną ar daugiau manifestų. „Check“ atlieka saugų testavimą serveryje, o „Diff“ rodo, kas pasikeis. Jokių pakeitimų nebus, kol nepaspausite „Apply“.",
+    "namespace": "Į {{namespace}}",
+    "defaultNamespace": "Į numatytąją vardų erdvę"
+  },
+  "helm": {
+    "none": "Nėra Helm leidimų",
+    "revision": "Versija {{revision}}",
+    "tabs": {
+      "history": "Istorija",
+      "values": "Reikšmės",
+      "manifest": "Manifestas"
+    },
+    "allValues": "Įtraukti šablono numatytuosius nustatymus",
+    "allValuesHint": "Rodyti visus parametrus, ne tik tuos, kurie nustatyti diegimo metu.",
+    "rollbackTitle": "Atstatyti „{{name}}“ į peržiūrą {{revision}}?",
+    "rollbackText": "Helm sukuria naują peržiūrą su senosios nustatymais.",
+    "rolledBack": "„{{name}}“ atstatyta į peržiūrą {{revision}}",
+    "uninstall": "Pašalinti",
+    "uninstallTitle": "Pašalinti „{{name}}“?",
+    "uninstallText": "Helm ištrina visus šio leidimo išteklius.",
+    "uninstalled": "„{{name}}“ pašalinta"
+  },
+  "logs": {
+    "container": "Konteineris",
+    "allContainers": "Visi konteineriai",
+    "previous": "Ankstesnis paleidimas",
+    "filter": "Filtruoti žurnalus...",
+    "lines": "eilių",
+    "last50": "Paskutinės 50",
+    "last100": "Paskutinės 100",
+    "last500": "Paskutinės 500",
+    "last1000": "Paskutinės 1000",
+    "all": "Visi",
+    "timestamps": "Laiko žymos",
+    "autoRefresh": "Sekti",
+    "copy": "Kopijuoti žurnalą",
+    "download": "Atsisiųsti",
+    "clear": "Išvalyti",
+    "none": "Žurnalas tuščias",
+    "noneMatching": "Nėra žurnalo įrašų, atitinkančių „{{query}}“",
+    "copied": "Nukopijuota {{count}} eilučių",
+    "failedToCopy": "Nepavyko nukopijuoti žurnalo",
+    "downloaded": "Žurnalas atsisiųstas",
+    "failedToDownload": "Nepavyko atsisiųsti žurnalų: {{error}}",
+    "failedToFetch": "Nepavyko įkelti žurnalų: {{error}}"
+  },
+  "console": {
+    "connect": "Prisijungti",
+    "disconnect": "Atsijungti",
+    "connecting": "Prisijungiama...",
+    "connectingTo": "Prisijungiama prie {{name}}...",
+    "connectedTo": "Prisijungta prie {{name}}",
+    "notConnected": "Neprisijungta",
+    "clickToConnect": "Pasirinkite komandinę eilutę ir spauskite Prisijungti",
+    "disconnected": "Atsijungta",
+    "consoleError": "Konsole klaida",
+    "errorMessage": "Klaida: {{message}}",
+    "failedToConnect": "Nepavyko prisijungti prie pod",
+    "failedToConnectWithError": "Nepavyko prisijungti: {{error}}",
+    "selectShell": "Konsolė",
+    "copyConsole": "Kopijuoti išvestį",
+    "consoleCopied": "Išvestis nukopijuota",
+    "clear": "Išvalyti",
+    "podMustBeRunning": "Pod turi būti paleistas",
+    "podNotRunning": "Pod nėra paleistas",
+    "podNotRunningHint": "Paleiskite pod, kad atidarytumėte jo konsolę.",
+    "readOnly": "Konsolė išjungta",
+    "readOnlyHint": "Šis hostas yra tik skaitymui, todėl pod konsolės išjungtos."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Nepavyko nuskaityti iš iškarpinės. Įsitikinkite, kad suteiktos iškarpinės leidimai.",
+    "clipboardWriteFailed": "Nepavyko nukopijuoti į iškarpinę. Įsitikinkite, kad puslapis pasiekiamas per HTTPS arba localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Reikalingas nuotolinis serveris. Nustatymuose prijunkite nuotolinį serverį, kad galėtumėte naudoti šį prisijungimo tipą."
+  },
+  "hosts": {
+    "docsLink": "Peržiūrėti dokumentaciją",
+    "hostNotFound": "Hostas nerastas",
+    "loadingHost": "Įkeliamas hostas..."
+  }
+}

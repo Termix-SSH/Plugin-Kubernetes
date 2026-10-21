@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Quản lý các cụm Kubernetes từ các máy chủ của bạn qua SSH, với nhật ký, chỉ số, YAML và shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Bảng điều khiển Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Sử dụng Kubernetes",
+      "description": "Mở giao diện Kubernetes và shell của pod trên các máy chủ đã bật Kubernetes."
+    },
+    "secrets": {
+      "title": "Hiển thị bí mật Kubernetes",
+      "description": "Hiển thị các giá trị đã giải mã của bí mật Kubernetes. Mọi lần hiển thị đều được ghi vào nhật ký kiểm toán."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Bật Kubernetes",
+        "description": "Chạy kubectl trên máy chủ này qua SSH để quản lý cụm mà nó có thể truy cập."
+      },
+      "kubectlFlavor": {
+        "label": "Phiên bản Kubernetes",
+        "description": "Lệnh nào chạy kubectl trên máy chủ này.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Đường dẫn Kubeconfig",
+        "description": "Để trống để sử dụng mặc định cho người dùng SSH (~/.kube/config hoặc KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Bối cảnh mặc định",
+        "description": "Để trống để sử dụng bối cảnh hiện tại trong kubeconfig. Bạn có thể chuyển đổi bối cảnh trong tab Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Không gian tên mặc định",
+        "description": "Không gian tên mà tab Kubernetes mở ra.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Chạy với sudo",
+        "description": "Chạy kubectl với sudo -n, dành cho các cài đặt k3s và MicroK8s nơi chỉ root mới có thể đọc cấu hình cụm. Người dùng SSH cần có quyền sudo không mật khẩu."
+      },
+      "readOnly": {
+        "label": "Chỉ đọc",
+        "description": "Chỉ xem. Chặn việc mở rộng quy mô, khởi động lại, xóa, thay đổi YAML, thay đổi Helm và shell pod cho mọi người trên máy chủ này."
+      },
+      "showPanel": {
+        "label": "Hiển thị bảng điều khiển Kubernetes trong terminal",
+        "description": "Cho phép bảng điều khiển Kubernetes mở bên cạnh các terminal SSH trên máy chủ này."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Mở bảng điều khiển Kubernetes cùng với terminal mới",
+        "description": "Hiển thị bảng điều khiển Kubernetes bên cạnh mọi terminal SSH đã bật Kubernetes. Bạn vẫn có thể mở và đóng nó từ nút ở cạnh phải."
+      },
+      "companionSide": {
+        "label": "Vị trí bảng điều khiển Kubernetes",
+        "description": "Nơi bảng điều khiển Kubernetes nằm cạnh terminal.",
+        "right": "Phải",
+        "left": "Trái",
+        "bottom": "Dưới"
+      },
+      "companionSize": {
+        "label": "Kích thước bảng điều khiển Kubernetes",
+        "description": "Chiều rộng tính bằng pixel, hoặc chiều cao khi nó ở dưới cùng. Bạn cũng có thể kéo cạnh của nó."
+      },
+      "companionEdgeButton": {
+        "label": "Hiển thị nút bảng điều khiển",
+        "description": "Hiển thị một nút nhỏ ở cạnh phải của terminal để mở bảng điều khiển Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes chưa được bật cho máy chủ này",
+    "notEnabledHint": "Bật Kubernetes trong cài đặt của máy chủ này để quản lý cụm của nó.",
+    "validating": "Đang kiểm tra cụm...",
+    "connecting": "Đang kết nối...",
+    "error": "Lỗi",
+    "errorCode": "Mã lỗi: {{code}}",
+    "connectionFailed": "Không thể kết nối",
+    "totpVerificationFailed": "Xác minh thất bại. Vui lòng thử lại.",
+    "verificationCodePrompt": "Nhập mã xác minh",
+    "browserSignInFailed": "Đăng nhập thất bại. Vui lòng thử lại.",
+    "noHostSelected": "Chưa chọn máy chủ",
+    "refresh": "Làm mới"
+  },
+  "cluster": {
+    "loading": "Đang tải...",
+    "empty": "Không có {{kind}} ở đây",
+    "noMatches": "Không có kết quả phù hợp với bộ lọc của bạn",
+    "readOnly": "Chỉ đọc"
+  },
+  "sections": {
+    "workloads": "Tải trọng",
+    "network": "Mạng",
+    "config": "Cấu hình",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "Tất cả",
+    "healthy": "Hoạt động tốt",
+    "problem": "Lỗi",
+    "idle": "Chờ"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Tất cả namespaces",
+    "context": "Context",
+    "kind": "Loại tài nguyên",
+    "search": "Tìm kiếm..."
+  },
+  "columns": {
+    "name": "Tên",
+    "namespace": "Namespace",
+    "status": "Trạng thái",
+    "age": "Thời gian",
+    "ready": "Sẵn sàng",
+    "restarts": "Khởi động lại",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Chủ sở hữu",
+    "upToDate": "Đã cập nhật",
+    "available": "Khả dụng",
+    "images": "Images",
+    "completions": "Hoàn thành",
+    "duration": "Thời lượng",
+    "schedule": "Lịch trình",
+    "active": "Hoạt động",
+    "lastSchedule": "Lần chạy cuối",
+    "type": "Loại",
+    "clusterIP": "IP cụm",
+    "externalIP": "IP ngoài",
+    "ports": "Cổng",
+    "class": "Lớp",
+    "hosts": "Máy chủ",
+    "address": "Địa chỉ",
+    "tls": "TLS",
+    "keys": "Khóa",
+    "capacity": "Dung lượng",
+    "access": "Quyền truy cập",
+    "storageClass": "Lớp lưu trữ",
+    "volume": "Volume",
+    "reclaim": "Thu hồi",
+    "claim": "Yêu cầu",
+    "roles": "Vai trò",
+    "version": "Phiên bản",
+    "internalIP": "IP nội bộ",
+    "os": "Hệ điều hành",
+    "cpu": "CPU",
+    "memory": "Bộ nhớ",
+    "reason": "Lý do",
+    "object": "Đối tượng",
+    "message": "Thông báo",
+    "count": "Số lần",
+    "cpuUsage": "Sử dụng CPU",
+    "memoryUsage": "Sử dụng bộ nhớ",
+    "container": "Container",
+    "chart": "Biểu đồ",
+    "appVersion": "Phiên bản ứng dụng",
+    "revision": "Phiên sửa đổi"
+  },
+  "actions": {
+    "logs": "Nhật ký",
+    "console": "Shell",
+    "scale": {
+      "label": "Mở rộng",
+      "title": "Mở rộng {{name}}",
+      "replicas": "Bản sao",
+      "hint": "Đang chạy: {{current}}",
+      "done": "Đã mở rộng {{name}}"
+    },
+    "restart": {
+      "label": "Khởi động lại",
+      "confirmTitle": "Khởi động lại {{name}}?",
+      "confirmText": "Mỗi pod của {{kind}} này sẽ được thay thế lần lượt.",
+      "done": "Đang khởi động lại {{name}}"
+    },
+    "undo": {
+      "label": "Hoàn tác",
+      "done": "Đã hoàn tác {{name}}"
+    },
+    "setImage": {
+      "label": "Đổi ảnh",
+      "title": "Đổi ảnh của {{name}}",
+      "image": "Ảnh",
+      "hint": "Các pod sẽ được thay thế bằng ảnh mới.",
+      "done": "Đã đổi ảnh của {{name}}"
+    },
+    "suspend": {
+      "label": "Tạm dừng",
+      "confirmTitle": "Tạm dừng {{name}}?",
+      "confirmText": "{{kind}} này sẽ ngừng khởi chạy mới cho đến khi bạn tiếp tục.",
+      "done": "Đã tạm dừng {{name}}"
+    },
+    "resume": {
+      "label": "Tiếp tục",
+      "done": "Đã tiếp tục {{name}}"
+    },
+    "trigger": {
+      "label": "Chạy ngay",
+      "done": "Đã khởi động công việc từ {{name}}"
+    },
+    "cordon": {
+      "label": "Cấm lên lịch",
+      "confirmTitle": "Cấm lên lịch {{name}}?",
+      "confirmText": "Không có pod mới nào được lên lịch trên {{kind}} này. Các pod đang chạy trên nó sẽ tiếp tục hoạt động.",
+      "done": "Đã cô lập {{name}}"
+    },
+    "uncordon": {
+      "label": "Hủy cô lập",
+      "done": "Đã hủy cô lập {{name}}"
+    },
+    "drain": {
+      "label": "Dọn dẹp",
+      "title": "Dọn dẹp {{name}}",
+      "text": "Cô lập {{name}} và trục xuất các pod của nó để chúng di chuyển sang các node khác. Các pod thuộc DaemonSet sẽ không bị ảnh hưởng.",
+      "emptyDir": "Xóa dữ liệu emptyDir",
+      "emptyDirHint": "Trục xuất các pod lưu trữ dữ liệu trong volume emptyDir. Dữ liệu này sẽ bị mất.",
+      "force": "Buộc thực hiện",
+      "forceHint": "Cũng trục xuất các pod không được bộ điều khiển nào quản lý. Chúng sẽ không được tạo lại.",
+      "done": "Đã dọn dẹp {{name}}"
+    },
+    "delete": {
+      "label": "Xóa",
+      "confirmTitle": "Xóa {{name}}?",
+      "confirmText": "{{kind}} này sẽ bị xóa khỏi cụm.",
+      "managedPodText": "Pod này thuộc về một bộ điều khiển, bộ điều khiển này sẽ khởi tạo một pod mới thay thế.",
+      "namespaceText": "Tất cả nội dung trong namespace này cũng sẽ bị xóa. Thao tác này không thể hoàn tác.",
+      "done": "Đã xóa {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Đang tải...",
+    "noDescribe": "Không có mô tả",
+    "noPods": "Không có pod",
+    "noEvents": "Không có sự kiện",
+    "tabs": {
+      "overview": "Tổng quan",
+      "pods": "Pods",
+      "logs": "Nhật ký",
+      "console": "Shell",
+      "metrics": "Thống kê",
+      "history": "Lịch sử",
+      "data": "Dữ liệu",
+      "yaml": "YAML",
+      "events": "Sự kiện"
+    }
+  },
+  "history": {
+    "none": "Không có lịch sử triển khai",
+    "noCause": "Không có nguyên nhân thay đổi",
+    "current": "Hiện tại",
+    "rollBack": "Hoàn tác",
+    "confirmTitle": "Hoàn tác về bản sửa đổi {{revision}}?",
+    "confirmText": "{{name}} sẽ quay lại mẫu pod của bản sửa đổi đó.",
+    "rolledBack": "Đã hoàn tác về bản sửa đổi {{revision}}"
+  },
+  "data": {
+    "empty": "Không có dữ liệu",
+    "reveal": "Hiển thị",
+    "hide": "Ẩn",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "secretHint": "Giá trị sẽ được ẩn cho đến khi bạn hiển thị chúng. Việc hiển thị sẽ được ghi vào nhật ký kiểm toán.",
+    "secretNoPermission": "Bạn có thể xem các khóa nhưng không xem được giá trị. Hãy yêu cầu quản trị viên cấp quyền Hiển thị bí mật Kubernetes."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Bộ nhớ",
+    "collecting": "Đang thu thập mẫu...",
+    "unavailable": "Métric không khả dụng",
+    "unavailableHint": "Cài đặt metrics-server trong cụm để xem mức sử dụng CPU và bộ nhớ.",
+    "cpuUsage": "Sử dụng CPU",
+    "memoryUsage": "Sử dụng bộ nhớ",
+    "podInformation": "Thông tin pod",
+    "containers": "Container",
+    "cpuHistory": "Lịch sử CPU",
+    "memoryHistory": "Lịch sử bộ nhớ",
+    "loading": "Đang tải thống kê...",
+    "error": "Lỗi khi tải thống kê",
+    "startPod": "Khởi động pod để xem thống kê của nó.",
+    "noLimit": "không giới hạn",
+    "of": {
+      "limit": "giới hạn",
+      "node": "nút"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Kiểm tra",
+    "diff": "So sánh",
+    "save": "Lưu",
+    "reload": "Tải lại",
+    "unsaved": "Thay đổi chưa lưu",
+    "valid": "Trông ổn. Những thay đổi sau sẽ được áp dụng:",
+    "noChanges": "Không có thay đổi",
+    "saved": "Đã lưu {{count}} tài nguyên"
+  },
+  "apply": {
+    "title": "Áp dụng YAML",
+    "apply": "Áp dụng",
+    "hint": "Dán một hoặc nhiều manifest. Kiểm tra chạy thử trên máy chủ và So sánh hiển thị các thay đổi. Không có gì thay đổi cho đến khi bạn áp dụng.",
+    "namespace": "Vào {{namespace}}",
+    "defaultNamespace": "Vào namespace mặc định"
+  },
+  "helm": {
+    "none": "Không có bản phát hành Helm",
+    "revision": "Phiên bản {{revision}}",
+    "tabs": {
+      "history": "Lịch sử",
+      "values": "Giá trị",
+      "manifest": "Manifest"
+    },
+    "allValues": "Bao gồm giá trị mặc định của biểu đồ",
+    "allValuesHint": "Hiển thị mọi giá trị, không chỉ những giá trị được đặt khi cài đặt.",
+    "rollbackTitle": "Hoàn tác {{name}} về phiên bản {{revision}}?",
+    "rollbackText": "Helm tạo một phiên bản mới với cài đặt của phiên bản cũ.",
+    "rolledBack": "Đã hoàn tác {{name}} về phiên bản {{revision}}",
+    "uninstall": "Gỡ cài đặt",
+    "uninstallTitle": "Gỡ cài đặt {{name}}?",
+    "uninstallText": "Helm xóa mọi tài nguyên của bản phát hành này.",
+    "uninstalled": "Đã gỡ cài đặt {{name}}"
+  },
+  "logs": {
+    "container": "Container",
+    "allContainers": "Tất cả container",
+    "previous": "Lần chạy trước",
+    "filter": "Lọc nhật ký...",
+    "lines": "dòng",
+    "last50": "50 dòng cuối",
+    "last100": "100 dòng cuối",
+    "last500": "500 dòng cuối",
+    "last1000": "1000 dòng cuối",
+    "all": "Tất cả",
+    "timestamps": "Dấu thời gian",
+    "autoRefresh": "Theo dõi",
+    "copy": "Sao chép nhật ký",
+    "download": "Tải xuống",
+    "clear": "Xóa",
+    "none": "Không có nhật ký",
+    "noneMatching": "Không có nhật ký nào khớp với \"{{query}}\"",
+    "copied": "Đã sao chép {{count}} dòng",
+    "failedToCopy": "Không thể sao chép nhật ký",
+    "downloaded": "Đã tải xuống nhật ký",
+    "failedToDownload": "Không thể tải xuống nhật ký: {{error}}",
+    "failedToFetch": "Không thể tải nhật ký: {{error}}"
+  },
+  "console": {
+    "connect": "Kết nối",
+    "disconnect": "Ngắt kết nối",
+    "connecting": "Đang kết nối...",
+    "connectingTo": "Đang kết nối đến {{name}}...",
+    "connectedTo": "Đã kết nối đến {{name}}",
+    "notConnected": "Chưa kết nối",
+    "clickToConnect": "Chọn một shell và nhấp vào Kết nối",
+    "disconnected": "Đã ngắt kết nối",
+    "consoleError": "Lỗi shell",
+    "errorMessage": "Lỗi: {{message}}",
+    "failedToConnect": "Không thể kết nối đến pod",
+    "failedToConnectWithError": "Không thể kết nối: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Sao chép kết quả",
+    "consoleCopied": "Đã sao chép kết quả",
+    "clear": "Xóa",
+    "podMustBeRunning": "Pod phải đang chạy",
+    "podNotRunning": "Pod không đang chạy",
+    "podNotRunningHint": "Khởi động pod để mở shell trong đó.",
+    "readOnly": "Shell đã tắt",
+    "readOnlyHint": "Máy chủ này chỉ đọc, do đó shell của pod đã bị tắt."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Không thể đọc từ clipboard. Hãy đảm bảo đã cấp quyền truy cập clipboard.",
+    "clipboardWriteFailed": "Không thể sao chép vào clipboard. Hãy đảm bảo trang web được phục vụ qua HTTPS hoặc localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Yêu cầu máy chủ từ xa. Kết nối máy chủ từ xa trong Cài đặt để sử dụng loại kết nối này."
+  },
+  "hosts": {
+    "docsLink": "Xem tài liệu",
+    "hostNotFound": "Không tìm thấy máy chủ",
+    "loadingHost": "Đang tải máy chủ..."
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Управлявайте Kubernetes клъстери от вашите хостове чрез SSH, с достъп до логове, метрики, YAML и shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Панел за Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Използване на Kubernetes",
+      "description": "Отваряне на изгледа за Kubernetes и pod shell-ове на хостове, на които Kubernetes е включен."
+    },
+    "secrets": {
+      "title": "Показване на Kubernetes тайни",
+      "description": "Показване на декодираните стойности на Kubernetes тайните. Всяко показване се записва в одитния лог."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Включване на Kubernetes",
+        "description": "Изпълняване на kubectl на този хост чрез SSH за управление на клъстера, до който има достъп."
+      },
+      "kubectlFlavor": {
+        "label": "Вариант на Kubernetes",
+        "description": "Коя команда изпълнява kubectl на този хост.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Път до kubeconfig",
+        "description": "Оставете празно, за да използвате стойността по подразбиране за SSH потребителя (~/.kube/config или KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Контекст по подразбиране",
+        "description": "Оставете празно, за да използвате текущия контекст от kubeconfig. Можете да превключвате контексти в раздела Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Namespace по подразбиране",
+        "description": "Namespace, с който се отваря разделът Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Изпълняване с sudo",
+        "description": "Изпълнява kubectl с sudo -n, за конфигурации с k3s и MicroK8s, при които само root може да чете конфигурацията на кластера. SSH потребителят трябва да има sudo без парола."
+      },
+      "readOnly": {
+        "label": "Само за четене",
+        "description": "Само за преглед. Блокира мащабиране, рестартиране, изтриване, промени в YAML, промени в Helm и pod shells за всички потребители на този хост."
+      },
+      "showPanel": {
+        "label": "Показване на панела за Kubernetes в терминалите",
+        "description": "Позволява панелът за Kubernetes да се отваря до SSH терминалите на този хост."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Отваряне на панела за Kubernetes с нови терминали",
+        "description": "Показва панела за Kubernetes до всеки SSH терминал, който има активиран Kubernetes. Все още можете да го отваряте и затваряте от бутона на десния ръб."
+      },
+      "companionSide": {
+        "label": "Позиция на панела за Kubernetes",
+        "description": "Къде се намира панелът за Kubernetes до терминала.",
+        "right": "Дясно",
+        "left": "Ляво",
+        "bottom": "Долу"
+      },
+      "companionSize": {
+        "label": "Размер на панела за Kubernetes",
+        "description": "Ширина в пиксели или височина, когато е отдолу. Можете също да влачите ръба му."
+      },
+      "companionEdgeButton": {
+        "label": "Показване на бутона в панела",
+        "description": "Показва малък бутон в дясната част на терминала, който отваря панела за Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes не е активиран за този хост",
+    "notEnabledHint": "Активирайте Kubernetes в настройките на този хост, за да управлявате неговия кластер.",
+    "validating": "Проверка на кластера...",
+    "connecting": "Свързване...",
+    "error": "Грешка",
+    "errorCode": "Код на грешката: {{code}}",
+    "connectionFailed": "Неуспешно свързване",
+    "totpVerificationFailed": "Неуспешна верификация. Моля, опитайте отново.",
+    "verificationCodePrompt": "Въведете код за потвърждение",
+    "browserSignInFailed": "Вписването не бе успешно. Опитайте отново.",
+    "noHostSelected": "Не е избран хост",
+    "refresh": "Опресняване"
+  },
+  "cluster": {
+    "loading": "Зареждане...",
+    "empty": "Няма {{kind}} тук",
+    "noMatches": "Няма съвпадения с филтрите ви",
+    "readOnly": "Само за четене"
+  },
+  "sections": {
+    "workloads": "Работни натоварвания",
+    "network": "Мрежа",
+    "config": "Конфигурация",
+    "cluster": "Кластер",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "Всички",
+    "healthy": "Здрави",
+    "problem": "Проблеми",
+    "idle": "Неактивни"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Всички namespaces",
+    "context": "Контекст",
+    "kind": "Тип ресурс",
+    "search": "Търсене..."
+  },
+  "columns": {
+    "name": "Име",
+    "namespace": "Namespace",
+    "status": "Статус",
+    "age": "Възраст",
+    "ready": "Готови",
+    "restarts": "Рестартирания",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Собственик",
+    "upToDate": "Актуални",
+    "available": "Налични",
+    "images": "Образи",
+    "completions": "Завършени",
+    "duration": "Продължителност",
+    "schedule": "График",
+    "active": "Активни",
+    "lastSchedule": "Последно изпълнение",
+    "type": "Тип",
+    "clusterIP": "IP на кластера",
+    "externalIP": "Външен IP",
+    "ports": "Портове",
+    "class": "Клас",
+    "hosts": "Хостове",
+    "address": "Адрес",
+    "tls": "TLS",
+    "keys": "Ключове",
+    "capacity": "Капацитет",
+    "access": "Достъп",
+    "storageClass": "Клас на съхранението",
+    "volume": "Том",
+    "reclaim": "Възстановяване",
+    "claim": "Заявка",
+    "roles": "Роли",
+    "version": "Версия",
+    "internalIP": "Вътрешен IP",
+    "os": "ОС",
+    "cpu": "CPU",
+    "memory": "Памет",
+    "reason": "Причина",
+    "object": "Обект",
+    "message": "Съобщение",
+    "count": "Брой",
+    "cpuUsage": "Използване на CPU",
+    "memoryUsage": "Използване на паметта",
+    "container": "Контейнер",
+    "chart": "Графика",
+    "appVersion": "Версия на приложението",
+    "revision": "Редакция"
+  },
+  "actions": {
+    "logs": "Логове",
+    "console": "Обвивка",
+    "scale": {
+      "label": "Мащабиране",
+      "title": "Мащабиране на {{name}}",
+      "replicas": "Реплики",
+      "hint": "Изпълнява се сега: {{current}}",
+      "done": "Мащабирано е {{name}}"
+    },
+    "restart": {
+      "label": "Рестартиране",
+      "confirmTitle": "Рестартиране на {{name}}?",
+      "confirmText": "Всеки под на този {{kind}} се заменя един по един.",
+      "done": "Рестартиране на {{name}}"
+    },
+    "undo": {
+      "label": "Връщане назад",
+      "done": "Върнато е назад {{name}}"
+    },
+    "setImage": {
+      "label": "Промяна на образа",
+      "title": "Промяна на образа на {{name}}",
+      "image": "Образ",
+      "hint": "Подите се заменят с новия образ.",
+      "done": "Образът на {{name}} е променен"
+    },
+    "suspend": {
+      "label": "Придържане",
+      "confirmTitle": "Придържане на {{name}}?",
+      "confirmText": "Този {{kind}} спира да стартира нови изпълнения, докато не го възобновите.",
+      "done": "Придържане на {{name}}"
+    },
+    "resume": {
+      "label": "Възобновяване",
+      "done": "Възобновено е {{name}}"
+    },
+    "trigger": {
+      "label": "Изпълни сега",
+      "done": "Стартирана е задача от {{name}}"
+    },
+    "cordon": {
+      "label": "Изолиране",
+      "confirmTitle": "Изолиране на {{name}}?",
+      "confirmText": "Нови подове не се планират на този {{kind}}. Подовите, които вече работят, продължават да работят.",
+      "done": "{{name}} е изолиран"
+    },
+    "uncordon": {
+      "label": "Премахване на изолацията",
+      "done": "Изолацията на {{name}} е премахната"
+    },
+    "drain": {
+      "label": "Изчистване",
+      "title": "Изчистване на {{name}}",
+      "text": "Изолира {{name}} и изгонва подовите му, за да преминат към други възли. Подовите от DaemonSet остават.",
+      "emptyDir": "Изтриване на данни от emptyDir",
+      "emptyDirHint": "Изгонване на подове, които съхраняват данни в emptyDir обеми. Тези данни се губят.",
+      "force": "Принудително",
+      "forceHint": "Премахнете и подове, които не се управляват от контролер. Те няма да бъдат създадени отново.",
+      "done": "{{name}} е изпразнен"
+    },
+    "delete": {
+      "label": "Изтриване",
+      "confirmTitle": "Да се изтрие {{name}}?",
+      "confirmText": "Този {{kind}} ще бъде премахнат от кластера.",
+      "managedPodText": "Този под принадлежи на контролер, който ще стартира нов на негово място.",
+      "namespaceText": "Всичко в това пространство за имена също ще бъде изтрито. Това действие не може да бъде отменено.",
+      "done": "{{name}} е изтрит"
+    }
+  },
+  "detail": {
+    "loading": "Зареждане...",
+    "noDescribe": "Няма описание",
+    "noPods": "Няма подове",
+    "noEvents": "Няма събития",
+    "tabs": {
+      "overview": "Преглед",
+      "pods": "Подове",
+      "logs": "Логове",
+      "console": "Конзола",
+      "metrics": "Статистика",
+      "history": "История",
+      "data": "Данни",
+      "yaml": "YAML",
+      "events": "Събития"
+    }
+  },
+  "history": {
+    "none": "Няма история на разгръщането",
+    "noCause": "Няма причина за промяната",
+    "current": "Текущ",
+    "rollBack": "Връщане назад",
+    "confirmTitle": "Връщане назад към ревизия {{revision}}?",
+    "confirmText": "{{name}} се връща към шаблона на пода от тази ревизия.",
+    "rolledBack": "Върнато назад към ревизия {{revision}}"
+  },
+  "data": {
+    "empty": "Няма данни",
+    "reveal": "Покажи",
+    "hide": "Скрий",
+    "copy": "Копирай",
+    "copied": "Копирано",
+    "secretHint": "Стойностите остават скрити, докато не ги разкриете. Разкриването се записва в журнала за одит.",
+    "secretNoPermission": "Можете да виждате ключовете, но не и стойностите. Попитайте администратор за разрешение за разкриване на Kubernetes тайни."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Памет",
+    "collecting": "Събиране на проби...",
+    "unavailable": "Метриките не са налични",
+    "unavailableHint": "Инсталирайте metrics-server в кластера, за да виждате използването на CPU и памет.",
+    "cpuUsage": "Използване на CPU",
+    "memoryUsage": "Използване на памет",
+    "podInformation": "Информация за пода",
+    "containers": "Контейнери",
+    "cpuHistory": "История на CPU",
+    "memoryHistory": "История на паметта",
+    "loading": "Зареждане на статистиката...",
+    "error": "Грешка при зареждане на статистиката",
+    "startPod": "Стартирайте пода, за да видите неговата статистика.",
+    "noLimit": "без ограничение",
+    "of": {
+      "limit": "лимит",
+      "node": "възел"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Проверка",
+    "diff": "Разлики",
+    "save": "Запазване",
+    "reload": "Презареждане",
+    "unsaved": "Незапазени промени",
+    "valid": "Изглежда добре. Ще се променят:",
+    "noChanges": "Няма промени",
+    "saved": "Запазени {{count}} ресурса"
+  },
+  "apply": {
+    "title": "Приложи YAML",
+    "apply": "Приложи",
+    "hint": "Поставете един или повече манифести. Проверката извършва тестово изпълнение на сървъра, а Разликата показва промените. Нищо не се променя, докато не приложите.",
+    "namespace": "В {{namespace}}",
+    "defaultNamespace": "В пространството по подразбиране"
+  },
+  "helm": {
+    "none": "Няма Helm издания",
+    "revision": "Редакция {{revision}}",
+    "tabs": {
+      "history": "История",
+      "values": "Стойности",
+      "manifest": "Manifest"
+    },
+    "allValues": "Включи стойности по подразбиране на чарта",
+    "allValuesHint": "Покажи всяка стойност, а не само тези, зададени при инсталация.",
+    "rollbackTitle": "Да се върне {{name}} към ревизия {{revision}}?",
+    "rollbackText": "Helm създава нова ревизия с настройките на старата.",
+    "rolledBack": "{{name}} е върнат към ревизия {{revision}}",
+    "uninstall": "Деинсталирай",
+    "uninstallTitle": "Да се деинсталира {{name}}?",
+    "uninstallText": "Helm изтрива всеки ресурс на този релийз.",
+    "uninstalled": "{{name}} е деинсталиран"
+  },
+  "logs": {
+    "container": "Контейнер",
+    "allContainers": "Всички контейнери",
+    "previous": "Предишно изпълнение",
+    "filter": "Филтриране на логовете...",
+    "lines": "редове",
+    "last50": "Последни 50",
+    "last100": "Последни 100",
+    "last500": "Последни 500",
+    "last1000": "Последни 1000",
+    "all": "Всички",
+    "timestamps": "Времеви отметки",
+    "autoRefresh": "Следване",
+    "copy": "Копиране на логове",
+    "download": "Изтегляне",
+    "clear": "Изчистване",
+    "none": "Няма логове",
+    "noneMatching": "Няма логове, съвпадащи с \"{{query}}\"",
+    "copied": "Копирани са {{count}} реда",
+    "failedToCopy": "Грешка при копирането на логовете",
+    "downloaded": "Логовете са изтеглени",
+    "failedToDownload": "Неуспешно изтегляне на логовете: {{error}}",
+    "failedToFetch": "Неуспешно зареждане на логовете: {{error}}"
+  },
+  "console": {
+    "connect": "Свързване",
+    "disconnect": "Прекъсване на връзката",
+    "connecting": "Свързване...",
+    "connectingTo": "Свързване с {{name}}...",
+    "connectedTo": "Свързан с {{name}}",
+    "notConnected": "Не е свързан",
+    "clickToConnect": "Изберете shell и натиснете Свързване",
+    "disconnected": "Връзката е прекъсната",
+    "consoleError": "Грешка в shell-а",
+    "errorMessage": "Грешка: {{message}}",
+    "failedToConnect": "Неуспешно свързване с пода",
+    "failedToConnectWithError": "Неуспешно свързване: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Копиране на изхода",
+    "consoleCopied": "Изходът е копиран",
+    "clear": "Изчистване",
+    "podMustBeRunning": "Подът трябва да работи",
+    "podNotRunning": "Подът не работи",
+    "podNotRunningHint": "Стартирайте пода, за да отворите shell в него.",
+    "readOnly": "Shell-ът е изключен",
+    "readOnlyHint": "Този хост е само за четене, затова shell-овете на подовете са изключени."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Неуспешно четене от клипборда. Уверете се, че са предоставени разрешения за клипборда.",
+    "clipboardWriteFailed": "Неуспешно копиране в клипборда. Уверете се, че страницата се обслужва чрез HTTPS или localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Изисква се отдалечен сървър. Свържете отдалечен сървър в Настройките, за да използвате този тип връзка."
+  },
+  "hosts": {
+    "docsLink": "Преглед на документацията",
+    "hostNotFound": "Хостът не е намерен",
+    "loadingHost": "Зареждане на хоста..."
+  }
+}

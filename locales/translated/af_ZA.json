@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Bestuur Kubernetes-kluisters vanaf jou gasheë oor SSH, met logboeke, metrieke, YAML en 'n skul."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes-paneel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Gebruik Kubernetes",
+      "description": "Maak die Kubernetes-aansig en pod-skulle oop op gasheë waar Kubernetes ingeskakel is."
+    },
+    "secrets": {
+      "title": "Onthul Kubernetes-geheimenisse",
+      "description": "Wys die ontsleutelde waardes van Kubernetes-geheimenisse. Elke onthulling word in die ouditlogboek geskryf."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Skakel Kubernetes in",
+        "description": "Voer kubectl op hierdie gasheer oor SSH uit om die kluister wat dit kan bereik, te bestuur."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes-variant",
+        "description": "Watter opdrag word gebruik om kubectl op hierdie gasheer uit te voer.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig-pad",
+        "description": "Laat leeg om die verstek vir die SSH-gebruiker te gebruik (~/.kube/config of KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Verstekkonteks",
+        "description": "Laat leeg om die huidige konteks in die kubeconfig te gebruik. Jy kan konteksse in die Kubernetes-oortjie wissel.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Verstek naamruimte",
+        "description": "Die naamruimte waarmee die Kubernetes-oortjie oopmaak.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Voer uit met sudo",
+        "description": "Voer kubectl uit met sudo -n, vir k3s- en MicroK8s-opstellings waar slegs root die klusterkonfigurasie kan lees. Die SSH-gebruiker moet wagwoordlose sudo hê."
+      },
+      "readOnly": {
+        "label": "Slegs lees",
+        "description": "Slegs kyk. Blokkeer skaalvergroting, herbeginne, verwyderings, YAML-veranderings, Helm-veranderings en pod-skille vir almal op hierdie gasheer."
+      },
+      "showPanel": {
+        "label": "Wys Kubernetes-paneel in terminale",
+        "description": "Laat die Kubernetes-paneel oopmaak langs SSH-terminals op hierdie gasheer."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Maak die Kubernetes-paneel oop met nuwe terminals",
+        "description": "Wys die Kubernetes-paneel langs elke SSH-terminal wat Kubernetes het. Jy kan dit steeds oopmaak en sluit vanaf die knoppie aan die regterkant."
+      },
+      "companionSide": {
+        "label": "Kubernetes-paneel kant",
+        "description": "Waar die Kubernetes-paneel langs 'n terminal sit.",
+        "right": "Reg",
+        "left": "Links",
+        "bottom": "Onder"
+      },
+      "companionSize": {
+        "label": "Kubernetes-paneel grootte",
+        "description": "Wydte in pixels, of hoogte wanneer dit onder is. Jy kan ook die rand sleep."
+      },
+      "companionEdgeButton": {
+        "label": "Wys die paneelknoppie",
+        "description": "Wys 'n klein knoppie aan die regterkant van 'n terminaal wat die Kubernetes-paneel oopmaak."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes is nie vir hierdie gasheer ingeskakel nie",
+    "notEnabledHint": "Skakel Kubernetes in hierdie gasheer se instellings in om die kluster te bestuur.",
+    "validating": "Kluster word nagegaan...",
+    "connecting": "Maak verbinding...",
+    "error": "Fout",
+    "errorCode": "Foutkode: {{code}}",
+    "connectionFailed": "Kon nie verbinding maak nie",
+    "totpVerificationFailed": "Verifikasie het misluk. Probeer asseblief weer.",
+    "verificationCodePrompt": "Voer verifikasiekode in",
+    "browserSignInFailed": "Aanmelding het misluk. Probeer asseblief weer.",
+    "noHostSelected": "Geen gasheer gekies nie",
+    "refresh": "Verfris"
+  },
+  "cluster": {
+    "loading": "Laai tans...",
+    "empty": "Geen {{kind}} hier nie",
+    "noMatches": "Niets pas by jou filters nie",
+    "readOnly": "Slegs lees"
+  },
+  "sections": {
+    "workloads": "Werklaste",
+    "network": "Netwerk",
+    "config": "Konfig",
+    "cluster": "Kluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Implementering",
+      "many": "Implementerings"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Taak",
+      "many": "Take"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Diens",
+      "many": "Dienste"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Geheim",
+      "many": "Geheime"
+    },
+    "pvcs": {
+      "one": "Volume-eis",
+      "many": "Volume-eise"
+    },
+    "pvs": {
+      "one": "Volhoubare volume",
+      "many": "Volhoubare volumes"
+    },
+    "nodes": {
+      "one": "Knooppunt",
+      "many": "Knooppunte"
+    },
+    "namespaces": {
+      "one": "Naamruimte",
+      "many": "Naamruimtes"
+    },
+    "events": {
+      "one": "Gebeurtenis",
+      "many": "Gebeurtenisse"
+    }
+  },
+  "filters": {
+    "all": "Alles",
+    "healthy": "Gesond",
+    "problem": "Probleme",
+    "idle": "Lug"
+  },
+  "toolbar": {
+    "namespace": "Naamruimte",
+    "allNamespaces": "Alle naamruimtes",
+    "context": "Konteks",
+    "kind": "Hulpbrontipe",
+    "search": "Soek..."
+  },
+  "columns": {
+    "name": "Naam",
+    "namespace": "Naamruimte",
+    "status": "Status",
+    "age": "Leeftyd",
+    "ready": "Gereed",
+    "restarts": "Herstarts",
+    "node": "Knooppunt",
+    "ip": "IP",
+    "owner": "Eienaar",
+    "upToDate": "Op datum",
+    "available": "Beskikbaar",
+    "images": "Beelde",
+    "completions": "Voltooiings",
+    "duration": "Tydsduur",
+    "schedule": "Rooster",
+    "active": "Aktief",
+    "lastSchedule": "Laaste loop",
+    "type": "Tipe",
+    "clusterIP": "Kluster-IP",
+    "externalIP": "Eksterne IP",
+    "ports": "Porte",
+    "class": "Klas",
+    "hosts": "Gashere",
+    "address": "Adres",
+    "tls": "TLS",
+    "keys": "Sleutels",
+    "capacity": "Kapasiteit",
+    "access": "Toegang",
+    "storageClass": "Stoorklas",
+    "volume": "Volume",
+    "reclaim": "Herstel",
+    "claim": "Eis",
+    "roles": "Rolle",
+    "version": "Weergawe",
+    "internalIP": "Interne IP",
+    "os": "BS",
+    "cpu": "CPU",
+    "memory": "Geheue",
+    "reason": "Rede",
+    "object": "Objek",
+    "message": "Boodskap",
+    "count": "Telling",
+    "cpuUsage": "CPU-gebruik",
+    "memoryUsage": "Geheuegebruik",
+    "container": "Behouer",
+    "chart": "Grafiek",
+    "appVersion": "App-weergawe",
+    "revision": "Herziening"
+  },
+  "actions": {
+    "logs": "Logboeke",
+    "console": "Skil",
+    "scale": {
+      "label": "Skaal",
+      "title": "Skaal {{name}}",
+      "replicas": "Replicas",
+      "hint": "Loop nou: {{current}}",
+      "done": "Geskaal {{name}}"
+    },
+    "restart": {
+      "label": "Herbegin",
+      "confirmTitle": "Herbegin {{name}}?",
+      "confirmText": "Elke pod van hierdie {{kind}} word een vir een vervang.",
+      "done": "Herbegin tans {{name}}"
+    },
+    "undo": {
+      "label": "Rol terug",
+      "done": "Teruggerol na {{name}}"
+    },
+    "setImage": {
+      "label": "Verander beeld",
+      "title": "Verander die beeld van {{name}}",
+      "image": "Beeld",
+      "hint": "Die pods word vervang met die nuwe beeld.",
+      "done": "Beeld van {{name}} verander"
+    },
+    "suspend": {
+      "label": "Ophang",
+      "confirmTitle": "Ophang {{name}}?",
+      "confirmText": "Hierdie {{kind}} stop die begin van nuwe loops tot jy dit hervat.",
+      "done": "Opgehang {{name}}"
+    },
+    "resume": {
+      "label": "Hervat",
+      "done": "Hervat {{name}}"
+    },
+    "trigger": {
+      "label": "Voer nou uit",
+      "done": "Begin 'n taak vanaf {{name}}"
+    },
+    "cordon": {
+      "label": "Kordon",
+      "confirmTitle": "Kordon {{name}}?",
+      "confirmText": "Geen nuwe pods word op hierdie {{kind}} geskeduleer nie. Pods wat reeds daar is, gaan voort met uitvoering.",
+      "done": "{{name}} is afgesluit"
+    },
+    "uncordon": {
+      "label": "Maak oop",
+      "done": "{{name}} is oopgemaak"
+    },
+    "drain": {
+      "label": "Ontlaai",
+      "title": "Ontlaai {{name}}",
+      "text": "Sluit {{name}} af en verdryf sy pods sodat hulle na ander knope beweeg. DaemonSet-pods bly.",
+      "emptyDir": "Vee emptyDir-data uit",
+      "emptyDirHint": "Verdryf pods wat data in emptyDir-volumeë behou. Daardie data gaan verlore.",
+      "force": "Dwing",
+      "forceHint": "Verwyder ook pods wat nie deur 'n beheerder bestuur word nie. Hulle word nie herstel nie.",
+      "done": "{{name}} gedreineer"
+    },
+    "delete": {
+      "label": "Vee uit",
+      "confirmTitle": "Vee {{name}} uit?",
+      "confirmText": "Hierdie {{kind}} word uit die kluster verwyder.",
+      "managedPodText": "Hierdie pod behoort aan 'n beheerder, wat 'n nuwe een in sy plek begin.",
+      "namespaceText": "Alles binne hierdie naamruimte word ook uitgevee. Dit kan nie ongedaan gemaak word nie.",
+      "done": "{{name}} uitgevee"
+    }
+  },
+  "detail": {
+    "loading": "Laai tans...",
+    "noDescribe": "Geen beskrywing nie",
+    "noPods": "Geen pods nie",
+    "noEvents": "Geen gebeurtenisse nie",
+    "tabs": {
+      "overview": "Oorsig",
+      "pods": "Pods",
+      "logs": "Logboeke",
+      "console": "Skil",
+      "metrics": "Statistieke",
+      "history": "Geskiedenis",
+      "data": "Data",
+      "yaml": "YAML",
+      "events": "Gebeurtenisse"
+    }
+  },
+  "history": {
+    "none": "Geen uitrolgeskiedenis nie",
+    "noCause": "Geen veranderingsoorsaak nie",
+    "current": "Huidig",
+    "rollBack": "Terugrol",
+    "confirmTitle": "Terugrol na herziening {{revision}}?",
+    "confirmText": "{{name}} gaan terug na die pod-sjabloon van daardie herziening.",
+    "rolledBack": "Teruggerol na herziening {{revision}}"
+  },
+  "data": {
+    "empty": "Geen data nie",
+    "reveal": "Openbaar",
+    "hide": "Versteek",
+    "copy": "Kopieer",
+    "copied": "Gekopieer",
+    "secretHint": "Waardes bly verborge totdat jy hulle onthul. Ontdekking word in die ouditlogboek opgeteken.",
+    "secretNoPermission": "Jy kan die sleutels sien, maar nie die waardes nie. Vra 'n bestuurder om die \"Ontdek Kubernetes-geheimenes\"-toestemming."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Geheue",
+    "collecting": "Steekproefdata word ingesamel...",
+    "unavailable": "Metrieke is nie beskikbaar nie",
+    "unavailableHint": "Installeer metrics-server in die kluster om CPU- en geheuegebruik te sien.",
+    "cpuUsage": "CPU-gebruik",
+    "memoryUsage": "Geheueorgebruik",
+    "podInformation": "Pod-inligting",
+    "containers": "Behuisinge",
+    "cpuHistory": "CPU-geskiedenis",
+    "memoryHistory": "Geheuegeskiedenis",
+    "loading": "Laai statistieke...",
+    "error": "Fout met laai van statistieke",
+    "startPod": "Begin die pod om sy statistieke te sien.",
+    "noLimit": "geen limiet nie",
+    "of": {
+      "limit": "limiet",
+      "node": "knoop"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Kontroleer",
+    "diff": "Verskil",
+    "save": "Stoor",
+    "reload": "Herlaai",
+    "unsaved": "Ongestoorde veranderinge",
+    "valid": "Sien goed uit. Hierdie sou verander:",
+    "noChanges": "Geen veranderinge nie",
+    "saved": "Het {{count}} bronne gestoor"
+  },
+  "apply": {
+    "title": "2",
+    "apply": "3",
+    "hint": "4",
+    "namespace": "In {{namespace}}",
+    "defaultNamespace": "6"
+  },
+  "helm": {
+    "none": "7",
+    "revision": "Herziening {{revision}}",
+    "tabs": {
+      "history": "9",
+      "values": "10",
+      "manifest": "Manifest"
+    },
+    "allValues": "Sluit kaartstandaarde in",
+    "allValuesHint": "Wys elke waarde, nie net die een wat tydens installering gestel is nie.",
+    "rollbackTitle": "Herstel {{name}} na herziening {{revision}}?",
+    "rollbackText": "Helm skep 'n nuwe herziening met die ou een se instellings.",
+    "rolledBack": "Het {{name}} na herziening {{revision}} herstel",
+    "uninstall": "Deïnstalleer",
+    "uninstallTitle": "Deïnstalleer {{name}}?",
+    "uninstallText": "Helm verwyder elke hulpbron van hierdie uitgawe.",
+    "uninstalled": "Het {{name}} deïnstalleer"
+  },
+  "logs": {
+    "container": "Houer",
+    "allContainers": "Alle houers",
+    "previous": "Vorige uitvoering",
+    "filter": "Filter logboeke...",
+    "lines": "reëls",
+    "last50": "Laaste 50",
+    "last100": "Laaste 100",
+    "last500": "Laaste 500",
+    "last1000": "Laaste 1000",
+    "all": "Alles",
+    "timestamps": "Tydstempels",
+    "autoRefresh": "Volg",
+    "copy": "Kopieer logboeke",
+    "download": "Laai af",
+    "clear": "Vee uit",
+    "none": "Geen logboeke nie",
+    "noneMatching": "Geen logboeke stem ooreen met \"{{query}}\" nie",
+    "copied": "Reëls gekopieer: {{count}}",
+    "failedToCopy": "Kon nie logboeke kopieer nie",
+    "downloaded": "Logboeke afgelaai",
+    "failedToDownload": "Kon nie logboeke aflaai nie: {{error}}",
+    "failedToFetch": "Kon nie logboeke laai nie: {{error}}"
+  },
+  "console": {
+    "connect": "Koppel",
+    "disconnect": "Ontkoppel",
+    "connecting": "Koppel tans...",
+    "connectingTo": "Koppel tans aan {{name}}...",
+    "connectedTo": "Gekoppel aan {{name}}",
+    "notConnected": "Nie gekoppel nie",
+    "clickToConnect": "Kies 'n skul en klik op Koppel",
+    "disconnected": "Ontkoppel",
+    "consoleError": "Skilfout",
+    "errorMessage": "Fout: {{message}}",
+    "failedToConnect": "Kon nie met die pod verbind nie",
+    "failedToConnectWithError": "Kon nie verbind nie: {{error}}",
+    "selectShell": "Skil",
+    "copyConsole": "Kopieer uitset",
+    "consoleCopied": "Uitset gekopieer",
+    "clear": "Vee uit",
+    "podMustBeRunning": "Die pod moet aan die loop wees",
+    "podNotRunning": "Die pod is nie aan die loop nie",
+    "podNotRunningHint": "Begin die pod om 'n skil daarin oop te maak.",
+    "readOnly": "Skil is af",
+    "readOnlyHint": "Hierdie gasheer is lees-only, dus is pod-skille afgeskakel."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Kon nie van die knipbord lees nie. Maak seker dat knipbordtoestemmings verleen is.",
+    "clipboardWriteFailed": "Kon nie na die knipbord kopieer nie. Maak seker die bladsy word oor HTTPS of localhost bedien."
+  },
+  "errors": {
+    "remoteServerRequired": "Verre server vereis. Verbind 'n verre server in Instellings om hierdie verbindings tipe te gebruik."
+  },
+  "hosts": {
+    "docsLink": "Bekyk dokumentasie",
+    "hostNotFound": "Gasheer nie gevind nie",
+    "loadingHost": "Laai gasheer..."
+  }
+}

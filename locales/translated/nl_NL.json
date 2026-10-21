@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Beheer Kubernetes-clusters vanaf je hosts via SSH, met logs, metrieken, YAML en een shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes-paneel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes gebruiken",
+      "description": "Open de Kubernetes-weergave en pod-shells op hosts waar Kubernetes is ingeschakeld."
+    },
+    "secrets": {
+      "title": "Kubernetes-secrets tonen",
+      "description": "Toon de gedecodeerde waarden van Kubernetes-secrets. Elke weergave wordt vastgelegd in het auditlogboek."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes inschakelen",
+        "description": "Voer kubectl uit op deze host via SSH om het cluster te beheren dat deze host kan bereiken."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes-variant",
+        "description": "Welk commando kubectl op deze host uitvoert.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig-pad",
+        "description": "Laat leeg om de standaard voor de SSH-gebruiker te gebruiken (~/.kube/config of KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Standaardcontext",
+        "description": "Laat leeg om de huidige context in het kubeconfig-bestand te gebruiken. Je kunt contexten wisselen in het tabblad Kubernetes.",
+        "placeholder": "mijn-cluster"
+      },
+      "namespace": {
+        "label": "Standaardnamespace",
+        "description": "De namespace die wordt geopend in het tabblad Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Uitvoeren met sudo",
+        "description": "Voer kubectl uit met sudo -n, voor k3s- en MicroK8s-installaties waarbij alleen root de clusterconfiguratie kan lezen. De SSH-gebruiker moet sudo zonder wachtwoord kunnen gebruiken."
+      },
+      "readOnly": {
+        "label": "Alleen-lezen",
+        "description": "Alleen bekijken. Blokkeert schalen, herstarts, verwijderingen, YAML-wijzigingen, Helm-wijzigingen en pod-shells voor iedereen op deze host."
+      },
+      "showPanel": {
+        "label": "Kubernetes-paneel tonen in terminals",
+        "description": "Sta toe dat het Kubernetes-paneel naast SSH-terminalen op deze host wordt geopend."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Open het Kubernetes-paneel met nieuwe terminalen",
+        "description": "Toon het Kubernetes-paneel naast elke SSH-terminal die Kubernetes heeft ingeschakeld. Je kunt het paneel nog steeds openen en sluiten via de knop aan de rechterkant."
+      },
+      "companionSide": {
+        "label": "Kant van het Kubernetes-paneel",
+        "description": "Waar het Kubernetes-paneel naast een terminal wordt weergegeven.",
+        "right": "Rechts",
+        "left": "Links",
+        "bottom": "Onder"
+      },
+      "companionSize": {
+        "label": "Grootte van het Kubernetes-paneel",
+        "description": "Breedte in pixels, of hoogte wanneer het paneel onderaan staat. Je kunt de rand ook verslepen."
+      },
+      "companionEdgeButton": {
+        "label": "Toon de paneelknop",
+        "description": "Toon een kleine knop aan de rechterkant van een terminal die het Kubernetes-paneel opent."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes is niet ingeschakeld voor deze host",
+    "notEnabledHint": "Schakel Kubernetes in de instellingen van deze host in om het cluster te beheren.",
+    "validating": "Cluster controleren...",
+    "connecting": "Verbinden...",
+    "error": "Fout",
+    "errorCode": "Foutcode: {{code}}",
+    "connectionFailed": "Verbinding mislukt",
+    "totpVerificationFailed": "Verificatie mislukt. Probeer het opnieuw.",
+    "verificationCodePrompt": "Voer verificatiecode in",
+    "browserSignInFailed": "Aanmelden mislukt. Probeer het opnieuw.",
+    "noHostSelected": "Geen host geselecteerd",
+    "refresh": "Vernieuwen"
+  },
+  "cluster": {
+    "loading": "Laden...",
+    "empty": "Geen {{kind}} hier",
+    "noMatches": "Niets komt overeen met je filters",
+    "readOnly": "Alleen-lezen"
+  },
+  "sections": {
+    "workloads": "Workloads",
+    "network": "Netwerk",
+    "config": "Configuratie",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "Alles",
+    "healthy": "Gezond",
+    "problem": "Problemen",
+    "idle": "Inactief"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Alle namespaces",
+    "context": "Context",
+    "kind": "Resource type",
+    "search": "Zoeken..."
+  },
+  "columns": {
+    "name": "Naam",
+    "namespace": "Namespace",
+    "status": "Status",
+    "age": "Leeftijd",
+    "ready": "Klaar",
+    "restarts": "Herstarts",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Eigenaar",
+    "upToDate": "Uitgebreid",
+    "available": "Beschikbaar",
+    "images": "Images",
+    "completions": "Voltooiingen",
+    "duration": "Duur",
+    "schedule": "Schema",
+    "active": "Actief",
+    "lastSchedule": "Laatste uitvoering",
+    "type": "Type",
+    "clusterIP": "Cluster-IP",
+    "externalIP": "Externe IP",
+    "ports": "Poorten",
+    "class": "Klasse",
+    "hosts": "Hosts",
+    "address": "Adres",
+    "tls": "TLS",
+    "keys": "Sleutels",
+    "capacity": "Capaciteit",
+    "access": "Toegang",
+    "storageClass": "Opslagklasse",
+    "volume": "Volume",
+    "reclaim": "Terugvorderen",
+    "claim": "Claim",
+    "roles": "Rollen",
+    "version": "Versie",
+    "internalIP": "Intern IP",
+    "os": "Besturingssysteem",
+    "cpu": "CPU",
+    "memory": "Geheugen",
+    "reason": "Reden",
+    "object": "Object",
+    "message": "Bericht",
+    "count": "Aantal",
+    "cpuUsage": "CPU-gebruik",
+    "memoryUsage": "Geheugengebruik",
+    "container": "Container",
+    "chart": "Grafiek",
+    "appVersion": "Appversie",
+    "revision": "Revisie"
+  },
+  "actions": {
+    "logs": "Logs",
+    "console": "Shell",
+    "scale": {
+      "label": "Schaal",
+      "title": "Schaal {{name}}",
+      "replicas": "Replica's",
+      "hint": "Nu actief: {{current}}",
+      "done": "{{name}} geschaald"
+    },
+    "restart": {
+      "label": "Herstarten",
+      "confirmTitle": "Herstart {{name}}?",
+      "confirmText": "Elke pod van deze {{kind}} wordt één voor één vervangen.",
+      "done": "{{name}} wordt herstart"
+    },
+    "undo": {
+      "label": "Terugdraaien",
+      "done": "{{name}} is teruggedraaid"
+    },
+    "setImage": {
+      "label": "Afbeelding wijzigen",
+      "title": "Wijzig de afbeelding van {{name}}",
+      "image": "Afbeelding",
+      "hint": "De pods worden vervangen door de nieuwe afbeelding.",
+      "done": "De afbeelding van {{name}} is gewijzigd"
+    },
+    "suspend": {
+      "label": "Suspend",
+      "confirmTitle": "{{name}} suspenderen?",
+      "confirmText": "Deze {{kind}} stopt met het starten van nieuwe uitvoeringen tot je hem hervat.",
+      "done": "{{name}} gesuspend"
+    },
+    "resume": {
+      "label": "Hervatten",
+      "done": "{{name}} hervat"
+    },
+    "trigger": {
+      "label": "Nu uitvoeren",
+      "done": "Een taak gestart vanuit {{name}}"
+    },
+    "cordon": {
+      "label": "Cordonneren",
+      "confirmTitle": "{{name}} cordonneren?",
+      "confirmText": "Er worden geen nieuwe pods meer gepland op deze {{kind}}. Pods die er al op draaien, blijven actief.",
+      "done": "{{name}} is afgezet"
+    },
+    "uncordon": {
+      "label": "Opnieuw beschikbaar maken",
+      "done": "{{name}} is opnieuw beschikbaar gemaakt"
+    },
+    "drain": {
+      "label": "Leegmaken",
+      "title": "{{name}} leegmaken",
+      "text": "Zet {{name}} af en verwijder de pods, zodat ze naar andere knooppunten verhuizen. DaemonSet-pods blijven behouden.",
+      "emptyDir": "emptyDir-gegevens verwijderen",
+      "emptyDirHint": "Verwijder pods die gegevens opslaan in emptyDir-volumes. Deze gegevens gaan verloren.",
+      "force": "Forceren",
+      "forceHint": "Verwijder ook pods die niet door een controller worden beheerd. Ze worden niet opnieuw aangemaakt.",
+      "done": "{{name}} gedraineerd"
+    },
+    "delete": {
+      "label": "Verwijderen",
+      "confirmTitle": "{{name}} verwijderen?",
+      "confirmText": "Deze {{kind}} wordt uit de cluster verwijderd.",
+      "managedPodText": "Deze pod behoort tot een controller, die er een nieuwe in de plaats start.",
+      "namespaceText": "Alles in deze namespace wordt ook verwijderd. Dit kan niet ongedaan worden gemaakt.",
+      "done": "{{name}} verwijderd"
+    }
+  },
+  "detail": {
+    "loading": "Laden...",
+    "noDescribe": "Geen beschrijving",
+    "noPods": "Geen pods",
+    "noEvents": "Geen gebeurtenissen",
+    "tabs": {
+      "overview": "Overzicht",
+      "pods": "Pods",
+      "logs": "Logs",
+      "console": "Shell",
+      "metrics": "Statistieken",
+      "history": "Geschiedenis",
+      "data": "Gegevens",
+      "yaml": "YAML",
+      "events": "Gebeurtenissen"
+    }
+  },
+  "history": {
+    "none": "Geen rolloutgeschiedenis",
+    "noCause": "Geen oorzaak van wijziging",
+    "current": "Huidig",
+    "rollBack": "Terugdraaien",
+    "confirmTitle": "Terugdraaien naar revisie {{revision}}?",
+    "confirmText": "{{name}} gaat terug naar de pod-sjabloon van die revisie.",
+    "rolledBack": "Teruggedraaid naar revisie {{revision}}"
+  },
+  "data": {
+    "empty": "Geen gegevens",
+    "reveal": "Tonen",
+    "hide": "Verbergen",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "secretHint": "Waarden blijven verborgen totdat je ze onthult. Het onthullen wordt geregistreerd in het auditlogboek.",
+    "secretNoPermission": "Je kunt de sleutels zien, maar niet de waarden. Vraag een beheerder om de machtiging 'Kubernetes-geheimen onthullen'."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Geheugen",
+    "collecting": "Monsters verzamelen...",
+    "unavailable": "Metrieken zijn niet beschikbaar",
+    "unavailableHint": "Installeer metrics-server in de cluster om CPU- en geheugengebruik te bekijken.",
+    "cpuUsage": "CPU-gebruik",
+    "memoryUsage": "Geheugengebruik",
+    "podInformation": "Pod-informatie",
+    "containers": "Containers",
+    "cpuHistory": "CPU-geschiedenis",
+    "memoryHistory": "Geheugengeschiedenis",
+    "loading": "Statistieken laden...",
+    "error": "Fout bij het laden van statistieken",
+    "startPod": "Start de pod om de statistieken te bekijken.",
+    "noLimit": "geen limiet",
+    "of": {
+      "limit": "limiet",
+      "node": "knooppunt"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Controleren",
+    "diff": "Verschillen",
+    "save": "Opslaan",
+    "reload": "Herladen",
+    "unsaved": "Niet-opgeslagen wijzigingen",
+    "valid": "Ziet er goed uit. Dit zou veranderen:",
+    "noChanges": "Geen wijzigingen",
+    "saved": "Opgeslagen {{count}} resources"
+  },
+  "apply": {
+    "title": "text",
+    "apply": "text",
+    "hint": "text",
+    "namespace": "In {{namespace}}",
+    "defaultNamespace": "text"
+  },
+  "helm": {
+    "none": "text",
+    "revision": "Revisie {{revision}}",
+    "tabs": {
+      "history": "text",
+      "values": "text",
+      "manifest": "Manifest"
+    },
+    "allValues": "Chartstandaarden opnemen",
+    "allValuesHint": "Toon alle waarden, niet alleen degenen die bij installatie zijn ingesteld.",
+    "rollbackTitle": "Terugdraaien van {{name}} naar revisie {{revision}}?",
+    "rollbackText": "Helm maakt een nieuwe revisie aan met de instellingen van de vorige.",
+    "rolledBack": "{{name}} teruggezet naar revisie {{revision}}",
+    "uninstall": "Verwijderen",
+    "uninstallTitle": "{{name}} verwijderen?",
+    "uninstallText": "Helm verwijdert alle resources van deze release.",
+    "uninstalled": "{{name}} verwijderd"
+  },
+  "logs": {
+    "container": "Container",
+    "allContainers": "Alle containers",
+    "previous": "Vorige uitvoering",
+    "filter": "Logboeken filteren...",
+    "lines": "regels",
+    "last50": "Laatste 50",
+    "last100": "Laatste 100",
+    "last500": "Laatste 500",
+    "last1000": "Laatste 1000",
+    "all": "Alles",
+    "timestamps": "Tijdstempels",
+    "autoRefresh": "Volgen",
+    "copy": "Logboeken kopiëren",
+    "download": "Downloaden",
+    "clear": "Wissen",
+    "none": "Geen logboeken",
+    "noneMatching": "Geen logboeken komen overeen met \"{{query}}\"",
+    "copied": "Regels gekopieerd: {{count}}",
+    "failedToCopy": "Logboeken kopiëren mislukt",
+    "downloaded": "Logboeken gedownload",
+    "failedToDownload": "Kan logboeken niet downloaden: {{error}}",
+    "failedToFetch": "Kan logboeken niet laden: {{error}}"
+  },
+  "console": {
+    "connect": "Verbinden",
+    "disconnect": "Verbinding verbreken",
+    "connecting": "Verbinding maken...",
+    "connectingTo": "Verbinding maken met {{name}}...",
+    "connectedTo": "Verbonden met {{name}}",
+    "notConnected": "Niet verbonden",
+    "clickToConnect": "Kies een shell en klik op Verbinden",
+    "disconnected": "Verbinding verbroken",
+    "consoleError": "Shell-fout",
+    "errorMessage": "Fout: {{message}}",
+    "failedToConnect": "Verbinding met de pod mislukt",
+    "failedToConnectWithError": "Verbinding mislukt: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Uitvoer kopiëren",
+    "consoleCopied": "Uitvoer gekopieerd",
+    "clear": "Wissen",
+    "podMustBeRunning": "De pod moet actief zijn",
+    "podNotRunning": "De pod is niet actief",
+    "podNotRunningHint": "Start de pod om een shell-sessie te openen.",
+    "readOnly": "Shell is uitgeschakeld",
+    "readOnlyHint": "Deze host is alleen-lezen, dus pod-shells zijn uitgeschakeld."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Lezen van het klembord mislukt. Zorg dat de machtigingen voor het klembord zijn verleend.",
+    "clipboardWriteFailed": "Kopiëren naar het klembord mislukt. Zorg dat de pagina via HTTPS of localhost wordt geserveerd."
+  },
+  "errors": {
+    "remoteServerRequired": "Een externe server is vereist. Koppel een externe server in de Instellingen om dit verbindingstype te gebruiken."
+  },
+  "hosts": {
+    "docsLink": "Documentatie bekijken",
+    "hostNotFound": "Host niet gevonden",
+    "loadingHost": "Host laden..."
+  }
+}

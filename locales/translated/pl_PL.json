@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Zarządzaj klastrami Kubernetes z hostów przez SSH, z dostępem do logów, metryk, YAML i powłoki."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Panel Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Używanie Kubernetes",
+      "description": "Otwieraj widok Kubernetes i powłoki podów na hostach, na których włączono Kubernetes."
+    },
+    "secrets": {
+      "title": "Wyświetlanie haseł Kubernetes",
+      "description": "Wyświetlaj zdekodowane wartości haseł Kubernetes. Każde wyświetlenie jest zapisywane w dzienniku audytu."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Włącz Kubernetes",
+        "description": "Uruchamiaj kubectl na tym hoście przez SSH, aby zarządzać klastrami, do których ma dostęp."
+      },
+      "kubectlFlavor": {
+        "label": "Wersja Kubernetes",
+        "description": "Które polecenie uruchamia kubectl na tym hoście.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Ścieżka do kubeconfig",
+        "description": "Pozostaw puste, aby użyć domyślnej dla użytkownika SSH (~/.kube/config lub KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Domyślny kontekst",
+        "description": "Pozostaw puste, aby użyć bieżącego kontekstu z pliku kubeconfig. Możesz przełączać konteksty w zakładce Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Domyślna przestrzeń nazw",
+        "description": "Przestrzeń nazw, która jest otwierana domyślnie w zakładce Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Uruchom z sudo",
+        "description": "Uruchamia kubectl z opcją sudo -n, przydatne w konfiguracjach k3s i MicroK8s, gdzie tylko użytkownik root może odczytać konfigurację klastra. Użytkownik SSH musi mieć skonfigurowane sudo bez hasła."
+      },
+      "readOnly": {
+        "label": "Tylko do odczytu",
+        "description": "Tylko podgląd. Blokuje skalowanie, restarty, usuwanie, zmiany w YAML, zmiany Helm i powłoki podów dla wszystkich użytkowników tego hosta."
+      },
+      "showPanel": {
+        "label": "Pokaż panel Kubernetes w terminalach",
+        "description": "Zezwól na otwieranie panelu Kubernetes obok terminali SSH na tym hoście."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Otwieraj panel Kubernetes wraz z nowymi terminalami",
+        "description": "Wyświetlaj panel Kubernetes obok każdego terminala SSH, w którym włączono Kubernetes. Panel można nadal otwierać i zamykać za pomocą przycisku na prawej krawędzi."
+      },
+      "companionSide": {
+        "label": "Położenie panelu Kubernetes",
+        "description": "Gdzie panel Kubernetes znajduje się obok terminala.",
+        "right": "Prawa",
+        "left": "Lewa",
+        "bottom": "Dolna"
+      },
+      "companionSize": {
+        "label": "Rozmiar panelu Kubernetes",
+        "description": "Szerokość w pikselach lub wysokość, gdy panel jest umieszczony na dole. Możesz również przeciągnąć jego krawędź."
+      },
+      "companionEdgeButton": {
+        "label": "Pokaż przycisk panelu",
+        "description": "Wyświetl mały przycisk na prawej krawędzi terminala, który otwiera panel Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes nie jest włączony dla tego hosta",
+    "notEnabledHint": "Włącz Kubernetes w ustawieniach tego hosta, aby zarządzać jego klastrami.",
+    "validating": "Sprawdzanie klastra...",
+    "connecting": "Łączenie...",
+    "error": "Błąd",
+    "errorCode": "Kod błędu: {{code}}",
+    "connectionFailed": "Nie udało się połączyć",
+    "totpVerificationFailed": "Weryfikacja nieudana. Spróbuj ponownie.",
+    "verificationCodePrompt": "Wprowadź kod weryfikacyjny",
+    "browserSignInFailed": "Logowanie nie powiodło się. Spróbuj ponownie.",
+    "noHostSelected": "Nie wybrano hosta",
+    "refresh": "Odśwież"
+  },
+  "cluster": {
+    "loading": "Ładowanie...",
+    "empty": "Brak {{kind}}",
+    "noMatches": "Nic nie pasuje do Twoich filtrów",
+    "readOnly": "Tylko do odczytu"
+  },
+  "sections": {
+    "workloads": "Obciążenia",
+    "network": "Sieć",
+    "config": "Konfiguracja",
+    "cluster": "Klaster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pody"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deploymenty"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSety"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSety"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSety"
+    },
+    "jobs": {
+      "one": "Zadanie",
+      "many": "Zadania"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJoby"
+    },
+    "services": {
+      "one": "Usługa",
+      "many": "Usługi"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingressy"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMapy"
+    },
+    "secrets": {
+      "one": "Tajna",
+      "many": "Tajne"
+    },
+    "pvcs": {
+      "one": "Rezerwacja wolumenu",
+      "many": "Rezerwacje wolumenów"
+    },
+    "pvs": {
+      "one": "Trwały wolumen",
+      "many": "Trwałe wolumeny"
+    },
+    "nodes": {
+      "one": "Węzeł",
+      "many": "Węzły"
+    },
+    "namespaces": {
+      "one": "Przestrzeń nazw",
+      "many": "Przestrzenie nazw"
+    },
+    "events": {
+      "one": "Wydarzenie",
+      "many": "Wydarzenia"
+    }
+  },
+  "filters": {
+    "all": "Wszystkie",
+    "healthy": "Zdrowe",
+    "problem": "Problemy",
+    "idle": "Bezczynne"
+  },
+  "toolbar": {
+    "namespace": "Przestrzeń nazw",
+    "allNamespaces": "Wszystkie przestrzenie nazw",
+    "context": "Kontekst",
+    "kind": "Typ zasobu",
+    "search": "Szukaj..."
+  },
+  "columns": {
+    "name": "Nazwa",
+    "namespace": "Przestrzeń nazw",
+    "status": "Status",
+    "age": "Wiek",
+    "ready": "Gotowe",
+    "restarts": "Restarty",
+    "node": "Węzeł",
+    "ip": "IP",
+    "owner": "Właściciel",
+    "upToDate": "Aktualne",
+    "available": "Dostępne",
+    "images": "Obrazy",
+    "completions": "Ukończenia",
+    "duration": "Czas trwania",
+    "schedule": "Harmonogram",
+    "active": "Aktywne",
+    "lastSchedule": "Ostatnie uruchomienie",
+    "type": "Typ",
+    "clusterIP": "Adres IP klastra",
+    "externalIP": "Zewnętrzny adres IP",
+    "ports": "Porty",
+    "class": "Klasa",
+    "hosts": "Hosty",
+    "address": "Adres",
+    "tls": "TLS",
+    "keys": "Klucze",
+    "capacity": "Pojemność",
+    "access": "Dostęp",
+    "storageClass": "Klasa magazynowania",
+    "volume": "Wolumin",
+    "reclaim": "Odzyskiwanie",
+    "claim": "Reklamacja",
+    "roles": "Role",
+    "version": "Wersja",
+    "internalIP": "Wewnętrzny adres IP",
+    "os": "System operacyjny",
+    "cpu": "CPU",
+    "memory": "Pamięć",
+    "reason": "Powód",
+    "object": "Obiekt",
+    "message": "Komunikat",
+    "count": "Liczba",
+    "cpuUsage": "Wykorzystanie CPU",
+    "memoryUsage": "Wykorzystanie pamięci",
+    "container": "Kontener",
+    "chart": "Wykres",
+    "appVersion": "Wersja aplikacji",
+    "revision": "Rewizja"
+  },
+  "actions": {
+    "logs": "Dzienniki",
+    "console": "Powłoka",
+    "scale": {
+      "label": "Skaluj",
+      "title": "Skaluj {{name}}",
+      "replicas": "Repliki",
+      "hint": "Uruchomione teraz: {{current}}",
+      "done": "Zskalowano {{name}}"
+    },
+    "restart": {
+      "label": "Uruchom ponownie",
+      "confirmTitle": "Uruchomić ponownie {{name}}?",
+      "confirmText": "Każdy pod tego {{kind}} jest zastępowany po kolei.",
+      "done": "Uruchamianie ponownie {{name}}"
+    },
+    "undo": {
+      "label": "Przywróć poprzednią wersję",
+      "done": "Przywrócono poprzednią wersję {{name}}"
+    },
+    "setImage": {
+      "label": "Zmień obraz",
+      "title": "Zmień obraz dla {{name}}",
+      "image": "Obraz",
+      "hint": "Pody zostaną zastąpione nowym obrazem.",
+      "done": "Zmieniono obraz dla {{name}}"
+    },
+    "suspend": {
+      "label": "Wstrzymaj",
+      "confirmTitle": "Wstrzymać {{name}}?",
+      "confirmText": "Ten {{kind}} przestaje uruchamiać nowe zadania, dopóki go nie wznowisz.",
+      "done": "Wstrzymano {{name}}"
+    },
+    "resume": {
+      "label": "Wznów",
+      "done": "Wznowiono {{name}}"
+    },
+    "trigger": {
+      "label": "Uruchom teraz",
+      "done": "Uruchomiono zadanie z {{name}}"
+    },
+    "cordon": {
+      "label": "Ogranicz",
+      "confirmTitle": "Ograniczyć {{name}}?",
+      "confirmText": "Na tym {{kind}} nie będą już planowane nowe pody. Pody już na nim uruchomione będą kontynuować działanie.",
+      "done": "Zablokowano {{name}}"
+    },
+    "uncordon": {
+      "label": "Odblokuj",
+      "done": "Odblokowano {{name}}"
+    },
+    "drain": {
+      "label": "Opróżnij",
+      "title": "Opróżnij {{name}}",
+      "text": "Blokuje {{name}} i usuwa jego pody, aby zostały przeniesione na inne węzły. Pody z DaemonSet pozostają.",
+      "emptyDir": "Usuń dane emptyDir",
+      "emptyDirHint": "Usuń pody, które przechowują dane w wolumenach emptyDir. Te dane zostaną utracone.",
+      "force": "Wymuś",
+      "forceHint": "Usuń również pody, którymi nie zarządza żaden kontroler. Nie zostaną one ponownie utworzone.",
+      "done": "Wypłukano {{name}}"
+    },
+    "delete": {
+      "label": "Usuń",
+      "confirmTitle": "Usunąć {{name}}?",
+      "confirmText": "Ten {{kind}} zostanie usunięty z klastra.",
+      "managedPodText": "Ten pod należy do kontrolera, który uruchomi nowy w jego miejsce.",
+      "namespaceText": "Wszystko w tej przestrzeni nazw zostanie również usunięte. Tej operacji nie można cofnąć.",
+      "done": "Usunięto {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Ładowanie...",
+    "noDescribe": "Brak opisu",
+    "noPods": "Brak podów",
+    "noEvents": "Brak zdarzeń",
+    "tabs": {
+      "overview": "Przegląd",
+      "pods": "Pody",
+      "logs": "Dzienniki",
+      "console": "Powłoka",
+      "metrics": "Statystyki",
+      "history": "Historia",
+      "data": "Dane",
+      "yaml": "YAML",
+      "events": "Zdarzenia"
+    }
+  },
+  "history": {
+    "none": "Brak historii wdrożeń",
+    "noCause": "Brak przyczyny zmiany",
+    "current": "Obecny",
+    "rollBack": "Przywróć",
+    "confirmTitle": "Przywrócić do wersji {{revision}}?",
+    "confirmText": "{{name}} zostanie przywrócony do szablonu podu z tej wersji.",
+    "rolledBack": "Przywrócono do wersji {{revision}}"
+  },
+  "data": {
+    "empty": "Brak danych",
+    "reveal": "Pokaż",
+    "hide": "Ukryj",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano",
+    "secretHint": "Wartości pozostają ukryte, dopóki ich nie ujawnisz. Ujawnienie jest zapisywane w dzienniku audytu.",
+    "secretNoPermission": "Możesz zobaczyć klucze, ale nie wartości. Poproś administratora o przyznanie uprawnień do ujawniania sekretów Kubernetes."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Pamięć",
+    "collecting": "Zbieranie próbek...",
+    "unavailable": "Metryki są niedostępne",
+    "unavailableHint": "Zainstaluj metrics-server w klastrze, aby zobaczyć użycie CPU i pamięci.",
+    "cpuUsage": "Użycie CPU",
+    "memoryUsage": "Użycie pamięci",
+    "podInformation": "Informacje o podzie",
+    "containers": "Kontenery",
+    "cpuHistory": "Historia użycia CPU",
+    "memoryHistory": "Historia użycia pamięci",
+    "loading": "Ładowanie statystyk...",
+    "error": "Błąd ładowania statystyk",
+    "startPod": "Uruchom pod, aby zobaczyć jego statystyki.",
+    "noLimit": "brak limitu",
+    "of": {
+      "limit": "limit",
+      "node": "węzeł"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Sprawdź",
+    "diff": "Różnice",
+    "save": "Zapisz",
+    "reload": "Przeładuj",
+    "unsaved": "Niezapisane zmiany",
+    "valid": "Wygląda dobrze. Zmieni się to:",
+    "noChanges": "Brak zmian",
+    "saved": "Zapisano {{count}} zasobów"
+  },
+  "apply": {
+    "title": "Zastosuj YAML",
+    "apply": "Zastosuj",
+    "hint": "Wklej jeden lub więcej manifestów. Opcja Check wykonuje symulację na serwerze, a Diff pokazuje planowane zmiany. Żadnych zmian nie zostanie wprowadzonych, dopóki nie klikniesz Zastosuj.",
+    "namespace": "Do przestrzeni nazw {{namespace}}",
+    "defaultNamespace": "Do domyślnej przestrzeni nazw"
+  },
+  "helm": {
+    "none": "Brak wydań Helm",
+    "revision": "Rewizja {{revision}}",
+    "tabs": {
+      "history": "Historia",
+      "values": "Wartości",
+      "manifest": "Manifest"
+    },
+    "allValues": "Uwzględnij domyślne wartości wykresu",
+    "allValuesHint": "Wyświetl wszystkie wartości, nie tylko te ustawione podczas instalacji.",
+    "rollbackTitle": "Cofnąć {{name}} do rewizji {{revision}}?",
+    "rollbackText": "Helm utworzy nową rewizję z ustawieniami poprzedniej.",
+    "rolledBack": "Cofnięto {{name}} do rewizji {{revision}}",
+    "uninstall": "Odinstaluj",
+    "uninstallTitle": "Odinstalować {{name}}?",
+    "uninstallText": "Helm usunie wszystkie zasoby tej wersji.",
+    "uninstalled": "Odinstalowano {{name}}"
+  },
+  "logs": {
+    "container": "Kontener",
+    "allContainers": "Wszystkie kontenery",
+    "previous": "Poprzednie uruchomienie",
+    "filter": "Filtruj logi...",
+    "lines": "linii",
+    "last50": "Ostatnie 50",
+    "last100": "Ostatnie 100",
+    "last500": "Ostatnie 500",
+    "last1000": "Ostatnie 1000",
+    "all": "Wszystkie",
+    "timestamps": "Znaczniki czasu",
+    "autoRefresh": "Śledź",
+    "copy": "Kopiuj logi",
+    "download": "Pobierz",
+    "clear": "Wyczyść",
+    "none": "Brak logów",
+    "noneMatching": "Żadne logi nie pasują do „{{query}}”",
+    "copied": "Skopiowano {{count}} linii",
+    "failedToCopy": "Nie udało się skopiować logów",
+    "downloaded": "Logi pobrane",
+    "failedToDownload": "Nie udało się pobrać dzienników: {{error}}",
+    "failedToFetch": "Nie udało się załadować dzienników: {{error}}"
+  },
+  "console": {
+    "connect": "Połącz",
+    "disconnect": "Rozłącz",
+    "connecting": "Łączenie...",
+    "connectingTo": "Łączenie z {{name}}...",
+    "connectedTo": "Połączono z {{name}}",
+    "notConnected": "Brak połączenia",
+    "clickToConnect": "Wybierz powłokę i kliknij Połącz",
+    "disconnected": "Rozłączono",
+    "consoleError": "Błąd powłoki",
+    "errorMessage": "Błąd: {{message}}",
+    "failedToConnect": "Nie udało się połączyć z kontenerem",
+    "failedToConnectWithError": "Nie udało się połączyć: {{error}}",
+    "selectShell": "Powłoka",
+    "copyConsole": "Kopiuj wynik",
+    "consoleCopied": "Wynik skopiowany",
+    "clear": "Wyczyść",
+    "podMustBeRunning": "Kontener musi być uruchomiony",
+    "podNotRunning": "Kontener nie jest uruchomiony",
+    "podNotRunningHint": "Uruchom kontener, aby otworzyć w nim powłokę.",
+    "readOnly": "Powłoka jest wyłączona",
+    "readOnlyHint": "Ten host jest tylko do odczytu, więc powłoki kontenerów są wyłączone."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Nie udało się odczytać ze schowka. Upewnij się, że przyznano uprawnienia do schowka.",
+    "clipboardWriteFailed": "Nie udało się skopiować do schowka. Upewnij się, że strona jest serwowana przez HTTPS lub localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Wymagany jest zdalny serwer. Podłącz zdalny serwer w Ustawieniach, aby korzystać z tego typu połączenia."
+  },
+  "hosts": {
+    "docsLink": "Zobacz dokumentację",
+    "hostNotFound": "Host nie został znaleziony",
+    "loadingHost": "Ładowanie hosta..."
+  }
+}

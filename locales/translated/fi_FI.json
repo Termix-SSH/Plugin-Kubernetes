@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Hallinnoi Kubernetes-klustereita isäntien kautta SSH-yhteydellä, käyttäen lokia, mittareita, YAML-määrittelyitä ja komentoriviä."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes-paneeli"
+  },
+  "permissions": {
+    "use": {
+      "title": "Käytä Kubernetesia",
+      "description": "Avaa Kubernetes-näkymä ja pod-komentorivit isännillä, joilla Kubernetes on käytössä."
+    },
+    "secrets": {
+      "title": "Paljasta Kubernetes-salaisuudet",
+      "description": "Näytä Kubernetes-salaisuuksien dekoodatut arvot. Jokainen paljastus kirjataan tarkastuslokille."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Ota Kubernetes käyttöön",
+        "description": "Suorita kubectl-tiedosto tässä isännässä SSH-yhteyden kautta hallitaksesi klusteria, johon se pääsee käsiksi."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes-versio",
+        "description": "Mikä komento suorittaa kubectlin tässä isäntäpalvelimessa.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig-polku",
+        "description": "Jätä tyhjäksi käyttääksesi SSH-käyttäjän oletusarvoa (~/.kube/config tai KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Oletuskonteksti",
+        "description": "Jätä tyhjäksi käyttääksesi nykyistä kontekstia kubeconfig-tiedostossa. Voit vaihtaa konteksteja Kubernetes-välilehdellä.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Oletusnimetila",
+        "description": "Nimetila, jossa Kubernetes-välilehti avautuu.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Suorita sudo-käskyllä",
+        "description": "Suorita kubectl sudo -n -käskyllä, k3s- ja MicroK8s-asetuksissa, joissa vain root voi lukea klusterin konfiguraatiota. SSH-käyttäjän on käytettävä salasanaa vaativatonta sudoa."
+      },
+      "readOnly": {
+        "label": "Vain luku",
+        "description": "Vain katselu. Estää skaalaamisen, uudelleenkäynnistykset, poistot, YAML-muutokset, Helm-muutokset ja pod-kuoret kaikilta käyttäjiltä tässä isäntäpalvelimessa."
+      },
+      "showPanel": {
+        "label": "Näytä Kubernetes-paneeli terminaaleissa",
+        "description": "Salli Kubernetes-paneelin avautuminen tämän isäntäpalvelimen SSH-päätteiden viereen."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Avaa Kubernetes-paneeli uusien päätteiden kanssa",
+        "description": "Näytä Kubernetes-paneeli jokaisen SSH-päätteen vieressä, jossa Kubernetes on käytössä. Voit silti avata ja sulkea sen oikean reunan painikkeesta."
+      },
+      "companionSide": {
+        "label": "Kubernetes-paneelin sijainti",
+        "description": "Missä Kubernetes-paneeli sijaitsee päätteen vieressä.",
+        "right": "Oikealla",
+        "left": "Vasemmalla",
+        "bottom": "Alareunassa"
+      },
+      "companionSize": {
+        "label": "Kubernetes-paneelin koko",
+        "description": "Leveys pikseleinä tai korkeus, kun paneeli on alareunassa. Voit myös vetää sen reuna siirtämällä."
+      },
+      "companionEdgeButton": {
+        "label": "Näytä paneelin painike",
+        "description": "Näytä pieni painike terminaalin oikealla reunalla, joka avaa Kubernetes-paneelin."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes ei ole käytössä tässä isäntäpalvelimessa",
+    "notEnabledHint": "Ota Kubernetes käyttöön tämän isäntäpalvelimen asetuksista hallitaksesi sen klusteria.",
+    "validating": "Tarkistetaan klusteria...",
+    "connecting": "Yhdistetään...",
+    "error": "Virhe",
+    "errorCode": "Virhekoodi: {{code}}",
+    "connectionFailed": "Yhteys epäonnistui",
+    "totpVerificationFailed": "Varmennus epäonnistui. Yritä uudelleen.",
+    "verificationCodePrompt": "Syötä vahvistuskoodi",
+    "browserSignInFailed": "Kirjautuminen epäonnistui. Yritä uudelleen.",
+    "noHostSelected": "Yhtään isäntää ei ole valittu",
+    "refresh": "Päivitä"
+  },
+  "cluster": {
+    "loading": "Ladataan...",
+    "empty": "Täällä ei ole {{kind}}",
+    "noMatches": "Mitään ei vastaa suodattimiisi",
+    "readOnly": "Vain luku"
+  },
+  "sections": {
+    "workloads": "Työkuormat",
+    "network": "Verkko",
+    "config": "Asetukset",
+    "cluster": "Klusteri",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Podit"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "Kaikki",
+    "healthy": "Kunnossa",
+    "problem": "Ongelmat",
+    "idle": "Toimettomat"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Kaikki namespaces",
+    "context": "Konteksti",
+    "kind": "Resurssityyppi",
+    "search": "Hae..."
+  },
+  "columns": {
+    "name": "Nimi",
+    "namespace": "Namespace",
+    "status": "Tila",
+    "age": "Ikä",
+    "ready": "Valmis",
+    "restarts": "Uudelleenkäynnistykset",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Omistaja",
+    "upToDate": "Ajantasalla",
+    "available": "Saatavilla",
+    "images": "Kuvat",
+    "completions": "Suoritukset",
+    "duration": "Kesto",
+    "schedule": "Aikataulu",
+    "active": "Aktiivinen",
+    "lastSchedule": "Viimeisin ajo",
+    "type": "Tyyppi",
+    "clusterIP": "Klusterin IP",
+    "externalIP": "Ulkoinen IP",
+    "ports": "Portit",
+    "class": "Luokka",
+    "hosts": "Isäntätietokoneet",
+    "address": "Osoite",
+    "tls": "TLS",
+    "keys": "Avaimet",
+    "capacity": "Kapasiteetti",
+    "access": "Pääsy",
+    "storageClass": "Tallennusluokka",
+    "volume": "Volyymi",
+    "reclaim": "Palautus",
+    "claim": "Vaatimus",
+    "roles": "Roolit",
+    "version": "Versio",
+    "internalIP": "Sisäinen IP",
+    "os": "Käyttöjärjestelmä",
+    "cpu": "CPU",
+    "memory": "Muisti",
+    "reason": "Syy",
+    "object": "Objekti",
+    "message": "Viesti",
+    "count": "Määrä",
+    "cpuUsage": "CPU-käyttö",
+    "memoryUsage": "Muistinkäyttö",
+    "container": "Kontti",
+    "chart": "Kaavio",
+    "appVersion": "Sovelluksen versio",
+    "revision": "Versio"
+  },
+  "actions": {
+    "logs": "Lokit",
+    "console": "Komentorivi",
+    "scale": {
+      "label": "Mittakaava",
+      "title": "Mittaa skaalaa {{name}}",
+      "replicas": "Kopiot",
+      "hint": "Käynnissä nyt: {{current}}",
+      "done": "Skaalattu {{name}}"
+    },
+    "restart": {
+      "label": "Käynnistä uudelleen",
+      "confirmTitle": "Käynnistetäänkö {{name}} uudelleen?",
+      "confirmText": "Tämän {{kind}} jokainen pod korvataan yksi kerrallaan.",
+      "done": "Käynnistetään uudelleen {{name}}"
+    },
+    "undo": {
+      "label": "Palauta edellinen",
+      "done": "Palautettu {{name}}"
+    },
+    "setImage": {
+      "label": "Vaihda kuva",
+      "title": "Vaihda {{name}} -kuvan",
+      "image": "Kuva",
+      "hint": "Podit korvataan uudella kuvalla.",
+      "done": "Vaihdettu {{name}} -kuva"
+    },
+    "suspend": {
+      "label": "Keskeytä",
+      "confirmTitle": "Keskeytetäänkö {{name}}?",
+      "confirmText": "Tämä {{kind}} ei käynnistä uusia suorituksia, ennen kuin jatkat sitä.",
+      "done": "{{name}} keskeytetty"
+    },
+    "resume": {
+      "label": "Jatka",
+      "done": "{{name}} jatkettu"
+    },
+    "trigger": {
+      "label": "Suorita nyt",
+      "done": "Käynnistettiin työkohteesta {{name}}"
+    },
+    "cordon": {
+      "label": "Estä",
+      "confirmTitle": "Estetäänkö {{name}}?",
+      "confirmText": "Uusia pod-eja ei enää sijoiteta tähän {{kind}}-resurssiin. Siellä jo olevat podit jatkavat toimintaansa.",
+      "done": "Resurssi {{name}} on merkitty pois käytöstä (cordoned)"
+    },
+    "uncordon": {
+      "label": "Ota käyttöön (uncordon)",
+      "done": "Resurssi {{name}} on otettu takaisin käyttöön (uncordoned)"
+    },
+    "drain": {
+      "label": "Tyhjennä (drain)",
+      "title": "Tyhjennä {{name}}",
+      "text": "Merkitsee resurssin {{name}} pois käytöstä ja poistaa sen podit, jotta ne siirtyvät muihin solmuun. DaemonSet-podit säilyvät.",
+      "emptyDir": "Poista emptyDir-tiedot",
+      "emptyDirHint": "Poista podit, jotka tallentavat dataa emptyDir-volyymeihin. Tämä data menetetään.",
+      "force": "Pakota",
+      "forceHint": "Poista myös podit, joita mikään ohjain ei hallinnoi. Niitä ei luoda uudelleen.",
+      "done": "Resurssi {{name}} tyhjennetty"
+    },
+    "delete": {
+      "label": "Poista",
+      "confirmTitle": "Haluatko poistaa kohteen {{name}}?",
+      "confirmText": "Tämä {{kind}} poistetaan klusterista.",
+      "managedPodText": "Tämä pod kuuluu ohjaimeseen, joka käynnistää sen tilalle uuden.",
+      "namespaceText": "Kaikki tämän nimetyn avaruuden sisältö poistetaan myös. Toimintoa ei voi peruuttaa.",
+      "done": "Kohde {{name}} poistettu"
+    }
+  },
+  "detail": {
+    "loading": "Ladataan...",
+    "noDescribe": "Ei kuvausta",
+    "noPods": "Ei pod-eja",
+    "noEvents": "Ei tapahtumia",
+    "tabs": {
+      "overview": "Yleiskatsaus",
+      "pods": "Pod-it",
+      "logs": "Lokit",
+      "console": "Komentorivi",
+      "metrics": "Tilastot",
+      "history": "Historia",
+      "data": "Tiedot",
+      "yaml": "YAML",
+      "events": "Tapahtumat"
+    }
+  },
+  "history": {
+    "none": "Ei julkaisuhistoriaa",
+    "noCause": "Ei muutoksen syytä",
+    "current": "Nykyinen",
+    "rollBack": "Palauta",
+    "confirmTitle": "Palautetaanko versioon {{revision}}?",
+    "confirmText": "{{name}} palautuu kyseisen version pod-malliin.",
+    "rolledBack": "Palautettu versioon {{revision}}"
+  },
+  "data": {
+    "empty": "Ei dataa",
+    "reveal": "Näytä",
+    "hide": "Piilota",
+    "copy": "Kopioi",
+    "copied": "Kopioitu",
+    "secretHint": "Arvot pysyvät piilossa, kunnes paljastat ne. Paljastaminen kirjataan tarkastuslokiin.",
+    "secretNoPermission": "Näet avaimet, mutta eivät arvoja. Pyydä järjestelmänvalvojalta lupa paljastaa Kubernetes-salaisuudet."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Muisti",
+    "collecting": "Näytteiden kerääminen...",
+    "unavailable": "Mittarointitietoja ei ole saatavilla",
+    "unavailableHint": "Asenna metrics-server klusteriin nähdäksesi CPU:n ja muistin käytön.",
+    "cpuUsage": "Käyttöprosentti",
+    "memoryUsage": "Muistin käyttö",
+    "podInformation": "Podin tiedot",
+    "containers": "Kontit",
+    "cpuHistory": "Käyttöprosentin historia",
+    "memoryHistory": "Muistin käytön historia",
+    "loading": "Ladataan tilastotietoja...",
+    "error": "Virhe tilastotietojen lataamisessa",
+    "startPod": "Käynnistä pod nähdäksesi sen tilastotiedot.",
+    "noLimit": "ei rajaa",
+    "of": {
+      "limit": "raja",
+      "node": "solmu"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Tarkista",
+    "diff": "Ero",
+    "save": "Tallenna",
+    "reload": "Lataa uudelleen",
+    "unsaved": "Tallentamattomat muutokset",
+    "valid": "Näyttää hyvältä. Nämä muuttuisivat:",
+    "noChanges": "Ei muutoksia",
+    "saved": "Tallennettu {{count}} resurssia"
+  },
+  "apply": {
+    "title": "Käytä YAML:tä",
+    "apply": "Käytä",
+    "hint": "Liitä yksi tai useampi manifesti. Tarkistus suorittaa kuivan ajon palvelimella ja Ero näyttää muutokset. Mitään ei muuteta, ennen kuin käytät muutokset.",
+    "namespace": "Nimiavaruuteen {{namespace}}",
+    "defaultNamespace": "Oletusnimiavaruuteen"
+  },
+  "helm": {
+    "none": "Ei Helm-julkaisuja",
+    "revision": "Versio {{revision}}",
+    "tabs": {
+      "history": "Historia",
+      "values": "Arvot",
+      "manifest": "Manifesti"
+    },
+    "allValues": "Sisällytä kaavion oletusarvot",
+    "allValuesHint": "Näytä kaikki arvot, ei vain asennuksen aikana määritettyjä.",
+    "rollbackTitle": "Palautetaanko {{name}} versioon {{revision}}?",
+    "rollbackText": "Helm luo uuden version vanhan asetusten mukaisesti.",
+    "rolledBack": "Palautettu {{name}} versioon {{revision}}",
+    "uninstall": "Poista asennus",
+    "uninstallTitle": "Poistetaanko {{name}} asennus?",
+    "uninstallText": "Helm poistaa tämän julkaisun kaikki resurssit.",
+    "uninstalled": "Poistettu {{name}} asennus"
+  },
+  "logs": {
+    "container": "Kontti",
+    "allContainers": "Kaikki kontit",
+    "previous": "Edellinen ajokerta",
+    "filter": "Suodata lokit...",
+    "lines": "rivit",
+    "last50": "Viimeiset 50",
+    "last100": "Viimeiset 100",
+    "last500": "Viimeiset 500",
+    "last1000": "Viimeiset 1000",
+    "all": "Kaikki",
+    "timestamps": "Aikaleimat",
+    "autoRefresh": "Seuraa",
+    "copy": "Kopioi lokit",
+    "download": "Lataa",
+    "clear": "Tyhjennä",
+    "none": "Ei lokitietoja",
+    "noneMatching": "Kyselyyn \"{{query}}\" ei löydy vastaavia lokitietoja",
+    "copied": "Kopioitu {{count}} riviä",
+    "failedToCopy": "Lokien kopiointi epäonnistui",
+    "downloaded": "Lokitiedostot ladattu",
+    "failedToDownload": "Lokien lataaminen epäonnistui: {{error}}",
+    "failedToFetch": "Lokien haku epäonnistui: {{error}}"
+  },
+  "console": {
+    "connect": "Yhdistä",
+    "disconnect": "Katkaise yhteys",
+    "connecting": "Yhdistetään...",
+    "connectingTo": "Yhdistetään kohteeseen {{name}}...",
+    "connectedTo": "Yhdistetty kohteeseen {{name}}",
+    "notConnected": "Ei yhdistetty",
+    "clickToConnect": "Valitse shell ja klikkaa Yhdistä",
+    "disconnected": "Yhteys katkaistu",
+    "consoleError": "Komentorivivirhe",
+    "errorMessage": "Virhe: {{message}}",
+    "failedToConnect": "Yhteys konttiin epäonnistui",
+    "failedToConnectWithError": "Yhteys epäonnistui: {{error}}",
+    "selectShell": "Komentorivi",
+    "copyConsole": "Kopioi tuloste",
+    "consoleCopied": "Tuloste kopioitu",
+    "clear": "Tyhjennä",
+    "podMustBeRunning": "Kontin on oltava käynnissä",
+    "podNotRunning": "Kontti ei ole käynnissä",
+    "podNotRunningHint": "Käynnistä kontti avataksesi siihen komentorivi.",
+    "readOnly": "Komentorivi on pois päältä",
+    "readOnlyHint": "Tämä isäntä on vain lukukäytössä, joten konttien komentorivit on poistettu käytöstä."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Leikepöydän lukeminen epäonnistui. Varmista, että leikepöydän käyttöoikeudet on myönnetty.",
+    "clipboardWriteFailed": "Kopiointi leikepöydälle epäonnistui. Varmista, että sivu palvellessaan HTTPS-yhteydellä tai localhost-osoitteella."
+  },
+  "errors": {
+    "remoteServerRequired": "Etäpalvelin vaaditaan. Yhdistä etäpalvelin Asetuksissa käyttääksesi tätä yhteystyyppiä."
+  },
+  "hosts": {
+    "docsLink": "Näytä dokumentaatio",
+    "hostNotFound": "Isäntää ei löydy",
+    "loadingHost": "Ladataan isäntää..."
+  }
+}

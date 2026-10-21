@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Управляйте кластерами Kubernetes с ваших хостов через SSH: логи, метрики, YAML и оболочка."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Панель Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Использовать Kubernetes",
+      "description": "Открывать представление Kubernetes и оболочки подов на хостах, где включён Kubernetes."
+    },
+    "secrets": {
+      "title": "Просматривать секреты Kubernetes",
+      "description": "Показывать расшифрованные значения секретов Kubernetes. Каждое раскрытие записывается в журнал аудита."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Включить Kubernetes",
+        "description": "Запускать kubectl на этом хосте через SSH для управления кластером, к которому он имеет доступ."
+      },
+      "kubectlFlavor": {
+        "label": "Вариант Kubernetes",
+        "description": "Команда для запуска kubectl на этом хосте.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Путь к kubeconfig",
+        "description": "Оставьте пустым, чтобы использовать значение по умолчанию для пользователя SSH (~/.kube/config или KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Контекст по умолчанию",
+        "description": "Оставьте пустым, чтобы использовать текущий контекст из kubeconfig. Вы можете переключать контексты на вкладке Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Пространство имен по умолчанию",
+        "description": "Пространство имен, которое открывается на вкладке Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Запускать с sudo",
+        "description": "Запускать kubectl с sudo -n, для конфигураций k3s и MicroK8s, где конфигурацию кластера может читать только root. Пользователь SSH должен иметь доступ к sudo без пароля."
+      },
+      "readOnly": {
+        "label": "Только для чтения",
+        "description": "Только просмотр. Блокирует масштабирование, перезапуск, удаление, изменения YAML, изменения Helm и доступ к оболочкам подов для всех пользователей этого хоста."
+      },
+      "showPanel": {
+        "label": "Показывать панель Kubernetes в терминалах",
+        "description": "Разрешить панели Kubernetes открываться рядом с терминалами SSH на этом хосте."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Открывать панель Kubernetes вместе с новыми терминалами",
+        "description": "Показывать панель Kubernetes рядом с каждым терминалом SSH, в котором включён Kubernetes. Вы по-прежнему можете открывать и закрывать её с помощью кнопки на правой границе."
+      },
+      "companionSide": {
+        "label": "Расположение панели Kubernetes",
+        "description": "Где панель Kubernetes располагается рядом с терминалом.",
+        "right": "Справа",
+        "left": "Слева",
+        "bottom": "Снизу"
+      },
+      "companionSize": {
+        "label": "Размер панели Kubernetes",
+        "description": "Ширина в пикселях или высота, если панель находится внизу. Вы также можете перетаскивать её границу."
+      },
+      "companionEdgeButton": {
+        "label": "Показать кнопку панели",
+        "description": "Показывать небольшую кнопку на правом краю терминала, которая открывает панель Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes не включен для этого хоста",
+    "notEnabledHint": "Включите Kubernetes в настройках этого хоста, чтобы управлять его кластером.",
+    "validating": "Проверка кластера...",
+    "connecting": "Подключение...",
+    "error": "Ошибка",
+    "errorCode": "Код ошибки: {{code}}",
+    "connectionFailed": "Не удалось подключиться",
+    "totpVerificationFailed": "Ошибка проверки. Повторите попытку.",
+    "verificationCodePrompt": "Введите код подтверждения",
+    "browserSignInFailed": "Ошибка входа. Повторите попытку.",
+    "noHostSelected": "Хост не выбран",
+    "refresh": "Обновить"
+  },
+  "cluster": {
+    "loading": "Загрузка...",
+    "empty": "Здесь нет {{kind}}",
+    "noMatches": "Ничего не соответствует вашим фильтрам",
+    "readOnly": "Только для чтения"
+  },
+  "sections": {
+    "workloads": "Рабочие нагрузки",
+    "network": "Сеть",
+    "config": "Конфигурация",
+    "cluster": "Кластер",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Под",
+      "many": "Поды"
+    },
+    "deployments": {
+      "one": "Развёртывание",
+      "many": "Развёртывания"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Задание",
+      "many": "Задания"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Сервис",
+      "many": "Сервисы"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Секрет",
+      "many": "Секреты"
+    },
+    "pvcs": {
+      "one": "Заявка на том",
+      "many": "Заявки на томы"
+    },
+    "pvs": {
+      "one": "Постоянный том",
+      "many": "Постоянные томы"
+    },
+    "nodes": {
+      "one": "Узел",
+      "many": "Узлы"
+    },
+    "namespaces": {
+      "one": "Пространство имён",
+      "many": "Пространства имён"
+    },
+    "events": {
+      "one": "Событие",
+      "many": "События"
+    }
+  },
+  "filters": {
+    "all": "Все",
+    "healthy": "Работают",
+    "problem": "Проблемы",
+    "idle": "Неактивные"
+  },
+  "toolbar": {
+    "namespace": "Пространство имён",
+    "allNamespaces": "Все пространства имён",
+    "context": "Контекст",
+    "kind": "Тип ресурса",
+    "search": "Поиск..."
+  },
+  "columns": {
+    "name": "Имя",
+    "namespace": "Пространство имён",
+    "status": "Статус",
+    "age": "Возраст",
+    "ready": "Готово",
+    "restarts": "Перезапуски",
+    "node": "Узел",
+    "ip": "IP",
+    "owner": "Владелец",
+    "upToDate": "Актуально",
+    "available": "Доступно",
+    "images": "Образы",
+    "completions": "Завершено",
+    "duration": "Длительность",
+    "schedule": "Расписание",
+    "active": "Активные",
+    "lastSchedule": "Последний запуск",
+    "type": "Тип",
+    "clusterIP": "IP-адрес кластера",
+    "externalIP": "Внешний IP-адрес",
+    "ports": "Порты",
+    "class": "Класс",
+    "hosts": "Хосты",
+    "address": "Адрес",
+    "tls": "TLS",
+    "keys": "Ключи",
+    "capacity": "Вместимость",
+    "access": "Доступ",
+    "storageClass": "Класс хранилища",
+    "volume": "Том",
+    "reclaim": "Возврат",
+    "claim": "Заявка",
+    "roles": "Роли",
+    "version": "Версия",
+    "internalIP": "Внутренний IP",
+    "os": "ОС",
+    "cpu": "CPU",
+    "memory": "Память",
+    "reason": "Причина",
+    "object": "Объект",
+    "message": "Сообщение",
+    "count": "Количество",
+    "cpuUsage": "Использование CPU",
+    "memoryUsage": "Использование памяти",
+    "container": "Контейнер",
+    "chart": "График",
+    "appVersion": "Версия приложения",
+    "revision": "Ревизия"
+  },
+  "actions": {
+    "logs": "Журналы",
+    "console": "Терминал",
+    "scale": {
+      "label": "Масштабирование",
+      "title": "Масштабировать {{name}}",
+      "replicas": "Реплики",
+      "hint": "Запущено сейчас: {{current}}",
+      "done": "{{name}} масштабировано"
+    },
+    "restart": {
+      "label": "Перезапуск",
+      "confirmTitle": "Перезапустить {{name}}?",
+      "confirmText": "Каждый под этого {{kind}} будет заменён по одному.",
+      "done": "Перезапуск {{name}}"
+    },
+    "undo": {
+      "label": "Откатить",
+      "done": "Откат {{name}} выполнен"
+    },
+    "setImage": {
+      "label": "Изменить образ",
+      "title": "Изменить образ для {{name}}",
+      "image": "Образ",
+      "hint": "Поды будут заменены на новый образ.",
+      "done": "Образ для {{name}} изменён"
+    },
+    "suspend": {
+      "label": "Приостановить",
+      "confirmTitle": "Приостановить «{{name}}»?",
+      "confirmText": "Этот {{kind}} не будет запускать новые задачи, пока вы не возобновите его работу.",
+      "done": "«{{name}}» приостановлен"
+    },
+    "resume": {
+      "label": "Возобновить",
+      "done": "«{{name}}» возобновлен"
+    },
+    "trigger": {
+      "label": "Запустить сейчас",
+      "done": "Запущена задача из «{{name}}»"
+    },
+    "cordon": {
+      "label": "Изолировать",
+      "confirmTitle": "Изолировать «{{name}}»?",
+      "confirmText": "На этот {{kind}} больше не будут назначаться новые поды. Уже запущенные поды продолжат работу.",
+      "done": "{{name}} заблокирован для планирования"
+    },
+    "uncordon": {
+      "label": "Разблокировать",
+      "done": "{{name}} разблокирован"
+    },
+    "drain": {
+      "label": "Очистить",
+      "title": "Очистить {{name}}",
+      "text": "Блокирует {{name}} и удаляет его поды, чтобы они переместились на другие узлы. Поды DaemonSet останутся.",
+      "emptyDir": "Удалить данные emptyDir",
+      "emptyDirHint": "Удалить поды, которые хранят данные в томах emptyDir. Эти данные будут потеряны.",
+      "force": "Принудительно",
+      "forceHint": "Также удалить поды, которые не управляются контроллером. Они не будут воссозданы.",
+      "done": "Очищен {{name}}"
+    },
+    "delete": {
+      "label": "Удалить",
+      "confirmTitle": "Удалить {{name}}?",
+      "confirmText": "Этот {{kind}} будет удален из кластера.",
+      "managedPodText": "Этот под принадлежит контроллеру, который запустит новый на его месте.",
+      "namespaceText": "Всё содержимое этого пространства имен также будет удалено. Это действие нельзя отменить.",
+      "done": "Удален {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Загрузка...",
+    "noDescribe": "Описание отсутствует",
+    "noPods": "Нет подов",
+    "noEvents": "Нет событий",
+    "tabs": {
+      "overview": "Обзор",
+      "pods": "Поды",
+      "logs": "Журналы",
+      "console": "Консоль",
+      "metrics": "Статистика",
+      "history": "История",
+      "data": "Данные",
+      "yaml": "YAML",
+      "events": "События"
+    }
+  },
+  "history": {
+    "none": "История развертываний отсутствует",
+    "noCause": "Причина изменения не указана",
+    "current": "Текущая",
+    "rollBack": "Откатить",
+    "confirmTitle": "Откатить к ревизии {{revision}}?",
+    "confirmText": "{{name}} вернется к шаблону пода из этой ревизии.",
+    "rolledBack": "Откат выполнен к ревизии {{revision}}"
+  },
+  "data": {
+    "empty": "Нет данных",
+    "reveal": "Показать",
+    "hide": "Скрыть",
+    "copy": "Копировать",
+    "copied": "Скопировано",
+    "secretHint": "Значения скрыты, пока вы их не раскроете. Действие раскрытия записывается в журнал аудита.",
+    "secretNoPermission": "Вы видите ключи, но не значения. Обратитесь к администратору за разрешением «Раскрывать секреты Kubernetes»."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Память",
+    "collecting": "Сбор данных...",
+    "unavailable": "Метрики недоступны",
+    "unavailableHint": "Установите metrics-server в кластере, чтобы видеть использование CPU и памяти.",
+    "cpuUsage": "Использование CPU",
+    "memoryUsage": "Использование памяти",
+    "podInformation": "Информация о поде",
+    "containers": "Контейнеры",
+    "cpuHistory": "История использования CPU",
+    "memoryHistory": "История использования памяти",
+    "loading": "Загрузка статистики...",
+    "error": "Ошибка загрузки статистики",
+    "startPod": "Запустите под, чтобы увидеть его статистику.",
+    "noLimit": "без ограничений",
+    "of": {
+      "limit": "лимит",
+      "node": "узел"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Проверить",
+    "diff": "Различия",
+    "save": "Сохранить",
+    "reload": "Обновить",
+    "unsaved": "Несохранённые изменения",
+    "valid": "Всё в порядке. Изменятся следующие параметры:",
+    "noChanges": "Нет изменений",
+    "saved": "Сохранено {{count}} ресурсов"
+  },
+  "apply": {
+    "title": "Применить YAML",
+    "apply": "Применить",
+    "hint": "Вставьте один или несколько манифестов. Проверка выполняет тестовый запуск на сервере, а Сравнение показывает изменения. Ничего не изменится, пока вы не примените.",
+    "namespace": "В пространство имен {{namespace}}",
+    "defaultNamespace": "В пространство имен по умолчанию"
+  },
+  "helm": {
+    "none": "Нет релизов Helm",
+    "revision": "Ревизия {{revision}}",
+    "tabs": {
+      "history": "История",
+      "values": "Значения",
+      "manifest": "Манифест"
+    },
+    "allValues": "Включить значения по умолчанию чарта",
+    "allValuesHint": "Показывать все значения, а не только те, что были заданы при установке.",
+    "rollbackTitle": "Откатить {{name}} к ревизии {{revision}}?",
+    "rollbackText": "Helm создаст новую ревизию с настройками из старой.",
+    "rolledBack": "{{name}} откатен к ревизии {{revision}}",
+    "uninstall": "Удалить",
+    "uninstallTitle": "Удалить {{name}}?",
+    "uninstallText": "Helm удалит все ресурсы этого релиза.",
+    "uninstalled": "{{name}} удалён"
+  },
+  "logs": {
+    "container": "Контейнер",
+    "allContainers": "Все контейнеры",
+    "previous": "Предыдущий запуск",
+    "filter": "Фильтр журналов...",
+    "lines": "строк",
+    "last50": "Последние 50",
+    "last100": "Последние 100",
+    "last500": "Последние 500",
+    "last1000": "Последние 1000",
+    "all": "Все",
+    "timestamps": "Метки времени",
+    "autoRefresh": "Следить",
+    "copy": "Копировать логи",
+    "download": "Скачать",
+    "clear": "Очистить",
+    "none": "Нет логов",
+    "noneMatching": "Нет логов, соответствующих «{{query}}»",
+    "copied": "Скопировано {{count}} строк",
+    "failedToCopy": "Не удалось скопировать логи",
+    "downloaded": "Логи скачаны",
+    "failedToDownload": "Не удалось загрузить журналы: {{error}}",
+    "failedToFetch": "Не удалось получить журналы: {{error}}"
+  },
+  "console": {
+    "connect": "Подключиться",
+    "disconnect": "Отключиться",
+    "connecting": "Подключение...",
+    "connectingTo": "Подключение к {{name}}...",
+    "connectedTo": "Подключено к {{name}}",
+    "notConnected": "Не подключено",
+    "clickToConnect": "Выберите оболочку и нажмите Подключиться",
+    "disconnected": "Отключено",
+    "consoleError": "Ошибка оболочки",
+    "errorMessage": "Ошибка: {{message}}",
+    "failedToConnect": "Не удалось подключиться к поду",
+    "failedToConnectWithError": "Не удалось подключиться: {{error}}",
+    "selectShell": "Оболочка",
+    "copyConsole": "Копировать вывод",
+    "consoleCopied": "Вывод скопирован",
+    "clear": "Очистить",
+    "podMustBeRunning": "Под должен быть запущен",
+    "podNotRunning": "Под не запущен",
+    "podNotRunningHint": "Запустите под, чтобы открыть в нём оболочку.",
+    "readOnly": "Оболочка отключена",
+    "readOnlyHint": "Этот хост доступен только для чтения, поэтому оболочки подов отключены."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Не удалось прочитать из буфера обмена. Убедитесь, что предоставлены разрешения на доступ к буферу обмена.",
+    "clipboardWriteFailed": "Не удалось скопировать в буфер обмена. Убедитесь, что страница обслуживается по HTTPS или localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Требуется удалённый сервер. Подключите удалённый сервер в настройках, чтобы использовать этот тип подключения."
+  },
+  "hosts": {
+    "docsLink": "Просмотреть документацию",
+    "hostNotFound": "Хост не найден",
+    "loadingHost": "Загрузка хоста..."
+  }
+}

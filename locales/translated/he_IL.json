@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "ניהול אשכולות Kubernetes מהמארחים שלך דרך SSH, עם יומנים, מדדים, YAML ו-shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "לוח Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "שימוש ב-Kubernetes",
+      "description": "פתיחת תצוגת Kubernetes ו-shell של פודים במארחים עם Kubernetes מופעל."
+    },
+    "secrets": {
+      "title": "חשיפת סודות Kubernetes",
+      "description": "הצגת הערכים המפוענחים של סודות Kubernetes. כל חשיפה נרשמת ביומן הרישוי."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "הפעלת Kubernetes",
+        "description": "הפעלת kubectl במארח זה דרך SSH כדי לנהל את האשכול שהוא יכול להגיע אליו."
+      },
+      "kubectlFlavor": {
+        "label": "גרסת Kubernetes",
+        "description": "הפקודה שרצה את kubectl במארח זה.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "נתיב קובץ Kubeconfig",
+        "description": "השאר ריק כדי להשתמש בהגדרה ברירת המחדל עבור משתמש ה-SSH (~/.kube/config או KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "הקשר ברירת מחדל",
+        "description": "השאר ריק כדי להשתמש בהקשר הנוכחי בקובץ kubeconfig. ניתן להחליף הקשרים בלשונית Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "מרחב שמות ברירת מחדל",
+        "description": "מרחב השמות שבו תיפתח לשונית Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "הפעל עם sudo",
+        "description": "הפעל את kubectl עם sudo -n, להגדרות k3s ו-MicroK8s שבהן רק root יכול לקרוא את תצורת הצומת. משתמש ה-SSH צריך הרשאות sudo ללא סיסמה."
+      },
+      "readOnly": {
+        "label": "קריאה בלבד",
+        "description": "קריאה בלבד. חוסם הרחבה, הפעלה מחדש, מחיקה, שינויי YAML, שינויי Helm ו-Shell של פודים לכל המשתמשים במארח זה."
+      },
+      "showPanel": {
+        "label": "הצג לוח Kubernetes בטרמינלים",
+        "description": "אפשר לפאנל של Kubernetes להיפתח לצד מסופי SSH במארח זה."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "פתח את פאנל Kubernetes עם מסופים חדשים",
+        "description": "הצג את פאנל Kubernetes לצד כל מסוף SSH שבו Kubernetes מופעל. תמיד תוכל לפתוח ולסגור אותו באמצעות הכפתור בקצה הימני."
+      },
+      "companionSide": {
+        "label": "צד פאנל Kubernetes",
+        "description": "איפה פאנל Kubernetes ממוקם לצד מסוף.",
+        "right": "ימין",
+        "left": "שמאל",
+        "bottom": "תחתון"
+      },
+      "companionSize": {
+        "label": "גודל פאנל Kubernetes",
+        "description": "רוחב בפיקסלים, או גובה כשהוא ממוקם בתחתית. אפשר גם לגרור את הקצה שלו."
+      },
+      "companionEdgeButton": {
+        "label": "הצג את כפתור הפאנל",
+        "description": "הצג כפתור קטן בצד הימני של מסוף שפותח את פאנל Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes אינו מופעל עבור מארח זה",
+    "notEnabledHint": "הפעל את Kubernetes בהגדרות של מארח זה כדי לנהל את הצבירו.",
+    "validating": "בודק את הצביר...",
+    "connecting": "מתחבר...",
+    "error": "שגיאה",
+    "errorCode": "קוד שגיאה: {{code}}",
+    "connectionFailed": "החיבור נכשל",
+    "totpVerificationFailed": "האימות נכשל. אנא נסה שוב.",
+    "verificationCodePrompt": "הזן קוד אימות",
+    "browserSignInFailed": "התחברות נכשלה. נסה שוב.",
+    "noHostSelected": "לא נבחר מארח",
+    "refresh": "רענן"
+  },
+  "cluster": {
+    "loading": "טוען...",
+    "empty": "אין כאן {{kind}}",
+    "noMatches": "אין תוצאות התואמות את המסננים שלך",
+    "readOnly": "קריאה בלבד"
+  },
+  "sections": {
+    "workloads": "עומסי עבודה",
+    "network": "רשת",
+    "config": "הגדרות",
+    "cluster": "קלאסטר",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "תביעת נפח",
+      "many": "תביעות נפח"
+    },
+    "pvs": {
+      "one": "נפח קבוע",
+      "many": "נפחים קבועים"
+    },
+    "nodes": {
+      "one": "צומת",
+      "many": "צמתים"
+    },
+    "namespaces": {
+      "one": "מרחב שמות",
+      "many": "מרחבי שמות"
+    },
+    "events": {
+      "one": "אירוע",
+      "many": "אירועים"
+    }
+  },
+  "filters": {
+    "all": "הכל",
+    "healthy": "בריא",
+    "problem": "בעיות",
+    "idle": "לא פעיל"
+  },
+  "toolbar": {
+    "namespace": "מרחב שמות",
+    "allNamespaces": "כל מרחבי השמות",
+    "context": "הקשר",
+    "kind": "סוג משאב",
+    "search": "חיפוש..."
+  },
+  "columns": {
+    "name": "שם",
+    "namespace": "מרחב שמות",
+    "status": "סטטוס",
+    "age": "גיל",
+    "ready": "מוכן",
+    "restarts": "הפעלות מחדש",
+    "node": "צומת",
+    "ip": "IP",
+    "owner": "בעלים",
+    "upToDate": "מעודכן",
+    "available": "זמין",
+    "images": "דגמים",
+    "completions": "השלמות",
+    "duration": "משך",
+    "schedule": "לוח זמנים",
+    "active": "פעיל",
+    "lastSchedule": "הפעלה אחרונה",
+    "type": "סוג",
+    "clusterIP": "כתובת IP של הצביר",
+    "externalIP": "כתובת IP חיצונית",
+    "ports": "יציאות",
+    "class": "מחלקה",
+    "hosts": "מארחים",
+    "address": "כתובת",
+    "tls": "TLS",
+    "keys": "מפתחות",
+    "capacity": "קיבולת",
+    "access": "גישה",
+    "storageClass": "מחלקת אחסון",
+    "volume": "כרך",
+    "reclaim": "שחזור",
+    "claim": "טענה",
+    "roles": "תפקידים",
+    "version": "גרסה",
+    "internalIP": "כתובת IP פנימית",
+    "os": "מערכת הפעלה",
+    "cpu": "CPU",
+    "memory": "זיכרון",
+    "reason": "סיבה",
+    "object": "אובייקט",
+    "message": "הודעה",
+    "count": "ספירה",
+    "cpuUsage": "שימוש ב-CPU",
+    "memoryUsage": "שימוש בזיכרון",
+    "container": "מיכל",
+    "chart": "תרשים",
+    "appVersion": "גרסת אפליקציה",
+    "revision": "תיקון"
+  },
+  "actions": {
+    "logs": "יומנים",
+    "console": "מעטפת",
+    "scale": {
+      "label": "התאמת גודל",
+      "title": "התאמת גודל של {{name}}",
+      "replicas": "עותקים",
+      "hint": "רץ כעת: {{current}}",
+      "done": "הותאם את {{name}}"
+    },
+    "restart": {
+      "label": "הפעלה מחדש",
+      "confirmTitle": "להפעיל מחדש את {{name}}?",
+      "confirmText": "כל פוד ב-{{kind}} הזה יוחלף אחד אחרי השני.",
+      "done": "מפעיל מחדש את {{name}}"
+    },
+    "undo": {
+      "label": "החזרה לגרסה קודמת",
+      "done": "הוחזר לגרסה קודמת של {{name}}"
+    },
+    "setImage": {
+      "label": "שינוי תמונה",
+      "title": "שינוי התמונה של {{name}}",
+      "image": "תמונה",
+      "hint": "הפודים יוחלפו עם התמונה החדשה.",
+      "done": "שונה התמונה של {{name}}"
+    },
+    "suspend": {
+      "label": "השהה",
+      "confirmTitle": "להשהות את {{name}}?",
+      "confirmText": "ה{{kind}} הזה מפסיק להפעיל ריצות חדשות עד שתחדש אותו.",
+      "done": "{{name}} הושהה"
+    },
+    "resume": {
+      "label": "המשך",
+      "done": "{{name}} הופעל מחדש"
+    },
+    "trigger": {
+      "label": "הפעל עכשיו",
+      "done": "הופעלה משימה מ-{{name}}"
+    },
+    "cordon": {
+      "label": "סמן כלא זמין",
+      "confirmTitle": "לסמן את {{name}} כלא זמין?",
+      "confirmText": "לא מתוזמנים פודים חדשים על ה-{{kind}} הזה. פודים שכבר רצים עליו ממשיכים לפעול.",
+      "done": "ה-{{name}} הוצא משירות (Cordoned)"
+    },
+    "uncordon": {
+      "label": "החזר לשירות (Uncordon)",
+      "done": "ה-{{name}} הוחזר לשירות (Uncordoned)"
+    },
+    "drain": {
+      "label": "ריקון (Drain)",
+      "title": "ריקון ה-{{name}}",
+      "text": "מוציא את ה-{{name}} משירות ומגרש את הפודים שלו כך שיתעברו לצמתים אחרים. פודי DaemonSet נשארים במקומם.",
+      "emptyDir": "מחק נתוני emptyDir",
+      "emptyDirHint": "גרש פודים ששומרים נתונים בנפחי emptyDir. הנתונים הללו יאבדו.",
+      "force": "כפה",
+      "forceHint": "גם לפנות פודים שאין להם בקר. הם לא ייווצרו מחדש.",
+      "done": "הפנו את {{name}}"
+    },
+    "delete": {
+      "label": "מחיקה",
+      "confirmTitle": "למחוק את {{name}}?",
+      "confirmText": "ה{{kind}} הזה יוסר מהקלאסטר.",
+      "managedPodText": "פוד זה שייך לבקר, שיפעיל פוד חדש במקומו.",
+      "namespaceText": "כל מה שנמצא בתוך מרחב השמות הזה יימחק גם כן. פעולה זו אינה ניתנת לביטול.",
+      "done": "נמחק {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "טוען...",
+    "noDescribe": "אין תיאור",
+    "noPods": "אין פודים",
+    "noEvents": "אין אירועים",
+    "tabs": {
+      "overview": "סקירה כללית",
+      "pods": "פודים",
+      "logs": "יומנים",
+      "console": "מעטפת",
+      "metrics": "סטטיסטיקות",
+      "history": "היסטוריה",
+      "data": "נתונים",
+      "yaml": "YAML",
+      "events": "אירועים"
+    }
+  },
+  "history": {
+    "none": "אין היסטוריית הפעלה",
+    "noCause": "אין סיבה לשינוי",
+    "current": "נוכחי",
+    "rollBack": "החזרה לגרסה קודמת",
+    "confirmTitle": "להחזיר לגרסה {{revision}}?",
+    "confirmText": "{{name}} יוחזר לתבנית הפוד של אותה גרסה.",
+    "rolledBack": "הוחזר לגרסה {{revision}}"
+  },
+  "data": {
+    "empty": "אין נתונים",
+    "reveal": "הצג",
+    "hide": "הסתר",
+    "copy": "העתק",
+    "copied": "הועתק",
+    "secretHint": "הערכים נשארים מוסתרים עד שתחשוף אותם. חשיפה מתועדת ביומן הרבייה.",
+    "secretNoPermission": "אתה יכול לראות את המפתחות אך לא את הערכים. בקש ממנהל הרשאת חשיפת סודות Kubernetes."
+  },
+  "metrics": {
+    "cpu": "מעבד",
+    "memory": "זיכרון",
+    "collecting": "אוסף דוגמאות...",
+    "unavailable": "המדדים אינם זמינים",
+    "unavailableHint": "התקן את metrics-server ב-cluster כדי לראות את השימוש במעבד ובזיכרון.",
+    "cpuUsage": "שימוש ב-CPU",
+    "memoryUsage": "שימוש בזיכרון",
+    "podInformation": "מידע על ה-Pod",
+    "containers": "מיכלים",
+    "cpuHistory": "היסטוריית CPU",
+    "memoryHistory": "היסטוריית זיכרון",
+    "loading": "טוען סטטיסטיקות...",
+    "error": "שגיאה בטעינת הסטטיסטיקות",
+    "startPod": "התחל את ה-Pod כדי לראות את הסטטיסטיקות שלו.",
+    "noLimit": "ללא מגבלה",
+    "of": {
+      "limit": "מגבלה",
+      "node": "צומת"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "בדיקה",
+    "diff": "הבדלים",
+    "save": "שמירה",
+    "reload": "טעינה מחדש",
+    "unsaved": "שינויים שלא נשמרו",
+    "valid": "נראה טוב. אלו ישתנו:",
+    "noChanges": "אין שינויים",
+    "saved": "נשמרו {{count}} משאבים"
+  },
+  "apply": {
+    "title": "החל YAML",
+    "apply": "החל",
+    "hint": "הדבק מניפסט אחד או יותר. בדיקה מבצעת הרצה יבשה בשרת, והשוואה מציגה את השינויים. אין שינויים עד שתבצע החלה.",
+    "namespace": "לתוך {{namespace}}",
+    "defaultNamespace": "לתוך מרחב השמות המוגדר כברירת מחדל"
+  },
+  "helm": {
+    "none": "אין שחרורי Helm",
+    "revision": "גרסה {{revision}}",
+    "tabs": {
+      "history": "היסטוריה",
+      "values": "ערכים",
+      "manifest": "מניפסט"
+    },
+    "allValues": "הכלל ערכי ברירת מחדל של התרשים",
+    "allValuesHint": "הצג כל ערך, לא רק אלו שהוגדרו בהתקנה.",
+    "rollbackTitle": "להחזיר את {{name}} לגרסה {{revision}}?",
+    "rollbackText": "Helm יוצר גרסה חדשה עם הגדרות הגרסה הקודמת.",
+    "rolledBack": "הוחזר {{name}} לגרסה {{revision}}",
+    "uninstall": "הסר התקנה",
+    "uninstallTitle": "להסיר את ההתקנה של {{name}}?",
+    "uninstallText": "Helm ימחק כל משאב של שחרור זה.",
+    "uninstalled": "הוסרה ההתקנה של {{name}}"
+  },
+  "logs": {
+    "container": "מיכל",
+    "allContainers": "כל המיכלים",
+    "previous": "הרצה קודמת",
+    "filter": "סינון יומנים...",
+    "lines": "שורות",
+    "last50": "50 האחרונות",
+    "last100": "100 האחרונות",
+    "last500": "500 האחרונות",
+    "last1000": "1000 האחרונות",
+    "all": "הכל",
+    "timestamps": "חותמות זמן",
+    "autoRefresh": "מעקב",
+    "copy": "העתקת יומנים",
+    "download": "הורדה",
+    "clear": "ניקוי",
+    "none": "אין יומנים",
+    "noneMatching": "אין יומנים התואמים ל-\"{{query}}\"",
+    "copied": "הועתקו {{count}} שורות",
+    "failedToCopy": "העתקת היומנים נכשלה",
+    "downloaded": "היומנים הורדו",
+    "failedToDownload": "ההורדה של יומנים נכשלה: {{error}}",
+    "failedToFetch": "טעינת יומנים נכשלה: {{error}}"
+  },
+  "console": {
+    "connect": "חיבור",
+    "disconnect": "ניתוק",
+    "connecting": "מתחבר...",
+    "connectingTo": "מתחבר אל {{name}}...",
+    "connectedTo": "מחובר אל {{name}}",
+    "notConnected": "לא מחובר",
+    "clickToConnect": "בחר שׁל וּל ולחץ על חיבור",
+    "disconnected": "נתק",
+    "consoleError": "שגיאת מעטפת",
+    "errorMessage": "שגיאה: {{message}}",
+    "failedToConnect": "החיבור ל-pod נכשל",
+    "failedToConnectWithError": "החיבור נכשל: {{error}}",
+    "selectShell": "מעטפת",
+    "copyConsole": "העתקת פלט",
+    "consoleCopied": "הפוט הועתק",
+    "clear": "ניקוי",
+    "podMustBeRunning": "ה-pod חייב להיות פעיל",
+    "podNotRunning": "ה-pod אינו פעיל",
+    "podNotRunningHint": "הפעל את ה-pod כדי לפתוח בו מעטפת.",
+    "readOnly": "המעטפת כבויה",
+    "readOnlyHint": "מארח זה הוא לקריאה בלבד, ולכן מעטפות ה-pod כבויות."
+  },
+  "terminal": {
+    "clipboardReadFailed": "קריאה מהלוח נכשלה. ודא שניתנו הרשאות ללוח.",
+    "clipboardWriteFailed": "העתקה ללוח נכשלה. ודא שהדף מוגש דרך HTTPS או localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "נדרש שרת מרוחק. חבר שרת מרוחק בהגדרות כדי להשתמש בסוג חיבור זה."
+  },
+  "hosts": {
+    "docsLink": "צפייה בתיעוד",
+    "hostNotFound": "המארח לא נמצא",
+    "loadingHost": "טוען מארח..."
+  }
+}

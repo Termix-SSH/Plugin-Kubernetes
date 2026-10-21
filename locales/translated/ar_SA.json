@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "إدارة مجموعات Kubernetes من مضيفيك عبر SSH، مع السجلات، والمقاييس، و YAML و shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "لوحة Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "استخدام Kubernetes",
+      "description": "فتح عرض Kubernetes و shells pods على المضيفين الذين تم تمكين Kubernetes عليهم."
+    },
+    "secrets": {
+      "title": "كشف أسرار Kubernetes",
+      "description": "إظهار القيم المفككة لأسرار Kubernetes. يتم تسجيل كل كشف في سجل التدقيق."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "تمكين Kubernetes",
+        "description": "تشغيل kubectl على هذا المضيف عبر SSH لإدارة المجموعة التي يمكنه الوصول إليها."
+      },
+      "kubectlFlavor": {
+        "label": "نكهة Kubernetes",
+        "description": "الأمر الذي يُنفّذ kubectl على هذا المضيف.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "مسار Kubeconfig",
+        "description": "اتركه فارغًا لاستخدام الإعداد الافتراضي لمستخدم SSH (~/.kube/config أو KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "السياق الافتراضي",
+        "description": "اتركه فارغًا لاستخدام السياق الحالي في ملف kubeconfig. يمكنك التبديل بين السياقات في علامة تبويب Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "مساحة الاسم الافتراضية",
+        "description": "مساحة الاسم التي تفتح بها علامة تبويب Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "التشغيل باستخدام sudo",
+        "description": "تشغيل kubectl مع sudo -n، لإعدادات k3s و MicroK8s حيث يمكن للجذر (root) فقط قراءة تهيئة العنقود. يحتاج مستخدم SSH إلى sudo بدون كلمة مرور."
+      },
+      "readOnly": {
+        "label": "للقراءة فقط",
+        "description": "للمشاهدة فقط. يمنع التوسع، وإعادة التشغيل، والحذف، وتغييرات YAML، وتغييرات Helm، وشرائط pods لجميع المستخدمين على هذا المضيف."
+      },
+      "showPanel": {
+        "label": "إظهار لوحة Kubernetes في الطرفيات",
+        "description": "السماح بفتح لوحة Kubernetes بجانب طرفيات SSH على هذا المضيف."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "فتح لوحة Kubernetes مع الطرفيات الجديدة",
+        "description": "إظهار لوحة Kubernetes بجانب كل طرفية SSH تحتوي على Kubernetes. يمكنك دائماً فتحها وإغلاقها من الزر الموجود على الحافة اليمنى."
+      },
+      "companionSide": {
+        "label": "موقع لوحة Kubernetes",
+        "description": "المكان الذي تظهر فيه لوحة Kubernetes بجانب الطرفية.",
+        "right": "يمين",
+        "left": "يسار",
+        "bottom": "أسفل"
+      },
+      "companionSize": {
+        "label": "حجم لوحة Kubernetes",
+        "description": "العرض بالبكسل، أو الارتفاع عندما تكون في الأسفل. يمكنك أيضاً سحب حافتها."
+      },
+      "companionEdgeButton": {
+        "label": "إظهار زر اللوحة",
+        "description": "إظهار زر صغير على الحافة اليمنى من نافذة الطرفية يفتح لوحة Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes غير مفعّل لهذا المضيف",
+    "notEnabledHint": "فعّل Kubernetes في إعدادات هذا المضيف لإدارة العنقود الخاص به.",
+    "validating": "جارٍ التحقق من العنقود...",
+    "connecting": "جارٍ الاتصال...",
+    "error": "خطأ",
+    "errorCode": "رمز الخطأ: {{code}}",
+    "connectionFailed": "فشل الاتصال",
+    "totpVerificationFailed": "فشل التحقق. يرجى المحاولة مرة أخرى.",
+    "verificationCodePrompt": "أدخل رمز التحقق",
+    "browserSignInFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+    "noHostSelected": "لم يتم تحديد مضيف",
+    "refresh": "تحديث"
+  },
+  "cluster": {
+    "loading": "جارٍ التحميل...",
+    "empty": "لا يوجد {{kind}} هنا",
+    "noMatches": "لا يتطابق أي عنصر مع عوامل التصفية الخاصة بك",
+    "readOnly": "للقراءة فقط"
+  },
+  "sections": {
+    "workloads": "الأحمال العملية",
+    "network": "الشبكة",
+    "config": "الإعدادات",
+    "cluster": "العنقود",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "نشر",
+      "many": "عمليات النشر"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "مهمة",
+      "many": "المهام"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "خدمة",
+      "many": "الخدمات"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "سر",
+      "many": "الأسرار"
+    },
+    "pvcs": {
+      "one": "مطالبة حجم",
+      "many": "مطالبات الحجم"
+    },
+    "pvs": {
+      "one": "حجم دائم",
+      "many": "الأحجام الدائمة"
+    },
+    "nodes": {
+      "one": "عقدة",
+      "many": "العقد"
+    },
+    "namespaces": {
+      "one": "مساحة اسم",
+      "many": "مساحات الأسماء"
+    },
+    "events": {
+      "one": "حدث",
+      "many": "الأحداث"
+    }
+  },
+  "filters": {
+    "all": "الكل",
+    "healthy": "سليم",
+    "problem": "مشاكل",
+    "idle": "خامل"
+  },
+  "toolbar": {
+    "namespace": "مساحة الاسم",
+    "allNamespaces": "جميع مساحات الأسماء",
+    "context": "السياق",
+    "kind": "نوع المورد",
+    "search": "بحث..."
+  },
+  "columns": {
+    "name": "الاسم",
+    "namespace": "مساحة الاسم",
+    "status": "الحالة",
+    "age": "العمر",
+    "ready": "جاهز",
+    "restarts": "إعادة التشغيل",
+    "node": "العقدة",
+    "ip": "IP",
+    "owner": "المالك",
+    "upToDate": "محدث",
+    "available": "متاح",
+    "images": "الصور",
+    "completions": "الإكتمالات",
+    "duration": "المدة",
+    "schedule": "الجدول الزمني",
+    "active": "نشط",
+    "lastSchedule": "آخر تشغيل",
+    "type": "النوع",
+    "clusterIP": "عنوان IP للكتلة",
+    "externalIP": "عنوان IP الخارجي",
+    "ports": "المنافذ",
+    "class": "الفئة",
+    "hosts": "المضيفين",
+    "address": "العنوان",
+    "tls": "TLS",
+    "keys": "المفاتيح",
+    "capacity": "السعة",
+    "access": "الوصول",
+    "storageClass": "فئة التخزين",
+    "volume": "المجلد",
+    "reclaim": "استرداد",
+    "claim": "المطالبة",
+    "roles": "الأدوار",
+    "version": "الإصدار",
+    "internalIP": "عنوان IP الداخلي",
+    "os": "نظام التشغيل",
+    "cpu": "وحدة المعالجة المركزية",
+    "memory": "الذاكرة",
+    "reason": "السبب",
+    "object": "الكائن",
+    "message": "الرسالة",
+    "count": "العدد",
+    "cpuUsage": "استخدام وحدة المعالجة المركزية",
+    "memoryUsage": "استخدام الذاكرة",
+    "container": "الحاوية",
+    "chart": "الرسم البياني",
+    "appVersion": "إصدار التطبيق",
+    "revision": "المراجعة"
+  },
+  "actions": {
+    "logs": "السجلات",
+    "console": "الطرفية",
+    "scale": {
+      "label": "التوسع",
+      "title": "توسيع {{name}}",
+      "replicas": "النسخ المتماثلة",
+      "hint": "يعمل الآن: {{current}}",
+      "done": "تم توسيع {{name}}"
+    },
+    "restart": {
+      "label": "إعادة التشغيل",
+      "confirmTitle": "إعادة تشغيل {{name}}؟",
+      "confirmText": "يتم استبدال كل حاوية من هذا النوع {{kind}} واحدة تلو الأخرى.",
+      "done": "جارٍ إعادة تشغيل {{name}}"
+    },
+    "undo": {
+      "label": "التراجع",
+      "done": "تم التراجع عن {{name}}"
+    },
+    "setImage": {
+      "label": "تغيير الصورة",
+      "title": "تغيير صورة {{name}}",
+      "image": "الصورة",
+      "hint": "يتم استبدال الحاويات بالصورة الجديدة.",
+      "done": "تم تغيير صورة {{name}}"
+    },
+    "suspend": {
+      "label": "إيقاف مؤقت",
+      "confirmTitle": "إيقاف {{name}} مؤقتًا؟",
+      "confirmText": "يتوقف هذا {{kind}} عن بدء تشغيل عمليات جديدة حتى تستأنفه.",
+      "done": "تم إيقاف {{name}} مؤقتًا"
+    },
+    "resume": {
+      "label": "استئناف",
+      "done": "تم استئناف {{name}}"
+    },
+    "trigger": {
+      "label": "تشغيل الآن",
+      "done": "تم بدء مهمة من {{name}}"
+    },
+    "cordon": {
+      "label": "عزل",
+      "confirmTitle": "عزل {{name}}؟",
+      "confirmText": "لا يتم جدولة حاويات (Pods) جديدة على هذا الـ {{kind}}. ستستمر الحاويات الموجودة بالفعل في العمل.",
+      "done": "تم عزل {{name}}"
+    },
+    "uncordon": {
+      "label": "إلغاء العزل",
+      "done": "تم إلغاء عزل {{name}}"
+    },
+    "drain": {
+      "label": "تفريغ",
+      "title": "تفريغ {{name}}",
+      "text": "يعزل {{name}} ويطرد حاوياته (Pods) للانتقال إلى عقد أخرى. تبقى حاويات DaemonSet.",
+      "emptyDir": "حذف بيانات emptyDir",
+      "emptyDirHint": "طرد الحاويات التي تحتفظ ببيانات في وحدات تخزين emptyDir. ستفقد تلك البيانات.",
+      "force": "إجبار",
+      "forceHint": "طرد الحاويات التي لا يديرها أي متحكم أيضاً. لن يتم إعادة إنشائها.",
+      "done": "تم تفريغ {{name}}"
+    },
+    "delete": {
+      "label": "حذف",
+      "confirmTitle": "حذف {{name}}؟",
+      "confirmText": "سيتم إزالة هذا الـ {{kind}} من العنقود.",
+      "managedPodText": "تتبع هذه الحاوية (Pod) إلى متحكم، والذي سيبدأ حاوية جديدة مكانها.",
+      "namespaceText": "سيتم حذف كل ما بداخل هذا الفضاء.namespaces أيضاً. لا يمكن التراجع عن هذا الإجراء.",
+      "done": "تم حذف {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "جارٍ التحميل...",
+    "noDescribe": "لا يوجد وصف",
+    "noPods": "لا توجد حاويات (Pods)",
+    "noEvents": "لا توجد أحداث",
+    "tabs": {
+      "overview": "نظرة عامة",
+      "pods": "الحاويات (Pods)",
+      "logs": "السجلات",
+      "console": "الطرفية",
+      "metrics": "الإحصائيات",
+      "history": "السجل",
+      "data": "البيانات",
+      "yaml": "YAML",
+      "events": "الأحداث"
+    }
+  },
+  "history": {
+    "none": "لا يوجد سجل للنشر",
+    "noCause": "لا يوجد سبب للتغيير",
+    "current": "الحالي",
+    "rollBack": "تراجع",
+    "confirmTitle": "التراجع إلى المراجعة {{revision}}؟",
+    "confirmText": "سيعود {{name}} إلى قالب الحاوية (Pod template) الخاص بتلك المراجعة.",
+    "rolledBack": "تم التراجع إلى المراجعة {{revision}}"
+  },
+  "data": {
+    "empty": "لا توجد بيانات",
+    "reveal": "إظهار",
+    "hide": "إخفاء",
+    "copy": "نسخ",
+    "copied": "تم النسخ",
+    "secretHint": "تبقى القيم مخفية حتى تظهرها. يتم تسجيل عملية الإظهار في سجل التدقيق.",
+    "secretNoPermission": "يمكنك رؤية المفاتيح ولكن ليس القيم. اطلب من المسؤول إذن إظهار أسرار Kubernetes."
+  },
+  "metrics": {
+    "cpu": "المعالج",
+    "memory": "الذاكرة",
+    "collecting": "جارٍ جمع العينات...",
+    "unavailable": "الإحصائيات غير متاحة",
+    "unavailableHint": "قم بتثبيت metrics-server في العنقود لرؤية استخدام المعالج والذاكرة.",
+    "cpuUsage": "استخدام المعالج",
+    "memoryUsage": "استخدام الذاكرة",
+    "podInformation": "معلومات الحاوية",
+    "containers": "الحاويات",
+    "cpuHistory": "سجل المعالج",
+    "memoryHistory": "سجل الذاكرة",
+    "loading": "جارٍ تحميل الإحصائيات...",
+    "error": "خطأ في تحميل الإحصائيات",
+    "startPod": "ابدأ الحاوية لرؤية إحصائياتها.",
+    "noLimit": "بدون حد",
+    "of": {
+      "limit": "حد",
+      "node": "عقدة"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "فحص",
+    "diff": "الفرق",
+    "save": "حفظ",
+    "reload": "إعادة تحميل",
+    "unsaved": "تغييرات غير محفوظة",
+    "valid": "يبدو جيداً. هذه التغييرات ستُطبق:",
+    "noChanges": "لا توجد تغييرات",
+    "saved": "حفظ {{count}} موارد"
+  },
+  "apply": {
+    "title": "تطبيق YAML",
+    "apply": "تطبيق",
+    "hint": "الصق مظهراً واحداً أو أكثر. يقوم الفحص بتشغيل تجريبي على الخادم، ويظهر الفرق التغييرات المقترحة. لن يحدث أي تغيير حتى تقوم بالتطبيق.",
+    "namespace": "إلى {{namespace}}",
+    "defaultNamespace": "إلى مساحة الاسم الافتراضية"
+  },
+  "helm": {
+    "none": "لا توجد إصدارات Helm",
+    "revision": "مراجعة {{revision}}",
+    "tabs": {
+      "history": "السجل",
+      "values": "القيم",
+      "manifest": "المظهر"
+    },
+    "allValues": "تضمين القيم الافتراضية للرسم البياني",
+    "allValuesHint": "عرض كل القيم، وليس فقط تلك التي تم تعيينها أثناء التثبيت.",
+    "rollbackTitle": "هل تريد التراجع عن {{name}} إلى المراجعة {{revision}}؟",
+    "rollbackText": "سيقوم Helm بإنشاء مراجعة جديدة باستخدام إعدادات المراجعة القديمة.",
+    "rolledBack": "تم التراجع عن {{name}} إلى المراجعة {{revision}}",
+    "uninstall": "إلغاء التثبيت",
+    "uninstallTitle": "هل تريد إلغاء تثبيت {{name}}؟",
+    "uninstallText": "سيقوم Helm بحذف كل موارد هذا الإصدار.",
+    "uninstalled": "تم إلغاء تثبيت {{name}}"
+  },
+  "logs": {
+    "container": "الحاوية",
+    "allContainers": "جميع الحاويات",
+    "previous": "التشغيل السابق",
+    "filter": "تصفية السجلات...",
+    "lines": "سطور",
+    "last50": "آخر 50",
+    "last100": "آخر 100",
+    "last500": "آخر 500",
+    "last1000": "آخر 1000",
+    "all": "الكل",
+    "timestamps": "الطوابع الزمنية",
+    "autoRefresh": "متابعة",
+    "copy": "نسخ السجلات",
+    "download": "تحميل",
+    "clear": "مسح",
+    "none": "لا توجد سجلات",
+    "noneMatching": "لا توجد سجلات تطابق \"{{query}}\"",
+    "copied": "تم نسخ {{count}} سطور",
+    "failedToCopy": "فشل في نسخ السجلات",
+    "downloaded": "تم تحميل السجلات",
+    "failedToDownload": "فشل في تحميل السجلات: {{error}}",
+    "failedToFetch": "فشل في تحميل السجلات: {{error}}"
+  },
+  "console": {
+    "connect": "اتصال",
+    "disconnect": "قطع الاتصال",
+    "connecting": "جاري الاتصال...",
+    "connectingTo": "جاري الاتصال بـ {{name}}...",
+    "connectedTo": "متصل بـ {{name}}",
+    "notConnected": "غير متصل",
+    "clickToConnect": "اختر شل وانقر على اتصال",
+    "disconnected": "تم قطع الاتصال",
+    "consoleError": "خطأ في الطرفية",
+    "errorMessage": "خطأ: {{message}}",
+    "failedToConnect": "فشل الاتصال بالحاوية",
+    "failedToConnectWithError": "فشل الاتصال: {{error}}",
+    "selectShell": "الطرفية",
+    "copyConsole": "نسخ المخرجات",
+    "consoleCopied": "تم نسخ المخرجات",
+    "clear": "مسح",
+    "podMustBeRunning": "يجب أن تكون الحاوية قيد التشغيل",
+    "podNotRunning": "الحاوية غير قيد التشغيل",
+    "podNotRunningHint": "قم بتشغيل الحاوية لفتح طرفية داخلها.",
+    "readOnly": "الطرفية معطلة",
+    "readOnlyHint": "هذا المضيف للقراءة فقط، لذا تم تعطيل طرفيات الحاويات."
+  },
+  "terminal": {
+    "clipboardReadFailed": "فشل القراءة من الحافظة. تأكد من منح أذونات الحافظة.",
+    "clipboardWriteFailed": "فشل النسخ إلى الحافظة. تأكد من أن الصفحة تعمل عبر HTTPS أو localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "مطلوب خادم بعيد. قم بتوصيل خادم بعيد في الإعدادات لاستخدام هذا نوع الاتصال."
+  },
+  "hosts": {
+    "docsLink": "عرض التوثيق",
+    "hostNotFound": "المضيف غير موجود",
+    "loadingHost": "جاري تحميل المضيف..."
+  }
+}

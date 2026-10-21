@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Kubernetes-klaszterek kezelése a gazdagépekről SSH-n keresztül, naplókkal, metrikákkal, YAML-lel és shelllel."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes panel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes használata",
+      "description": "Kubernetes nézet és pod shell megnyitása azon gazdagépeken, ahol a Kubernetes be van kapcsolva."
+    },
+    "secrets": {
+      "title": "Kubernetes titkok megjelenítése",
+      "description": "A Kubernetes titkok dekódolt értékeinek megjelenítése. Minden megjelenítés rögzítésre kerül az ellenőrzési naplóban."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes engedélyezése",
+        "description": "A kubectl futtatása ezen a gazdagépen SSH-n keresztül a hozzáférhető klaszter kezeléséhez."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes változat",
+        "description": "Melyik parancs futtatja a kubectl-ot ezen a hosztján.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig elérési útja",
+        "description": "Hagyja üresen az SSH-felhasználó alapértelmezett beállításának használatához (~/.kube/config vagy KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Alapértelmezett környezet",
+        "description": "Hagyja üresen a kubeconfig aktuális kontextusának használatához. A Kubernetes-fülön válthat kontextusok között.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Alapértelmezett névtér",
+        "description": "A névtér, amelyben a Kubernetes-fül megnyílik.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Futtatás sudo-val",
+        "description": "A kubectl futtatása sudo -n kapcsolóval, k3s és MicroK8s telepítésekhez, ahol csak a root olvashatja a klaszter konfigurációját. Az SSH-felhasználónak jelszómentes sudo hozzáféréssel kell rendelkeznie."
+      },
+      "readOnly": {
+        "label": "Csak olvasható",
+        "description": "Csak megtekintés. Letiltja a skálázást, újraindítást, törlést, YAML-módosításokat, Helm-módosításokat és a pod shell használatát minden felhasználó számára ezen a hoszton."
+      },
+      "showPanel": {
+        "label": "Kubernetes panel megjelenítése a terminálokban",
+        "description": "Lehetővé teszi a Kubernetes panel megnyitását az SSH terminálok mellett ezen a hoszton."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "A Kubernetes panel megnyitása az új terminálokkal",
+        "description": "A Kubernetes panel megjelenítése minden olyan SSH terminál mellett, amelyen a Kubernetes be van kapcsolva. A jobb szélen található gombbal továbbra is megnyithatja és bezárhatja."
+      },
+      "companionSide": {
+        "label": "A Kubernetes panel oldala",
+        "description": "Ahol a Kubernetes panel a terminál mellett helyezkedik el.",
+        "right": "Jobb",
+        "left": "Bal",
+        "bottom": "Alsó"
+      },
+      "companionSize": {
+        "label": "A Kubernetes panel mérete",
+        "description": "Szélesség pixelben, vagy magasság, ha az alján van. Az élét is húzhatja."
+      },
+      "companionEdgeButton": {
+        "label": "Panel gomb megjelenítése",
+        "description": "Egy kis gomb megjelenítése a terminál jobb szélén, amely megnyitja a Kubernetes panelt."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "A Kubernetes nincs engedélyezve ezen a hoszton",
+    "notEnabledHint": "Engedélyezze a Kubernetes-t a hoszt beállításaiban a klaszter kezeléséhez.",
+    "validating": "Klaszter ellenőrzése...",
+    "connecting": "Csatlakozás...",
+    "error": "Hiba",
+    "errorCode": "Hibakód: {{code}}",
+    "connectionFailed": "A csatlakozás sikertelen",
+    "totpVerificationFailed": "Az ellenőrzés sikertelen. Kérjük, próbálja újra.",
+    "verificationCodePrompt": "Adja meg az ellenőrző kódot",
+    "browserSignInFailed": "A bejelentkezés sikertelen. Kérjük, próbálja újra.",
+    "noHostSelected": "Nincs kiválasztva gazdagép",
+    "refresh": "Frissítés"
+  },
+  "cluster": {
+    "loading": "Betöltés...",
+    "empty": "Nincs itt {{kind}}",
+    "noMatches": "Nincs találat a szűrők alapján",
+    "readOnly": "Csak olvasható"
+  },
+  "sections": {
+    "workloads": "Munkaterhek",
+    "network": "Hálózat",
+    "config": "Konfiguráció",
+    "cluster": "Klaszter",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Podok"
+    },
+    "deployments": {
+      "one": "Üzembe helyezés",
+      "many": "Üzembe helyezések"
+    },
+    "statefulsets": {
+      "one": "Állapotkövető készlet",
+      "many": "Állapotkövető készletek"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSetek"
+    },
+    "replicasets": {
+      "one": "Másolatkészlet",
+      "many": "Másolatkészletek"
+    },
+    "jobs": {
+      "one": "Feladat",
+      "many": "Feladatok"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobok"
+    },
+    "services": {
+      "one": "Szolgáltatás",
+      "many": "Szolgáltatások"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresszek"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMapok"
+    },
+    "secrets": {
+      "one": "Titok",
+      "many": "Titkok"
+    },
+    "pvcs": {
+      "one": "Kötetigény",
+      "many": "Kötetigények"
+    },
+    "pvs": {
+      "one": "Tartós kötettér",
+      "many": "Tartós kötetterek"
+    },
+    "nodes": {
+      "one": "Csomópont",
+      "many": "Csomópontok"
+    },
+    "namespaces": {
+      "one": "Névtér",
+      "many": "Névterek"
+    },
+    "events": {
+      "one": "Esemény",
+      "many": "Események"
+    }
+  },
+  "filters": {
+    "all": "Összes",
+    "healthy": "Zöld",
+    "problem": "Problémák",
+    "idle": "Tétlen"
+  },
+  "toolbar": {
+    "namespace": "Névtér",
+    "allNamespaces": "Összes névtér",
+    "context": "Kontextus",
+    "kind": "Erőforrás típusa",
+    "search": "Keresés..."
+  },
+  "columns": {
+    "name": "Név",
+    "namespace": "Névtér",
+    "status": "Állapot",
+    "age": "Életkor",
+    "ready": "Kész",
+    "restarts": "Újraindítások",
+    "node": "Csomópont",
+    "ip": "IP",
+    "owner": "Tulajdonos",
+    "upToDate": "Friss",
+    "available": "Elérhető",
+    "images": "Képek",
+    "completions": "Befejezések",
+    "duration": "Időtartam",
+    "schedule": "Ütemezés",
+    "active": "Aktív",
+    "lastSchedule": "Utolsó futtatás",
+    "type": "Típus",
+    "clusterIP": "Klaszter IP",
+    "externalIP": "Külső IP",
+    "ports": "Portok",
+    "class": "Osztály",
+    "hosts": "Hostok",
+    "address": "Cím",
+    "tls": "TLS",
+    "keys": "Kulcsok",
+    "capacity": "Kapasitás",
+    "access": "Hozzáférés",
+    "storageClass": "Tárolási osztály",
+    "volume": "Kötet",
+    "reclaim": "Visszaszerzés",
+    "claim": "Követelés",
+    "roles": "Szerepkörök",
+    "version": "Verzió",
+    "internalIP": "Belső IP",
+    "os": "Operációs rendszer",
+    "cpu": "CPU",
+    "memory": "Memória",
+    "reason": "Ok",
+    "object": "Objektum",
+    "message": "Üzenet",
+    "count": "Darabszám",
+    "cpuUsage": "CPU-használat",
+    "memoryUsage": "Memóriahasználat",
+    "container": "Konténer",
+    "chart": "Diagram",
+    "appVersion": "Alkalmazás verziója",
+    "revision": "Revízió"
+  },
+  "actions": {
+    "logs": "Naplók",
+    "console": "Parancssor",
+    "scale": {
+      "label": "Méretezés",
+      "title": "{{name}} méretezése",
+      "replicas": "Másolatok",
+      "hint": "Jelenleg fut: {{current}}",
+      "done": "{{name}} méretezése kész"
+    },
+    "restart": {
+      "label": "Újraindítás",
+      "confirmTitle": "Újraindítja a(z) {{name}}?",
+      "confirmText": "Ennek a(z) {{kind}} típusú erőforrásnak minden podja egyesével lecserélődik.",
+      "done": "A(z) {{name}} újraindítása"
+    },
+    "undo": {
+      "label": "Visszavonás",
+      "done": "A(z) {{name}} visszavonva"
+    },
+    "setImage": {
+      "label": "Kép módosítása",
+      "title": "A(z) {{name}} képének módosítása",
+      "image": "Kép",
+      "hint": "A podok a új képpel lesznek lecserélve.",
+      "done": "A(z) {{name}} képe módosítva"
+    },
+    "suspend": {
+      "label": "Felfüggesztés",
+      "confirmTitle": "Felfüggeszti a(z) {{name}} elemet?",
+      "confirmText": "Ez a(z) {{kind}} nem indít új futtatásokat, amíg vissza nem állítja.",
+      "done": "A(z) {{name}} felfüggesztve"
+    },
+    "resume": {
+      "label": "Folytatás",
+      "done": "A(z) {{name}} folytatva"
+    },
+    "trigger": {
+      "label": "Futtatás most",
+      "done": "Feladat indítva a(z) {{name}} alapján"
+    },
+    "cordon": {
+      "label": "Kizárás",
+      "confirmTitle": "Kizárja a(z) {{name}} elemet?",
+      "confirmText": "Nem lesznek új podok ütemezve erre a(z) {{kind}}-ra. A már futó podok továbbra is futnak.",
+      "done": "A(z) {{name}} lezárva (cordon)"
+    },
+    "uncordon": {
+      "label": "Nyitás (uncordon)",
+      "done": "A(z) {{name}} megnyitva (uncordon)"
+    },
+    "drain": {
+      "label": "Üresítés (drain)",
+      "title": "A(z) {{name}} üresítése",
+      "text": "A(z) {{name}} lezárása és podjainak kiürítése, hogy átkerüljenek más csomópontokra. A DaemonSet podok maradnak.",
+      "emptyDir": "Az emptyDir adatok törlése",
+      "emptyDirHint": "Azok a podok kiürítése, amelyek az emptyDir kötetekben tárolnak adatokat. Ezek az adatok elvesznek.",
+      "force": "Kényszerítés",
+      "forceHint": "A vezérlő által nem kezelt podok is eltávolításra kerülnek. Ezek nem jönnek létre újra.",
+      "done": "A(z) {{name}} leürítése megtörtént"
+    },
+    "delete": {
+      "label": "Törlés",
+      "confirmTitle": "Törli a(z) {{name}} elemet?",
+      "confirmText": "Ez a(z) {{kind}} eltávolításra kerül a klaszterből.",
+      "managedPodText": "Ez a pod egy vezérlőhöz tartozik, amely a helyére egy újat indít.",
+      "namespaceText": "A névtér összes tartalma is törlődik. Ez a művelet nem vonható vissza.",
+      "done": "A(z) {{name}} törlése megtörtént"
+    }
+  },
+  "detail": {
+    "loading": "Betöltés...",
+    "noDescribe": "Nincs leírás",
+    "noPods": "Nincs pod",
+    "noEvents": "Nincs esemény",
+    "tabs": {
+      "overview": "Áttekintés",
+      "pods": "Podok",
+      "logs": "Naplók",
+      "console": "Parancssor",
+      "metrics": "Statisztikák",
+      "history": "Előzmények",
+      "data": "Adatok",
+      "yaml": "YAML",
+      "events": "Események"
+    }
+  },
+  "history": {
+    "none": "Nincs kiadási előzmény",
+    "noCause": "Nincs változás oka",
+    "current": "Jelenlegi",
+    "rollBack": "Visszavonás",
+    "confirmTitle": "Visszavonás a(z) {{revision}} verzióra?",
+    "confirmText": "A(z) {{name}} visszaáll a megadott verzió pod-sablonjára.",
+    "rolledBack": "Visszavonva a(z) {{revision}} verzióra"
+  },
+  "data": {
+    "empty": "Nincs adat",
+    "reveal": "Megjelenítés",
+    "hide": "Elrejtés",
+    "copy": "Másolás",
+    "copied": "Kimásolva",
+    "secretHint": "Az értékek rejtve maradnak, amíg meg nem jeleníted őket. A megjelenítés rögzítésre kerül az ellenőrzési naplóban.",
+    "secretNoPermission": "Láthatod a kulcsokat, de nem az értékeket. Kérj egy rendszergazdától Kubernetes titkok megjelenítésére jogosultságot."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memória",
+    "collecting": "Minták gyűjtése...",
+    "unavailable": "A metrikák nem elérhetők",
+    "unavailableHint": "Telepítsd a metrics-servert a klaszterbe a CPU- és memória-használat megtekintéséhez.",
+    "cpuUsage": "CPU-használat",
+    "memoryUsage": "Memóriahasználat",
+    "podInformation": "Pod információ",
+    "containers": "Konténerek",
+    "cpuHistory": "CPU előzmények",
+    "memoryHistory": "Memória előzmények",
+    "loading": "Statisztikák betöltése...",
+    "error": "Hiba a statisztikák betöltésekor",
+    "startPod": "Indítsa el a podot a statisztikák megtekintéséhez.",
+    "noLimit": "korlátlan",
+    "of": {
+      "limit": "limit",
+      "node": "csomópont"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Ellenőrzés",
+    "diff": "Különbség",
+    "save": "Mentés",
+    "reload": "Újratöltés",
+    "unsaved": "Nem mentett módosítások",
+    "valid": "Jól néz ki. Ezek változnának:",
+    "noChanges": "Nincs módosítás",
+    "saved": "Mentve {{count}} erőforrás"
+  },
+  "apply": {
+    "title": "YAML alkalmazása",
+    "apply": "Alkalmazás",
+    "hint": "Illesszen be egy vagy több manifestumot. A Ellenőrzés egy száraz futtatást végez a szerveren, a Különbség pedig megmutatja a változásokat. Semmi sem változik, amíg nem alkalmazza.",
+    "namespace": "A(z) {{namespace}} névtérbe",
+    "defaultNamespace": "Az alapértelmezett névtérbe"
+  },
+  "helm": {
+    "none": "Nincsenek Helm kiadások",
+    "revision": "{{revision}}. verzió",
+    "tabs": {
+      "history": "Előzmények",
+      "values": "Értékek",
+      "manifest": "Manifeszt"
+    },
+    "allValues": "Chart alapértelmezett értékeinek belefoglalása",
+    "allValuesHint": "Minden érték megjelenítése, nemcsak az telepítéskor beállítottak.",
+    "rollbackTitle": "Visszaállítja a(z) {{name}} elemet a(z) {{revision}} verzióra?",
+    "rollbackText": "A Helm egy új verziót hoz létre a régi beállításokkal.",
+    "rolledBack": "A(z) {{name}} visszaállítva a(z) {{revision}} verzióra",
+    "uninstall": "Eltávolítás",
+    "uninstallTitle": "Eltávolítja a(z) {{name}} elemet?",
+    "uninstallText": "A Helm törli a kiadás összes erőforrását.",
+    "uninstalled": "A(z) {{name}} eltávolítva"
+  },
+  "logs": {
+    "container": "Konténer",
+    "allContainers": "Minden konténer",
+    "previous": "Előző futtatás",
+    "filter": "Naplók szűrése...",
+    "lines": "sor",
+    "last50": "Utolsó 50",
+    "last100": "Utolsó 100",
+    "last500": "Utolsó 500",
+    "last1000": "Utolsó 1000",
+    "all": "Összes",
+    "timestamps": "Időbélyegek",
+    "autoRefresh": "Követés",
+    "copy": "Naplók másolása",
+    "download": "Letöltés",
+    "clear": "Törlés",
+    "none": "Nincsenek naplók",
+    "noneMatching": "Nincs a \"{{query}}\" kifejezésnek megfelelő naplóbejegyzés",
+    "copied": "Másolva {{count}} sor",
+    "failedToCopy": "Nem sikerült a naplók másolása",
+    "downloaded": "Naplók letöltve",
+    "failedToDownload": "Nem sikerült letölteni a naplókat: {{error}}",
+    "failedToFetch": "Nem sikerült betölteni a naplókat: {{error}}"
+  },
+  "console": {
+    "connect": "Csatlakozás",
+    "disconnect": "Leválasztás",
+    "connecting": "Csatlakozás...",
+    "connectingTo": "Csatlakozás a(z) {{name}}-hoz...",
+    "connectedTo": "Csatlakozva a(z) {{name}}-hoz",
+    "notConnected": "Nincs csatlakozás",
+    "clickToConnect": "Válasszon egy shellt, majd kattintson a Csatlakozás gombra",
+    "disconnected": "Lecsatlakozva",
+    "consoleError": "Parancssori hiba",
+    "errorMessage": "Hiba: {{message}}",
+    "failedToConnect": "Nem sikerült csatlakozni a podhoz",
+    "failedToConnectWithError": "Nem sikerült csatlakozni: {{error}}",
+    "selectShell": "Parancssor",
+    "copyConsole": "Kimenet másolása",
+    "consoleCopied": "Kimenet másolva",
+    "clear": "Törlés",
+    "podMustBeRunning": "A podnak futnia kell",
+    "podNotRunning": "A pod nem fut",
+    "podNotRunningHint": "Indítsa el a podot, hogy parancssort nyisson benne.",
+    "readOnly": "Parancssor kikapcsolva",
+    "readOnlyHint": "Ez a gép csak olvasható, ezért a pod parancssorai kikapcsolva vannak."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Nem sikerült olvasni a vágólapról. Győződjön meg róla, hogy a vágólap engedélyek megvannak.",
+    "clipboardWriteFailed": "Nem sikerült másolni a vágólapra. Győződjön meg róla, hogy az oldal HTTPS-en vagy localhoston keresztül érhető el."
+  },
+  "errors": {
+    "remoteServerRequired": "Távoli szerver szükséges. Csatlakoztasson egy távoli szervert a Beállításokban, hogy ezt a csatlakozástípust használhassa."
+  },
+  "hosts": {
+    "docsLink": "Dokumentáció megtekintése",
+    "hostNotFound": "A gép nem található",
+    "loadingHost": "Gép betöltése..."
+  }
+}

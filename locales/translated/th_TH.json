@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "จัดการคลัสเตอร์ Kubernetes จากโฮสต์ของคุณผ่าน SSH พร้อมใช้งาน logs, metrics, YAML และ shell"
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "แผง Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "ใช้ Kubernetes",
+      "description": "เปิดมุมมอง Kubernetes และ pod shells บนโฮสต์ที่เปิดใช้งาน Kubernetes ไว้"
+    },
+    "secrets": {
+      "title": "แสดงค่า Secrets ของ Kubernetes",
+      "description": "แสดงค่าที่ถอดรหัสแล้วของ Kubernetes secrets การเปิดเผยทุกครั้งจะถูกบันทึกใน audit log"
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "เปิดใช้งาน Kubernetes",
+        "description": "รัน kubectl บนโฮสต์นี้ผ่าน SSH เพื่อจัดการคลัสเตอร์ที่เข้าถึงได้"
+      },
+      "kubectlFlavor": {
+        "label": "รูปแบบ Kubernetes",
+        "description": "คำสั่งที่ใช้รัน kubectl บนโฮสต์นี้",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "เส้นทาง Kubeconfig",
+        "description": "เว้นว่างไว้เพื่อใช้ค่าเริ่มต้นของผู้ใช้ SSH (~/.kube/config หรือ KUBECONFIG)",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Context เริ่มต้น",
+        "description": "เว้นว่างไว้เพื่อใช้ context ปัจจุบันใน kubeconfig คุณสามารถเปลี่ยน context ในแท็บ Kubernetes ได้",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Namespace เริ่มต้น",
+        "description": "Namespace ที่แท็บ Kubernetes จะเปิดขึ้นมา",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "รันด้วย sudo",
+        "description": "รัน kubectl ด้วย sudo -n สำหรับสภาพแวดล้อม k3s และ MicroK8s ที่เฉพาะ root เท่านั้นที่สามารถอ่านค่าการตั้งค่าคลัสเตอร์ได้ ผู้ใช้ SSH ต้องมีสิทธิ์ sudo แบบไม่ต้องใส่รหัสผ่าน"
+      },
+      "readOnly": {
+        "label": "อ่านอย่างเดียว",
+        "description": "ดูเท่านั้น ห้ามปรับขนาด รีสตาร์ท ลบ แก้ไข YAML แก้ไข Helm หรือใช้ pod shells สำหรับทุกคนบนโฮสต์นี้"
+      },
+      "showPanel": {
+        "label": "แสดงแผง Kubernetes ในเทอร์มินัล",
+        "description": "อนุญาตให้เปิดแผง Kubernetes ข้างเทอร์มินัล SSH บนโฮสต์นี้"
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "เปิดแผง Kubernetes พร้อมเทอร์มินัลใหม่",
+        "description": "แสดงแผง Kubernetes ข้างเทอร์มินัล SSH ทุกตัวที่เปิดใช้งาน Kubernetes ไว้ คุณยังคงสามารถเปิดและปิดได้จากปุ่มที่ขอบขวา"
+      },
+      "companionSide": {
+        "label": "ตำแหน่งแผง Kubernetes",
+        "description": "ตำแหน่งของแผง Kubernetes ที่วางอยู่ข้างเทอร์มินัล",
+        "right": "ขวา",
+        "left": "ซ้าย",
+        "bottom": "ล่าง"
+      },
+      "companionSize": {
+        "label": "ขนาดแผง Kubernetes",
+        "description": "ความกว้างเป็นพิกเซล หรือความสูงเมื่ออยู่ด้านล่าง คุณสามารถลากขอบเพื่อปรับขนาดได้เช่นกัน"
+      },
+      "companionEdgeButton": {
+        "label": "แสดงปุ่มแผง",
+        "description": "แสดงปุ่มขนาดเล็กที่ขอบขวาของเทอร์มินัลเพื่อเปิดแผง Kubernetes"
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes ไม่ได้เปิดใช้งานสำหรับโฮสต์นี้",
+    "notEnabledHint": "เปิดใช้งาน Kubernetes ในการตั้งค่าของโฮสต์นี้เพื่อจัดการคลัสเตอร์",
+    "validating": "กำลังตรวจสอบคลัสเตอร์...",
+    "connecting": "กำลังเชื่อมต่อ...",
+    "error": "ข้อผิดพลาด",
+    "errorCode": "รหัสข้อผิดพลาด: {{code}}",
+    "connectionFailed": "เชื่อมต่อไม่สำเร็จ",
+    "totpVerificationFailed": "การยืนยันล้มเหลว กรุณาลองอีกครั้ง",
+    "verificationCodePrompt": "กรอกรหัสยืนยัน",
+    "browserSignInFailed": "การเข้าสู่ระบบล้มเหลว กรุณาลองอีกครั้ง",
+    "noHostSelected": "ไม่ได้เลือกโฮสต์",
+    "refresh": "รีเฟรช"
+  },
+  "cluster": {
+    "loading": "กำลังโหลด...",
+    "empty": "ไม่มี {{kind}} ที่นี่",
+    "noMatches": "ไม่มีผลลัพธ์ที่ตรงกับตัวกรองของคุณ",
+    "readOnly": "อ่านอย่างเดียว"
+  },
+  "sections": {
+    "workloads": "Workloads",
+    "network": "Network",
+    "config": "การตั้งค่า",
+    "cluster": "คลัสเตอร์",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "ทั้งหมด",
+    "healthy": "ปกติ",
+    "problem": "ปัญหา",
+    "idle": "หยุดทำงาน"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "ทุก Namespace",
+    "context": "Context",
+    "kind": "ประเภททรัพยากร",
+    "search": "ค้นหา..."
+  },
+  "columns": {
+    "name": "ชื่อ",
+    "namespace": "Namespace",
+    "status": "สถานะ",
+    "age": "อายุ",
+    "ready": "พร้อมใช้งาน",
+    "restarts": "การรีสตาร์ท",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "เจ้าของ",
+    "upToDate": "อัปเดตล่าสุด",
+    "available": "พร้อมใช้งาน",
+    "images": "Images",
+    "completions": "การดำเนินการเสร็จสิ้น",
+    "duration": "ระยะเวลา",
+    "schedule": "กำหนดการ",
+    "active": "ใช้งานอยู่",
+    "lastSchedule": "รันล่าสุด",
+    "type": "ประเภท",
+    "clusterIP": "Cluster IP",
+    "externalIP": "External IP",
+    "ports": "พอร์ต",
+    "class": "คลาส",
+    "hosts": "โฮสต์",
+    "address": "ที่อยู่",
+    "tls": "TLS",
+    "keys": "คีย์",
+    "capacity": "ความจุ",
+    "access": "การเข้าถึง",
+    "storageClass": "Storage class",
+    "volume": "Volume",
+    "reclaim": "Reclaim",
+    "claim": "Claim",
+    "roles": "บทบาท",
+    "version": "เวอร์ชัน",
+    "internalIP": "Internal IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "หน่วยความจำ",
+    "reason": "เหตุผล",
+    "object": "ออบเจ็กต์",
+    "message": "ข้อความ",
+    "count": "จำนวน",
+    "cpuUsage": "การใช้ CPU",
+    "memoryUsage": "การใช้หน่วยความจำ",
+    "container": "คอนเทนเนอร์",
+    "chart": "แผนภูมิ",
+    "appVersion": "เวอร์ชันแอป",
+    "revision": "การแก้ไข"
+  },
+  "actions": {
+    "logs": "บันทึก",
+    "console": "Shell",
+    "scale": {
+      "label": "ปรับขนาด",
+      "title": "ปรับขนาด {{name}}",
+      "replicas": "Replicas",
+      "hint": "กำลังทำงาน: {{current}}",
+      "done": "ปรับขนาด {{name}} เรียบร้อย"
+    },
+    "restart": {
+      "label": "รีสตาร์ท",
+      "confirmTitle": "รีสตาร์ท {{name}} หรือไม่?",
+      "confirmText": "Pod ทั้งหมดของ {{kind}} นี้จะถูกแทนที่ทีละตัว",
+      "done": "กำลังรีสตาร์ท {{name}}"
+    },
+    "undo": {
+      "label": "ย้อนกลับ",
+      "done": "ย้อนกลับ {{name}} เรียบร้อย"
+    },
+    "setImage": {
+      "label": "เปลี่ยนภาพ",
+      "title": "เปลี่ยนภาพของ {{name}}",
+      "image": "ภาพ",
+      "hint": "Pod จะถูกแทนที่ด้วยภาพใหม่",
+      "done": "เปลี่ยนภาพของ {{name}} เรียบร้อย"
+    },
+    "suspend": {
+      "label": "ระงับ",
+      "confirmTitle": "ระงับ {{name}} หรือไม่?",
+      "confirmText": "{{kind}} นี้จะหยุดเริ่มการทำงานใหม่จนกว่าคุณจะดำเนินการต่อ",
+      "done": "ระงับ {{name}} เรียบร้อย"
+    },
+    "resume": {
+      "label": "ดำเนินการต่อ",
+      "done": "ดำเนินการต่อ {{name}} เรียบร้อย"
+    },
+    "trigger": {
+      "label": "รันตอนนี้",
+      "done": "เริ่มงานจาก {{name}} เรียบร้อย"
+    },
+    "cordon": {
+      "label": "Cordon",
+      "confirmTitle": "Cordon {{name}} หรือไม่?",
+      "confirmText": "ไม่มีการจัดกำหนดการพอดใหม่บน {{kind}} นี้ พอดที่อยู่บนนี้แล้วจะยังคงทำงานต่อไป",
+      "done": "ปิดใช้งาน {{name}} แล้ว"
+    },
+    "uncordon": {
+      "label": "เปิดใช้งาน",
+      "done": "เปิดใช้งาน {{name}} แล้ว"
+    },
+    "drain": {
+      "label": "ล้างพอด",
+      "title": "ล้างพอด {{name}}",
+      "text": "ปิดใช้งาน {{name}} และย้ายพอดออกเพื่อให้ไปทำงานบนโหนดอื่น พอดของ DaemonSet จะยังคงอยู่",
+      "emptyDir": "ลบข้อมูล emptyDir",
+      "emptyDirHint": "ย้ายพอดที่เก็บข้อมูลในโวลุ่ม emptyDir ออก ข้อมูลนั้นจะสูญหาย",
+      "force": "บังคับ",
+      "forceHint": "ย้ายพอดที่ไม่มีคอนโทรลเลอร์จัดการออกด้วย พอดเหล่านี้จะไม่ถูกสร้างใหม่",
+      "done": "ล้างพอด {{name}} แล้ว"
+    },
+    "delete": {
+      "label": "ลบ",
+      "confirmTitle": "ลบ {{name}} หรือไม่?",
+      "confirmText": "{{kind}} นี้จะถูกนำออกจากคลัสเตอร์",
+      "managedPodText": "พอดนี้อยู่ภายใต้การควบคุมของคอนโทรลเลอร์ ซึ่งจะสร้างพอดใหม่ขึ้นมาแทนที่",
+      "namespaceText": "ทุกอย่างภายในเนมสเปซนี้也会被ลบด้วย การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "done": "ลบ {{name}} แล้ว"
+    }
+  },
+  "detail": {
+    "loading": "กำลังโหลด...",
+    "noDescribe": "ไม่มีคำอธิบาย",
+    "noPods": "ไม่มีพอด",
+    "noEvents": "ไม่มีเหตุการณ์",
+    "tabs": {
+      "overview": "ภาพรวม",
+      "pods": "พอด",
+      "logs": "บันทึก",
+      "console": "เชลล์",
+      "metrics": "สถิติ",
+      "history": "ประวัติ",
+      "data": "ข้อมูล",
+      "yaml": "YAML",
+      "events": "เหตุการณ์"
+    }
+  },
+  "history": {
+    "none": "ไม่มีประวัติการปรับใช้",
+    "noCause": "ไม่ทราบสาเหตุการเปลี่ยนแปลง",
+    "current": "ปัจจุบัน",
+    "rollBack": "ย้อนกลับ",
+    "confirmTitle": "ย้อนกลับไปยังการแก้ไข {{revision}} หรือไม่?",
+    "confirmText": "{{name}} จะกลับไปใช้เทมเพลตพอดของการแก้ไขนั้น",
+    "rolledBack": "ย้อนกลับไปยังการแก้ไข {{revision}} แล้ว"
+  },
+  "data": {
+    "empty": "ไม่มีข้อมูล",
+    "reveal": "แสดง",
+    "hide": "ซ่อน",
+    "copy": "คัดลอก",
+    "copied": "คัดลอกแล้ว",
+    "secretHint": "ค่าจะถูกซ่อนไว้จนกว่าคุณจะแสดงออก การแสดงค่าจะถูกบันทึกไว้ในบันทึกการตรวจสอบ",
+    "secretNoPermission": "คุณสามารถเห็นคีย์แต่ไม่เห็นค่า กรุณาติดต่อผู้ดูแลระบบเพื่อขอสิทธิ์ในการแสดงข้อมูลลับของ Kubernetes"
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "หน่วยความจำ",
+    "collecting": "กำลังเก็บตัวอย่าง...",
+    "unavailable": "ไม่มีข้อมูลเมตริก",
+    "unavailableHint": "ติดตั้ง metrics-server ในคลัสเตอร์เพื่อดูการใช้งาน CPU และหน่วยความจำ",
+    "cpuUsage": "การใช้งาน CPU",
+    "memoryUsage": "การใช้งานหน่วยความจำ",
+    "podInformation": "ข้อมูลพอด",
+    "containers": "คอนเทนเนอร์",
+    "cpuHistory": "ประวัติ CPU",
+    "memoryHistory": "ประวัติหน่วยความจำ",
+    "loading": "กำลังโหลดสถิติ...",
+    "error": "เกิดข้อผิดพลาดในการโหลดสถิติ",
+    "startPod": "เริ่มพอดเพื่อดูสถิติของมัน",
+    "noLimit": "ไม่มีขีดจำกัด",
+    "of": {
+      "limit": "จำกัด",
+      "node": "โหนด"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "ตรวจสอบ",
+    "diff": "เปรียบเทียบความแตกต่าง",
+    "save": "บันทึก",
+    "reload": "โหลดใหม่",
+    "unsaved": "มีการเปลี่ยนแปลงที่ยังไม่บันทึก",
+    "valid": "ดูดีครับ สิ่งเหล่านี้จะเปลี่ยนแปลง:",
+    "noChanges": "ไม่มีการเปลี่ยนแปลง",
+    "saved": "บันทึกทรัพยากร {{count}} รายการ"
+  },
+  "apply": {
+    "title": "ใช้ YAML",
+    "apply": "ใช้",
+    "hint": "วาง manifest หนึ่งรายการหรือมากกว่า การตรวจสอบจะทำการทดสอบแบบ dry run บนเซิร์ฟเวอร์ และการเปรียบเทียบจะแสดงการเปลี่ยนแปลงต่างๆ จะไม่มีการเปลี่ยนแปลงจนกว่าคุณจะกดใช้",
+    "namespace": "ลงใน {{namespace}}",
+    "defaultNamespace": "ลงใน namespace เริ่มต้น"
+  },
+  "helm": {
+    "none": "ไม่มีการปล่อย Helm",
+    "revision": "การแก้ไข {{revision}}",
+    "tabs": {
+      "history": "ประวัติ",
+      "values": "ค่า",
+      "manifest": "Manifest"
+    },
+    "allValues": "รวมค่าเริ่มต้นของ chart",
+    "allValuesHint": "แสดงค่าทั้งหมด ไม่ใช่เฉพาะค่าที่ตั้งไว้ตอนติดตั้ง",
+    "rollbackTitle": "ย้อนกลับ {{name}} เป็นเวอร์ชันแก้ไข {{revision}} หรือไม่?",
+    "rollbackText": "Helm จะสร้างการแก้ไขใหม่โดยใช้การตั้งค่าจากเวอร์ชันเก่า",
+    "rolledBack": "ย้อนกลับ {{name}} เป็นเวอร์ชันแก้ไข {{revision}} เรียบร้อยแล้ว",
+    "uninstall": "ถอนการติดตั้ง",
+    "uninstallTitle": "ถอนการติดตั้ง {{name}} หรือไม่?",
+    "uninstallText": "Helm จะลบทรัพยากรทั้งหมดของการปล่อยนี้",
+    "uninstalled": "ถอนการติดตั้ง {{name}} เรียบร้อยแล้ว"
+  },
+  "logs": {
+    "container": "คอนเทนเนอร์",
+    "allContainers": "คอนเทนเนอร์ทั้งหมด",
+    "previous": "การรันก่อนหน้า",
+    "filter": "กรองบันทึก...",
+    "lines": "บรรทัด",
+    "last50": "50 บรรทัดล่าสุด",
+    "last100": "100 บรรทัดล่าสุด",
+    "last500": "500 บรรทัดล่าสุด",
+    "last1000": "1,000 บรรทัดล่าสุด",
+    "all": "ทั้งหมด",
+    "timestamps": "ประทับเวลา",
+    "autoRefresh": "ติดตาม",
+    "copy": "คัดลอกบันทึก",
+    "download": "ดาวน์โหลด",
+    "clear": "ล้าง",
+    "none": "ไม่มีบันทึก",
+    "noneMatching": "ไม่มีบันทึกที่ตรงกับ \"{{query}}\"",
+    "copied": "คัดลอก {{count}} บรรทัดแล้ว",
+    "failedToCopy": "คัดลอกบันทึกไม่สำเร็จ",
+    "downloaded": "ดาวน์โหลดบันทึกเรียบร้อยแล้ว",
+    "failedToDownload": "ดาวน์โหลดบันทึกไม่สำเร็จ: {{error}}",
+    "failedToFetch": "โหลดบันทึกไม่สำเร็จ: {{error}}"
+  },
+  "console": {
+    "connect": "เชื่อมต่อ",
+    "disconnect": "ตัดการเชื่อมต่อ",
+    "connecting": "กำลังเชื่อมต่อ...",
+    "connectingTo": "กำลังเชื่อมต่อกับ {{name}}...",
+    "connectedTo": "เชื่อมต่อกับ {{name}} เรียบร้อยแล้ว",
+    "notConnected": "ไม่ได้เชื่อมต่อ",
+    "clickToConnect": "เลือก shell แล้วคลิกเชื่อมต่อ",
+    "disconnected": "ตัดการเชื่อมต่อแล้ว",
+    "consoleError": "ข้อผิดพลาดของ Shell",
+    "errorMessage": "ข้อผิดพลาด: {{message}}",
+    "failedToConnect": "ไม่สามารถเชื่อมต่อกับ Pod ได้",
+    "failedToConnectWithError": "ไม่สามารถเชื่อมต่อได้: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "คัดลอกผลลัพธ์",
+    "consoleCopied": "คัดลอกผลลัพธ์แล้ว",
+    "clear": "ล้าง",
+    "podMustBeRunning": "Pod ต้องอยู่ในสถานะทำงาน",
+    "podNotRunning": "Pod ไม่ได้ทำงานอยู่",
+    "podNotRunningHint": "เริ่ม Pod เพื่อเปิด Shell ภายใน",
+    "readOnly": "Shell ถูกปิดใช้งาน",
+    "readOnlyHint": "โฮสต์นี้เป็นการอ่านอย่างเดียว จึงปิดใช้งาน Shell ของ Pod"
+  },
+  "terminal": {
+    "clipboardReadFailed": "ไม่สามารถอ่านจากคลิปบอร์ดได้ โปรดตรวจสอบว่าอนุญาตสิทธิ์คลิปบอร์ดแล้ว",
+    "clipboardWriteFailed": "ไม่สามารถคัดลอกไปยังคลิปบอร์ดได้ โปรดตรวจสอบว่าหน้าเว็บให้บริการผ่าน HTTPS หรือ localhost"
+  },
+  "errors": {
+    "remoteServerRequired": "จำเป็นต้องมีเซิร์ฟเวอร์ระยะไกล เชื่อมต่อเซิร์ฟเวอร์ระยะไกลในหน้าการตั้งค่าเพื่อใช้ประเภทการเชื่อมต่อนี้"
+  },
+  "hosts": {
+    "docsLink": "ดูเอกสาร",
+    "hostNotFound": "ไม่พบโฮสต์",
+    "loadingHost": "กำลังโหลดโฮสต์..."
+  }
+}

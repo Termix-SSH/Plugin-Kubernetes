@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "SSH এর মাধ্যমে আপনার হোস্ট থেকে Kubernetes ক্লাস্টার পরিচালনা করুন, যার মধ্যে লগ, মেট্রিক্স, YAML এবং শেল রয়েছে।"
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes প্যানেল"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes ব্যবহার করুন",
+      "description": "যে হোস্টে Kubernetes চালু আছে, সেখানে Kubernetes ভিউ এবং পড শেল খুলুন।"
+    },
+    "secrets": {
+      "title": "Kubernetes সিক্রেট প্রকাশ করুন",
+      "description": "Kubernetes সিক্রেটের ডিকোড করা মানগুলো দেখান। প্রতিটি প্রকাশের ঘটনা অডিট লগে লেখা হয়।"
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes সক্রিয় করুন",
+        "description": "এই হোস্টে SSH এর মাধ্যমে kubectl চালান যাতে এটি যে ক্লাস্টারে পৌঁছাতে পারে তা পরিচালনা করা যায়।"
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes flavor",
+        "description": "এই হোস্টে kubectl চালানোর জন্য কোন কমান্ড ব্যবহার করা হয়।",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig পথ",
+        "description": "SSH ব্যবহারকারীর জন্য ডিফল্ট (~/.kube/config বা KUBECONFIG) ব্যবহার করতে খালি রাখুন।",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "ডিফল্ট কনটেক্সট",
+        "description": "kubeconfig-এ বর্তমান কনটেক্সট ব্যবহার করতে খালি রাখুন। আপনি Kubernetes ট্যাবে কনটেক্সট পরিবর্তন করতে পারেন।",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "ডিফল্ট নেমস্পেস",
+        "description": "Kubernetes ট্যাবটি কোন নেমস্পেস দিয়ে খুলবে।",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "sudo দিয়ে চালান",
+        "description": "k3s এবং MicroK8s সেটআপের জন্য যেখানে শুধুমাত্র রুট ক্লাস্টার কনফিগারেশন পড়তে পারে, সেখানে kubectl কে sudo -n দিয়ে চালান। SSH ব্যবহারকারীর কাছে পাসওয়ার্ডহীন sudo থাকতে হবে।"
+      },
+      "readOnly": {
+        "label": "শুধুমাত্র পড়ার জন্য",
+        "description": "শুধুমাত্র দেখুন। এই হোস্টের সকলের জন্য স্কেলিং, রিস্টার্ট, ডিলিট, YAML পরিবর্তন, Helm পরিবর্তন এবং পড শেল ব্লক করে।"
+      },
+      "showPanel": {
+        "label": "টার্মিনালে Kubernetes প্যানেল দেখান",
+        "description": "এই হোস্টে SSH টার্মিনালের পাশে Kubernetes প্যানেল খোলার অনুমতি দিন।"
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "নতুন টার্মিনালের সাথে Kubernetes প্যানেল খুলুন",
+        "description": "যে প্রতিটি SSH টার্মিনালে Kubernetes চালু আছে, তার পাশে Kubernetes প্যানেল দেখান। আপনি এখনও ডান প্রান্তের বাটন থেকে এটি খুলতে এবং বন্ধ করতে পারবেন।"
+      },
+      "companionSide": {
+        "label": "Kubernetes প্যানেলের অবস্থান",
+        "description": "টার্মিনালের পাশে Kubernetes প্যানেল কোথায় থাকবে।",
+        "right": "ডান",
+        "left": "বাম",
+        "bottom": "নিচে"
+      },
+      "companionSize": {
+        "label": "Kubernetes প্যানেলের আকার",
+        "description": "পিক্সেলের মধ্যে প্রস্থ, অথবা এটি নিচে থাকলে উচ্চতা। আপনি এর প্রান্ত টেনেও এটি পরিবর্তন করতে পারেন।"
+      },
+      "companionEdgeButton": {
+        "label": "প্যানেল বাটন দেখান",
+        "description": "টার্মিনালের ডান প্রান্তে একটি ছোট বাটন দেখান যা Kubernetes প্যানেল খোলে।"
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "এই হোস্টের জন্য Kubernetes সক্রিয় নয়",
+    "notEnabledHint": "ক্লাস্টার পরিচালনা করতে এই হোস্টের সেটিংস থেকে Kubernetes চালু করুন।",
+    "validating": "ক্লাস্টার যাচাই করা হচ্ছে...",
+    "connecting": "সংযোগ করা হচ্ছে...",
+    "error": "ত্রুটি",
+    "errorCode": "ত্রুটি কোড: {{code}}",
+    "connectionFailed": "সংযোগ করতে ব্যর্থ হয়েছে",
+    "totpVerificationFailed": "যাচাইকরণ ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "verificationCodePrompt": "যাচাইকরণ কোড লিখুন",
+    "browserSignInFailed": "সাইন-ইন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "noHostSelected": "কোনো হোস্ট নির্বাচন করা হয়নি",
+    "refresh": "রিফ্রেশ"
+  },
+  "cluster": {
+    "loading": "লোড হচ্ছে...",
+    "empty": "এখানে কোনো {{kind}} নেই",
+    "noMatches": "আপনার ফিল্টারের সাথে কিছুই মিলছে না",
+    "readOnly": "শুধুমাত্র পঠনযোগ্য"
+  },
+  "sections": {
+    "workloads": "ওয়ার্কলোড",
+    "network": "নেটওয়ার্ক",
+    "config": "কনফিগ",
+    "cluster": "ক্লাস্টার",
+    "helm": "হেল্ম"
+  },
+  "kinds": {
+    "pods": {
+      "one": "পড",
+      "many": "পডগুলো"
+    },
+    "deployments": {
+      "one": "ডেপ্লয়মেন্ট",
+      "many": "ডেপ্লয়মেন্টগুলো"
+    },
+    "statefulsets": {
+      "one": "স্টেটফুলসেট",
+      "many": "স্টেটফুলসেটগুলো"
+    },
+    "daemonsets": {
+      "one": "ডেমোনসেট",
+      "many": "ডেমোনসেটগুলো"
+    },
+    "replicasets": {
+      "one": "রপ্লিকা সেট",
+      "many": "রপ্লিকা সেটগুলো"
+    },
+    "jobs": {
+      "one": "জব",
+      "many": "জবগুলো"
+    },
+    "cronjobs": {
+      "one": "ক্রনজব",
+      "many": "ক্রনজবগুলো"
+    },
+    "services": {
+      "one": "সার্ভিস",
+      "many": "সার্ভিসগুলো"
+    },
+    "ingresses": {
+      "one": "ইনগ্রেশ",
+      "many": "ইনগ্রেশগুলো"
+    },
+    "configmaps": {
+      "one": "কনফিগম্যাপ",
+      "many": "কনফিগম্যাপগুলো"
+    },
+    "secrets": {
+      "one": "সিক্রেট",
+      "many": "সিক্রেটগুলো"
+    },
+    "pvcs": {
+      "one": "ভলিউম ক্লেইম",
+      "many": "ভলিউম ক্লেইমগুলো"
+    },
+    "pvs": {
+      "one": "পারসিস্টেন্ট ভলিউম",
+      "many": "পারসিস্টেন্ট ভলিউমগুলো"
+    },
+    "nodes": {
+      "one": "নোড",
+      "many": "নোডগুলো"
+    },
+    "namespaces": {
+      "one": "নেমস্পেস",
+      "many": "নেমস্পেসগুলো"
+    },
+    "events": {
+      "one": "ইভেন্ট",
+      "many": "ইভেন্টগুলো"
+    }
+  },
+  "filters": {
+    "all": "সব",
+    "healthy": "সুস্থ",
+    "problem": "সমস্যা",
+    "idle": "আইডল"
+  },
+  "toolbar": {
+    "namespace": "নেমস্পেস",
+    "allNamespaces": "সব নেমস্পেস",
+    "context": "কনটেক্সট",
+    "kind": "রিসোর্সের ধরন",
+    "search": "খুঁজুন..."
+  },
+  "columns": {
+    "name": "নাম",
+    "namespace": "নেমস্পেস",
+    "status": "স্ট্যাটাস",
+    "age": "বয়স",
+    "ready": "প্রস্তুত",
+    "restarts": "রিস্টার্ট",
+    "node": "নোড",
+    "ip": "আইপি",
+    "owner": "মালিক",
+    "upToDate": "আপডেটেড",
+    "available": "উপলব্ধ",
+    "images": "ইমেজ",
+    "completions": "সম্পন্ন",
+    "duration": "সময়কাল",
+    "schedule": "সময়সূচী",
+    "active": "সক্রিয়",
+    "lastSchedule": "শেষ চালানো",
+    "type": "ধরন",
+    "clusterIP": "ক্লাস্টার IP",
+    "externalIP": "বহিঃস্থ IP",
+    "ports": "পোর্ট",
+    "class": "শ্রেণি",
+    "hosts": "হোস্ট",
+    "address": "ঠিকানা",
+    "tls": "TLS",
+    "keys": "কী",
+    "capacity": "ধারণক্ষমতা",
+    "access": "অ্যাক্সেস",
+    "storageClass": "স্টোরেজ ক্লাস",
+    "volume": "ভলিউম",
+    "reclaim": "রিক্লেম",
+    "claim": "ক্লেইম",
+    "roles": "ভূমিকা",
+    "version": "ভার্সন",
+    "internalIP": "ইন্টারনাল IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "মেমোরি",
+    "reason": "কারণ",
+    "object": "অবজেক্ট",
+    "message": "বার্তা",
+    "count": "গণনা",
+    "cpuUsage": "CPU ব্যবহার",
+    "memoryUsage": "মেমোরি ব্যবহার",
+    "container": "কন্টেইনার",
+    "chart": "চার্ট",
+    "appVersion": "অ্যাপ সংস্করণ",
+    "revision": "রিভিশন"
+  },
+  "actions": {
+    "logs": "লগ",
+    "console": "শেল",
+    "scale": {
+      "label": "স্কেল",
+      "title": "{{name}} স্কেল করুন",
+      "replicas": "র‍্যাপ্লিকা",
+      "hint": "এখন চলছে: {{current}}",
+      "done": "{{name}} স্কেল করা হয়েছে"
+    },
+    "restart": {
+      "label": "রিস্টার্ট",
+      "confirmTitle": "আপনি কি {{name}} পুনরায় চালু করতে চান?",
+      "confirmText": "এই {{kind}} এর প্রতিটি পড একে একে প্রতিস্থাপিত হবে।",
+      "done": "{{name}} পুনরায় চালু হচ্ছে"
+    },
+    "undo": {
+      "label": "পূর্বাবস্থায় ফিরুন",
+      "done": "{{name}} পূর্বাবস্থায় ফিরিয়ে নেওয়া হয়েছে"
+    },
+    "setImage": {
+      "label": "ইমেজ পরিবর্তন করুন",
+      "title": "{{name}} এর ইমেজ পরিবর্তন করুন",
+      "image": "ইমেজ",
+      "hint": "পডগুলো নতুন ইমেজ দিয়ে প্রতিস্থাপিত হবে।",
+      "done": "{{name}} এর ইমেজ পরিবর্তন করা হয়েছে"
+    },
+    "suspend": {
+      "label": "স্থগিত করুন",
+      "confirmTitle": "{{name}} স্থগিত করবেন?",
+      "confirmText": "আপনি এটি পুনরায় চালু না করা পর্যন্ত এই {{kind}} নতুন রান শুরু করা বন্ধ করে দেবে।",
+      "done": "{{name}} স্থগিত করা হয়েছে"
+    },
+    "resume": {
+      "label": "পুনরায় চালু করুন",
+      "done": "{{name}} পুনরায় চালু করা হয়েছে"
+    },
+    "trigger": {
+      "label": "এখন চালু করুন",
+      "done": "{{name}} থেকে একটি জব শুরু করা হয়েছে"
+    },
+    "cordon": {
+      "label": "কর্ডন",
+      "confirmTitle": "{{name}} কর্ডন করবেন?",
+      "confirmText": "এই {{kind}}-এ আর কোনো নতুন পড শিডিউল করা হবে না। ইতিমধ্যে এতে থাকা পডগুলো চলতে থাকবে।",
+      "done": "{{name}} কর্ডন করা হয়েছে"
+    },
+    "uncordon": {
+      "label": "আনকর্ডন",
+      "done": "{{name}} আনকর্ডন করা হয়েছে"
+    },
+    "drain": {
+      "label": "ড্রেন",
+      "title": "{{name}} ড্রেন করুন",
+      "text": "{{name}} কর্ডন করে তার পডগুলো নির্বাসিত করবে যাতে তারা অন্য নোডে চলে যায়। ডায়েমোনসেট পডগুলো থেকে যাবে।",
+      "emptyDir": "emptyDir ডেটা মুছুন",
+      "emptyDirHint": "যেসব পড emptyDir ভলিউমে ডেটা রাখে, সেগুলো নির্বাসিত করুন। সেই ডেটা হারিয়ে যাবে।",
+      "force": "ফোর্স",
+      "forceHint": "কন্ট্রোলার দ্বারা পরিচালিত নয় এমন পডগুলিকেও বহিষ্কার করুন। এগুলো পুনরায় তৈরি হবে না।",
+      "done": "{{name}} ড্রেন করা হয়েছে"
+    },
+    "delete": {
+      "label": "মুছে ফেলুন",
+      "confirmTitle": "{{name}} মুছে ফেলবেন?",
+      "confirmText": "এই {{kind}} ক্লাস্টার থেকে সরিয়ে নেওয়া হবে।",
+      "managedPodText": "এই পডটি একটি কন্ট্রোলারের অংশ, যা এর পরিবর্তে একটি নতুন পড শুরু করবে।",
+      "namespaceText": "এই নেমস্পেসের ভেতরের সবকিছুও মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
+      "done": "{{name}} মুছে ফেলা হয়েছে"
+    }
+  },
+  "detail": {
+    "loading": "লোড হচ্ছে...",
+    "noDescribe": "কোনো বিবরণ নেই",
+    "noPods": "কোনো পড নেই",
+    "noEvents": "কোনো ইভেন্ট নেই",
+    "tabs": {
+      "overview": "সংক্ষিপ্ত বিবরণ",
+      "pods": "পড",
+      "logs": "লগ",
+      "console": "শেল",
+      "metrics": "পরিসংখ্যান",
+      "history": "ইতিহাস",
+      "data": "ডেটা",
+      "yaml": "YAML",
+      "events": "ইভেন্ট"
+    }
+  },
+  "history": {
+    "none": "কোনো রোলআউট ইতিহাস নেই",
+    "noCause": "কোনো পরিবর্তনের কারণ নেই",
+    "current": "বর্তমান",
+    "rollBack": "রোলব্যাক",
+    "confirmTitle": "রিভিশন {{revision}}-এ রোলব্যাক করবেন?",
+    "confirmText": "{{name}} সেই রিভিশনের পড টেমপ্লেটে ফিরে যাবে।",
+    "rolledBack": "রিভিশন {{revision}}-এ রোলব্যাক করা হয়েছে"
+  },
+  "data": {
+    "empty": "কোনো ডেটা নেই",
+    "reveal": "প্রকাশ করুন",
+    "hide": "লুকান",
+    "copy": "কপি করুন",
+    "copied": "কপি হয়েছে",
+    "secretHint": "মানগুলো লুকিয়ে থাকবে যতক্ষণ না আপনি সেগুলো প্রকাশ করেন। প্রকাশ করার ঘটনাটি অডিট লগে লেখা হবে।",
+    "secretNoPermission": "আপনি কীগুলো দেখতে পারেন কিন্তু মানগুলো নয়। Kubernetes সিক্রেট প্রকাশের অনুমতির জন্য একজন অ্যাডমিনের কাছে আবেদন করুন।"
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "মেমোরি",
+    "collecting": "নমুনা সংগ্রহ করা হচ্ছে...",
+    "unavailable": "মেট্রিক্স উপলব্ধ নয়",
+    "unavailableHint": "CPU এবং মেমোরি ব্যবহার দেখতে ক্লাস্টারে metrics-server ইনস্টল করুন।",
+    "cpuUsage": "CPU ব্যবহার",
+    "memoryUsage": "মেমোরি ব্যবহার",
+    "podInformation": "পড তথ্য",
+    "containers": "কন্টেইনার",
+    "cpuHistory": "CPU ইতিহাস",
+    "memoryHistory": "মেমোরি ইতিহাস",
+    "loading": "পরিসংখ্যান লোড হচ্ছে...",
+    "error": "পরিসংখ্যান লোড করতে ত্রুটি হয়েছে",
+    "startPod": "পরিসংখ্যান দেখতে পডটি চালু করুন।",
+    "noLimit": "কোনো সীমা নেই",
+    "of": {
+      "limit": "সীমা",
+      "node": "নোড"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "যাচাই করুন",
+    "diff": "ভেদ",
+    "save": "সংরক্ষণ করুন",
+    "reload": "পুনরায় লোড করুন",
+    "unsaved": "অসংরক্ষিত পরিবর্তন",
+    "valid": "ভালো দেখাচ্ছে। এগুলো পরিবর্তিত হবে:",
+    "noChanges": "কোনো পরিবর্তন নেই",
+    "saved": "সংরক্ষণ করা হয়েছে {{count}}টি রিসোর্স"
+  },
+  "apply": {
+    "title": "YAML প্রয়োগ করুন",
+    "apply": "প্রয়োগ করুন",
+    "hint": "এক বা একাধিক ম্যানিফেস্ট পেস্ট করুন। চেক সার্ভারে একটি ড্রাই রান চালায় এবং ডিফ কী পরিবর্তন হবে তা দেখায়। আপনি যতক্ষণ না প্রয়োগ করেন, ততক্ষণ কিছুই পরিবর্তিত হয় না।",
+    "namespace": "{{namespace}}-এ",
+    "defaultNamespace": "ডিফল্ট নেমস্পেসে"
+  },
+  "helm": {
+    "none": "কোনো হেল্ম রিলিজ নেই",
+    "revision": "রিভিশন {{revision}}",
+    "tabs": {
+      "history": "ইতিহাস",
+      "values": "মান",
+      "manifest": "Manifest"
+    },
+    "allValues": "চার্টের ডিফল্ট মান অন্তর্ভুক্ত করুন",
+    "allValuesHint": "শুধুমাত্র ইনস্টলেশন সময় সেট করা মানগুলো নয়, প্রতিটি মান দেখান।",
+    "rollbackTitle": "{{name}} কে রিভিশন {{revision}}-এ রোলব্যাক করবেন?",
+    "rollbackText": "Helm পুরনো সেটিংস ব্যবহার করে একটি নতুন রিভিশন তৈরি করে।",
+    "rolledBack": "{{name}} কে রিভিশন {{revision}}-এ রোলব্যাক করা হয়েছে",
+    "uninstall": "আনইনস্টল",
+    "uninstallTitle": "{{name}} আনইনস্টল করবেন?",
+    "uninstallText": "Helm এই রিলিজের প্রতিটি রিসোর্স মুছে ফেলবে।",
+    "uninstalled": "{{name}} আনইনস্টল করা হয়েছে"
+  },
+  "logs": {
+    "container": "কন্টেইনার",
+    "allContainers": "সকল কন্টেইনার",
+    "previous": "পূর্ববর্তী রান",
+    "filter": "লগ ফিল্টার করুন...",
+    "lines": "লাইন",
+    "last50": "শেষ ৫০টি",
+    "last100": "শেষ ১০০টি",
+    "last500": "শেষ ৫০০টি",
+    "last1000": "শেষ ১০০০টি",
+    "all": "সকল",
+    "timestamps": "টাইমস্ট্যাম্প",
+    "autoRefresh": "অনুসরণ করুন",
+    "copy": "লগ কপি করুন",
+    "download": "ডাউনলোড",
+    "clear": "মুছে ফেলুন",
+    "none": "কোনো লগ নেই",
+    "noneMatching": "\"{{query}}\" এর সাথে কোনো লগ মিলছে না",
+    "copied": "কপি করা হয়েছে {{count}} লাইন",
+    "failedToCopy": "লগ কপি করতে ব্যর্থ হয়েছে",
+    "downloaded": "লগ ডাউনলোড হয়েছে",
+    "failedToDownload": "লগ ডাউনলোড করতে ব্যর্থ: {{error}}",
+    "failedToFetch": "লগ লোড করতে ব্যর্থ: {{error}}"
+  },
+  "console": {
+    "connect": "সংযোগ করুন",
+    "disconnect": "সংযোগ বিচ্ছিন্ন করুন",
+    "connecting": "সংযুক্ত হচ্ছে...",
+    "connectingTo": "{{name}}-এর সাথে সংযুক্ত হচ্ছে...",
+    "connectedTo": "{{name}}-এর সাথে সংযুক্ত",
+    "notConnected": "সংযুক্ত নয়",
+    "clickToConnect": "একটি শেল নির্বাচন করুন এবং সংযোগ করুন-এ ক্লিক করুন",
+    "disconnected": "সংযোগ বিচ্ছিন্ন",
+    "consoleError": "শেল এরর",
+    "errorMessage": "এরর: {{message}}",
+    "failedToConnect": "পডে সংযোগ করতে ব্যর্থ হয়েছে",
+    "failedToConnectWithError": "সংযোগ করতে ব্যর্থ হয়েছে: {{error}}",
+    "selectShell": "শেল",
+    "copyConsole": "আউটপুট কপি করুন",
+    "consoleCopied": "আউটপুট কপি হয়েছে",
+    "clear": "সাফ করুন",
+    "podMustBeRunning": "পডটি চলমান থাকতে হবে",
+    "podNotRunning": "পডটি চলমান নেই",
+    "podNotRunningHint": "এতে শেল খুলতে পডটি চালু করুন।",
+    "readOnly": "শেল বন্ধ আছে",
+    "readOnlyHint": "এই হোস্টটি রিড-অনলি, তাই পড শেল বন্ধ রাখা হয়েছে।"
+  },
+  "terminal": {
+    "clipboardReadFailed": "ক্লিপবোর্ড থেকে পড়তে ব্যর্থ হয়েছে। ক্লিপবোর্ডের অনুমতি দেওয়া আছে কিনা তা নিশ্চিত করুন।",
+    "clipboardWriteFailed": "ক্লিপবোর্ডে কপি করতে ব্যর্থ হয়েছে। নিশ্চিত করুন যে পৃষ্ঠাটি HTTPS বা লোকালহোস্টের মাধ্যমে পরিবেশন করা হচ্ছে।"
+  },
+  "errors": {
+    "remoteServerRequired": "রিমোট সার্ভার প্রয়োজন। এই সংযোগের ধরন ব্যবহার করতে সেটিংস থেকে একটি রিমোট সার্ভার সংযোগ করুন।"
+  },
+  "hosts": {
+    "docsLink": "ডক্স দেখুন",
+    "hostNotFound": "হোস্ট পাওয়া যায়নি",
+    "loadingHost": "হোস্ট লোড হচ্ছে..."
+  }
+}

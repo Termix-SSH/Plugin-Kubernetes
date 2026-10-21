@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "SSH के माध्यम से अपने होस्ट से Kubernetes क्लस्टर प्रबंधित करें, जिसमें लॉग, मेट्रिक्स, YAML और शेल शामिल हैं।"
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes पैनल"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes का उपयोग करें",
+      "description": "उन होस्ट पर Kubernetes दृश्य और पॉड शेल खोलें जिन पर Kubernetes सक्षम है।"
+    },
+    "secrets": {
+      "title": "Kubernetes सीक्रेट प्रकट करें",
+      "description": "Kubernetes सीक्रेट्स के डिकोड किए गए मान दिखाएं। हर प्रकट करने की घटना ऑडिट लॉग में लिखी जाती है।"
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes सक्षम करें",
+        "description": "इस होस्ट पर SSH के माध्यम से kubectl चलाएं ताकि वह क्लस्टर प्रबंधित कर सके जिसे यह पहुंच सकता है।"
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes flavor",
+        "description": "इस होस्ट पर kubectl चलाने के लिए कौन सा कमांड उपयोग किया जाता है।",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig पथ",
+        "description": "SSH उपयोगकर्ता के लिए डिफ़ॉल्ट (~/.kube/config या KUBECONFIG) उपयोग करने के लिए इसे खाली छोड़ दें।",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "डिफ़ॉल्ट संदर्भ",
+        "description": "kubeconfig में वर्तमान संदर्भ का उपयोग करने के लिए इसे खाली छोड़ दें। आप Kubernetes टैब में संदर्भ बदल सकते हैं।",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "डिफ़ॉल्ट नेमस्पेस",
+        "description": "जिस नेमस्पेस के साथ Kubernetes टैब खुलता है।",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "sudo के साथ चलाएं",
+        "description": "kubectl को sudo -n के साथ चलाएं, उन k3s और MicroK8s सेटअप के लिए जहां केवल root क्लस्टर कॉन्फ़िगरेशन पढ़ सकता है। SSH उपयोगकर्ता को पासवर्ड-रहित sudo की आवश्यकता होती है।"
+      },
+      "readOnly": {
+        "label": "केवल पढ़ने योग्य",
+        "description": "केवल देखें। इस होस्ट पर सभी के लिए स्केलिंग, रीस्टार्ट, डिलीट, YAML परिवर्तन, Helm परिवर्तन और पॉड शेल को रोकता है।"
+      },
+      "showPanel": {
+        "label": "टर्मिनल में Kubernetes पैनल दिखाएं",
+        "description": "इस होस्ट पर SSH टर्मिनल के बगल में Kubernetes पैनल खोलने की अनुमति दें।"
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "नए टर्मिनल के साथ Kubernetes पैनल खोलें",
+        "description": "हर SSH टर्मिनल के बगल में Kubernetes पैनल दिखाएं जिस पर Kubernetes चालू हो। आप इसे दाईं ओर के बटन से अभी भी खोल और बंद कर सकते हैं।"
+      },
+      "companionSide": {
+        "label": "Kubernetes पैनल की स्थिति",
+        "description": "टर्मिनल के बगल में Kubernetes पैनल कहाँ दिखेगा।",
+        "right": "दाईं ओर",
+        "left": "बाईं ओर",
+        "bottom": "नीचे"
+      },
+      "companionSize": {
+        "label": "Kubernetes पैनल का आकार",
+        "description": "पिक्सेल में चौड़ाई, या जब यह नीचे हो तो ऊँचाई। आप इसके किनारे को खींचकर भी आकार बदल सकते हैं।"
+      },
+      "companionEdgeButton": {
+        "label": "पैनल बटन दिखाएं",
+        "description": "Kubernetes पैनल खोलने वाले टर्मिनल के दाएं किनारे पर एक छोटा बटन दिखाएं।"
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "इस होस्ट के लिए Kubernetes सक्षम नहीं है",
+    "notEnabledHint": "अपने क्लस्टर को प्रबंधित करने के लिए इस होस्ट की सेटिंग्स में Kubernetes को चालू करें।",
+    "validating": "क्लस्टर की जांच की जा रही है...",
+    "connecting": "कनेक्ट हो रहा है...",
+    "error": "त्रुटि",
+    "errorCode": "त्रुटि कोड: {{code}}",
+    "connectionFailed": "कनेक्ट करने में विफल",
+    "totpVerificationFailed": "सत्यापन विफल रहा। कृपया पुनः प्रयास करें।",
+    "verificationCodePrompt": "सत्यापन कोड दर्ज करें",
+    "browserSignInFailed": "साइन-इन विफल रहा। कृपया पुनः प्रयास करें।",
+    "noHostSelected": "कोई होस्ट चयनित नहीं",
+    "refresh": "रिफ़्रेश करें"
+  },
+  "cluster": {
+    "loading": "लोड हो रहा है...",
+    "empty": "यहाँ कोई {{kind}} नहीं है",
+    "noMatches": "कुछ भी आपके फ़िल्टर से मेल नहीं खाता",
+    "readOnly": "केवल पठनीय"
+  },
+  "sections": {
+    "workloads": "वर्कलोड",
+    "network": "नेटवर्क",
+    "config": "कॉन्फ़िग",
+    "cluster": "क्लस्टर",
+    "helm": "हेल्म"
+  },
+  "kinds": {
+    "pods": {
+      "one": "पोड",
+      "many": "पोड्स"
+    },
+    "deployments": {
+      "one": "डिप्लॉयमेंट",
+      "many": "डिप्लॉयमेंट्स"
+    },
+    "statefulsets": {
+      "one": "स्टेटफुलसेट",
+      "many": "स्टेटफुलसेट्स"
+    },
+    "daemonsets": {
+      "one": "डेमोनसेट",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "इंग्रेस"
+    },
+    "configmaps": {
+      "one": "कॉन्फ़िगमैप",
+      "many": "कॉन्फ़िगमैप्स"
+    },
+    "secrets": {
+      "one": "सीक्रेट",
+      "many": "सीक्रेट्स"
+    },
+    "pvcs": {
+      "one": "वॉल्यूम क्लेम",
+      "many": "वॉल्यूम क्लेम्स"
+    },
+    "pvs": {
+      "one": "पर्सिस्टेंट वॉल्यूम",
+      "many": "पर्सिस्टेंट वॉल्यूम्स"
+    },
+    "nodes": {
+      "one": "नोड",
+      "many": "नोड्स"
+    },
+    "namespaces": {
+      "one": "नेमस्पेस",
+      "many": "नेमस्पेस"
+    },
+    "events": {
+      "one": "इवेंट",
+      "many": "इवेंट्स"
+    }
+  },
+  "filters": {
+    "all": "सभी",
+    "healthy": "स्वस्थ",
+    "problem": "समस्याएं",
+    "idle": "निष्क्रिय"
+  },
+  "toolbar": {
+    "namespace": "नेमस्पेस",
+    "allNamespaces": "सभी नामस्थान",
+    "context": "संदर्भ",
+    "kind": "संसाधन प्रकार",
+    "search": "खोजें..."
+  },
+  "columns": {
+    "name": "नाम",
+    "namespace": "नामस्थान",
+    "status": "स्थिति",
+    "age": "आयु",
+    "ready": "तैयार",
+    "restarts": "पुनः आरंभ",
+    "node": "नोड",
+    "ip": "IP",
+    "owner": "मालिक",
+    "upToDate": "अद्यतन",
+    "available": "उपलब्ध",
+    "images": "इमेज",
+    "completions": "पूर्णता",
+    "duration": "अवधि",
+    "schedule": "समयसारिणी",
+    "active": "सक्रिय",
+    "lastSchedule": "पिछली बार चलाया गया",
+    "type": "प्रकार",
+    "clusterIP": "क्लस्टर IP",
+    "externalIP": "बाहरी IP",
+    "ports": "पोर्ट्स",
+    "class": "श्रेणी",
+    "hosts": "होस्ट",
+    "address": "पता",
+    "tls": "TLS",
+    "keys": "कुंजी",
+    "capacity": "क्षमता",
+    "access": "पहुंच",
+    "storageClass": "स्टोरेज क्लास",
+    "volume": "वॉल्यूम",
+    "reclaim": "रिक्लेम",
+    "claim": "क्लेम",
+    "roles": "भूमिकाएँ",
+    "version": "संस्करण",
+    "internalIP": "आंतरिक IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "मेमोरी",
+    "reason": "कारण",
+    "object": "ऑब्जेक्ट",
+    "message": "संदेश",
+    "count": "गिनती",
+    "cpuUsage": "CPU उपयोग",
+    "memoryUsage": "मेमोरी उपयोग",
+    "container": "कंटेनर",
+    "chart": "चार्ट",
+    "appVersion": "ऐप संस्करण",
+    "revision": "संशोधन"
+  },
+  "actions": {
+    "logs": "लॉग",
+    "console": "शेल",
+    "scale": {
+      "label": "स्केल",
+      "title": "{{name}} स्केल करें",
+      "replicas": "प्रतिलिपियाँ",
+      "hint": "अभी चल रहा है: {{current}}",
+      "done": "{{name}} स्केल किया गया"
+    },
+    "restart": {
+      "label": "पुनः आरंभ करें",
+      "confirmTitle": "क्या {{name}} को पुनः आरंभ करें?",
+      "confirmText": "इस {{kind}} के सभी पॉड एक-एक करके बदले जाएंगे।",
+      "done": "{{name}} पुनः आरंभ हो रहा है"
+    },
+    "undo": {
+      "label": "वापस लौटें",
+      "done": "{{name}} वापस लौटाया गया"
+    },
+    "setImage": {
+      "label": "छवि बदलें",
+      "title": "{{name}} की छवि बदलें",
+      "image": "छवि",
+      "hint": "पॉड नई छवि के साथ बदले जाएंगे।",
+      "done": "{{name}} की छवि बदल दी गई"
+    },
+    "suspend": {
+      "label": "निलंबित करें",
+      "confirmTitle": "{{name}} को निलंबित करें?",
+      "confirmText": "जब तक आप इसे फिर से शुरू नहीं करते, यह {{kind}} नई चालू करने से रोक देगा।",
+      "done": "{{name}} को निलंबित किया गया"
+    },
+    "resume": {
+      "label": "फिर से शुरू करें",
+      "done": "{{name}} को फिर से शुरू किया गया"
+    },
+    "trigger": {
+      "label": "अभी चलाएं",
+      "done": "{{name}} से एक नौकरी शुरू की गई"
+    },
+    "cordon": {
+      "label": "कोर्डन",
+      "confirmTitle": "{{name}} को कोर्डन करें?",
+      "confirmText": "इस {{kind}} पर कोई नए पॉड शेड्यूल नहीं किए जाएंगे। जो पॉड पहले से चल रहे हैं, वे चलते रहेंगे।",
+      "done": "{{name}} को कॉर्डन किया गया"
+    },
+    "uncordon": {
+      "label": "अनकॉर्डन",
+      "done": "{{name}} को अनकॉर्डन किया गया"
+    },
+    "drain": {
+      "label": "ड्रेन",
+      "title": "{{name}} को ड्रेन करें",
+      "text": "{{name}} को कॉर्डन करता है और उसके पॉड्स को निकालता है ताकि वे अन्य नोड्स पर चले जाएं। डेमनसेट पॉड्स वहीं रहते हैं।",
+      "emptyDir": "emptyDir डेटा हटाएं",
+      "emptyDirHint": "उन पॉड्स को निकालें जो emptyDir वॉल्यूम में डेटा रखते हैं। वह डेटा खो जाएगा।",
+      "force": "जबरन",
+      "forceHint": "उन पॉड्स को भी हटाएं जिनका प्रबंधन किसी नियंत्रक द्वारा नहीं किया जाता है। उन्हें पुन: नहीं बनाया जाएगा।",
+      "done": "{{name}} को खाली किया गया"
+    },
+    "delete": {
+      "label": "हटाएं",
+      "confirmTitle": "{{name}} हटाएं?",
+      "confirmText": "यह {{kind}} क्लस्टर से हटा दिया जाएगा।",
+      "managedPodText": "यह पॉड एक नियंत्रक का हिस्सा है, जो इसके स्थान पर एक नया पॉड शुरू कर देगा।",
+      "namespaceText": "इस नेमस्पेस के अंदर मौजूद सब कुछ भी हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।",
+      "done": "{{name}} हटा दिया गया"
+    }
+  },
+  "detail": {
+    "loading": "लोड हो रहा है...",
+    "noDescribe": "कोई विवरण नहीं",
+    "noPods": "कोई पॉड नहीं",
+    "noEvents": "कोई घटना नहीं",
+    "tabs": {
+      "overview": "अवलोकन",
+      "pods": "पॉड",
+      "logs": "लॉग",
+      "console": "शेल",
+      "metrics": "आँकड़े",
+      "history": "इतिहास",
+      "data": "डेटा",
+      "yaml": "YAML",
+      "events": "घटनाएँ"
+    }
+  },
+  "history": {
+    "none": "कोई रोलआउट इतिहास नहीं",
+    "noCause": "कोई परिवर्तन कारण नहीं",
+    "current": "वर्तमान",
+    "rollBack": "वापस लें",
+    "confirmTitle": "संशोधन {{revision}} पर वापस जाएं?",
+    "confirmText": "{{name}} उस संशोधन के पॉड टेम्पलेट पर वापस जाता है।",
+    "rolledBack": "संशोधन {{revision}} पर वापस ले लिया गया"
+  },
+  "data": {
+    "empty": "कोई डेटा नहीं",
+    "reveal": "प्रकट करें",
+    "hide": "छुपाएं",
+    "copy": "कॉपी करें",
+    "copied": "कॉपी किया गया",
+    "secretHint": "मान तब तक छिपे रहेंगे जब तक आप उन्हें प्रकट नहीं करते। प्रकट करने की क्रिया ऑडिट लॉग में दर्ज की जाती है।",
+    "secretNoPermission": "आप कुंजियाँ देख सकते हैं लेकिन मान नहीं। Kubernetes रहस्यों को प्रकट करने की अनुमति के लिए किसी प्रशासक से पूछें।"
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "मेमोरी",
+    "collecting": "नमूने एकत्र किए जा रहे हैं...",
+    "unavailable": "मेट्रिक्स उपलब्ध नहीं हैं",
+    "unavailableHint": "CPU और मेमोरी उपयोग देखने के लिए क्लस्टर में metrics-server इंस्टॉल करें।",
+    "cpuUsage": "CPU उपयोग",
+    "memoryUsage": "मेमोरी उपयोग",
+    "podInformation": "Pod जानकारी",
+    "containers": "कंटेनर",
+    "cpuHistory": "CPU इतिहास",
+    "memoryHistory": "मेमोरी इतिहास",
+    "loading": "सांख्यिकी लोड हो रही है...",
+    "error": "सांख्यिकी लोड करने में त्रुटि",
+    "startPod": "सांख्यिकी देखने के लिए Pod शुरू करें।",
+    "noLimit": "कोई सीमा नहीं",
+    "of": {
+      "limit": "सीमा",
+      "node": "नोड"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "जाँचें",
+    "diff": "अंतर",
+    "save": "सहेजें",
+    "reload": "रिलोड करें",
+    "unsaved": "बिना सहेजे गए बदलाव",
+    "valid": "सब ठीक दिख रहा है। ये बदलाव होंगे:",
+    "noChanges": "कोई बदलाव नहीं",
+    "saved": "संसाधनों को सहेजा गया {{count}}"
+  },
+  "apply": {
+    "title": "Apply YAML",
+    "apply": "लागू करें",
+    "hint": "एक या अधिक मैनिफेस्ट पेस्ट करें। जाँच सर्वर पर ड्राई रन चलाता है और अंतर दिखाता है कि क्या बदलेगा। जब तक आप लागू नहीं करते, तब तक कुछ नहीं बदलेगा।",
+    "namespace": "{{namespace}} में",
+    "defaultNamespace": "डिफ़ॉल्ट नेमस्पेस में"
+  },
+  "helm": {
+    "none": "कोई Helm रिलीज़ नहीं",
+    "revision": "संशोधन {{revision}}",
+    "tabs": {
+      "history": "इतिहास",
+      "values": "मान",
+      "manifest": "मैनिफेस्ट"
+    },
+    "allValues": "चार्ट डिफ़ॉल्ट शामिल करें",
+    "allValuesHint": "हर मान दिखाएं, न कि केवल इंस्टॉल के समय सेट किए गए।",
+    "rollbackTitle": "{{name}} को संशोधन {{revision}} पर वापस करें?",
+    "rollbackText": "Helm पुराने सेटिंग्स के साथ एक नया संशोधन बनाता है।",
+    "rolledBack": "{{name}} को संशोधन {{revision}} पर वापस किया गया",
+    "uninstall": "अनइंस्टॉल करें",
+    "uninstallTitle": "{{name}} को अनइंस्टॉल करें?",
+    "uninstallText": "Helm इस रिलीज़ के सभी संसाधन हटा देता है।",
+    "uninstalled": "{{name}} को अनइंस्टॉल किया गया"
+  },
+  "logs": {
+    "container": "कंटेनर",
+    "allContainers": "सभी कंटेनर",
+    "previous": "पिछला चलाया गया",
+    "filter": "लॉग फ़िल्टर करें...",
+    "lines": "पंक्तियाँ",
+    "last50": "पिछली 50",
+    "last100": "पिछली 100",
+    "last500": "पिछली 500",
+    "last1000": "पिछली 1000",
+    "all": "सभी",
+    "timestamps": "टाइमस्टैम्प",
+    "autoRefresh": "फॉलो करें",
+    "copy": "लॉग कॉपी करें",
+    "download": "डाउनलोड करें",
+    "clear": "साफ़ करें",
+    "none": "कोई लॉग नहीं",
+    "noneMatching": "\"{{query}}\" से मेल खाने वाले कोई लॉग नहीं",
+    "copied": "पंक्तियाँ कॉपी की गईं {{count}}",
+    "failedToCopy": "लॉग कॉपी करने में विफल",
+    "downloaded": "लॉग डाउनलोड किए गए",
+    "failedToDownload": "लॉग डाउनलोड करने में विफल: {{error}}",
+    "failedToFetch": "लॉग लोड करने में विफल: {{error}}"
+  },
+  "console": {
+    "connect": "कनेक्ट करें",
+    "disconnect": "डिस्कनेक्ट करें",
+    "connecting": "कनेक्ट हो रहा है...",
+    "connectingTo": "{{name}} से कनेक्ट हो रहा है...",
+    "connectedTo": "{{name}} से कनेक्ट किया गया",
+    "notConnected": "कनेक्ट नहीं है",
+    "clickToConnect": "एक शेल चुनें और कनेक्ट करें पर क्लिक करें",
+    "disconnected": "डिस्कनेक्ट किया गया",
+    "consoleError": "शेल त्रुटि",
+    "errorMessage": "त्रुटि: {{message}}",
+    "failedToConnect": "पॉड से कनेक्ट करने में विफल",
+    "failedToConnectWithError": "कनेक्ट करने में विफल: {{error}}",
+    "selectShell": "शेल",
+    "copyConsole": "आउटपुट कॉपी करें",
+    "consoleCopied": "आउटपुट कॉपी किया गया",
+    "clear": "साफ़ करें",
+    "podMustBeRunning": "पॉड चल रहा होना चाहिए",
+    "podNotRunning": "पॉड चल नहीं रहा है",
+    "podNotRunningHint": "इसमें शेल खोलने के लिए पॉड शुरू करें।",
+    "readOnly": "शेल बंद है",
+    "readOnlyHint": "यह होस्ट केवल-पठनीय है, इसलिए पॉड शेल बंद हैं।"
+  },
+  "terminal": {
+    "clipboardReadFailed": "क्लिपबोर्ड से पढ़ने में विफल। सुनिश्चित करें कि क्लिपबोर्ड अनुमतियां दी गई हैं।",
+    "clipboardWriteFailed": "क्लिपबोर्ड पर कॉपी करने में विफल। सुनिश्चित करें कि पेज HTTPS या लोकलहोस्ट के माध्यम से सर्व किया जा रहा है।"
+  },
+  "errors": {
+    "remoteServerRequired": "रिमोट सर्वर आवश्यक है। इस कनेक्शन प्रकार का उपयोग करने के लिए सेटिंग्स में एक रिमोट सर्वर कनेक्ट करें।"
+  },
+  "hosts": {
+    "docsLink": "दस्तावेज़ देखें",
+    "hostNotFound": "होस्ट नहीं मिला",
+    "loadingHost": "होस्ट लोड हो रहा है..."
+  }
+}

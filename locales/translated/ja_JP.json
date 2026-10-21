@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "SSH を介してホストから Kubernetes クラスターを管理します。ログ、メトリクス、YAML、シェルに対応しています。"
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes パネル"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes の使用",
+      "description": "Kubernetes が有効なホストで、Kubernetes ビューとポッドシェルを開きます。"
+    },
+    "secrets": {
+      "title": "Kubernetes シークレットの表示",
+      "description": "Kubernetes シークレットのデコードされた値を表示します。すべての表示操作は監査ログに記録されます。"
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes を有効にする",
+        "description": "SSH を介してこのホストで kubectl を実行し、アクセス可能なクラスターを管理します。"
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes フレーバー",
+        "description": "このホストで kubectl を実行するコマンドを選択します。",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig パス",
+        "description": "SSH ユーザーのデフォルト (~/.kube/config または KUBECONFIG) を使用する場合は空白のままにします。",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "デフォルトコンテキスト",
+        "description": "kubeconfig の現在のコンテキストを使用するには空のままにしてください。Kubernetes タブでコンテキストを切り替えることができます。",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "デフォルトのネームスペース",
+        "description": "Kubernetes タブを開いたときに使用するネームスペースです。",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "sudo で実行",
+        "description": "k3s や MicroK8s のように、ルートユーザーのみがクラスター設定を読み取れる環境向けに、kubectl を sudo -n で実行します。SSH ユーザーはパスワードなしで sudo 実行できる必要があります。"
+      },
+      "readOnly": {
+        "label": "読み取り専用",
+        "description": "閲覧のみ許可します。このホスト上のすべてのユーザーに対して、スケーリング、再起動、削除、YAML の変更、Helm の変更、ポッドシェルをブロックします。"
+      },
+      "showPanel": {
+        "label": "ターミナルに Kubernetes パネルを表示",
+        "description": "このホストの SSH ターミナルの横に Kubernetes パネルを開くことを許可します。"
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "新しいターミナルで Kubernetes パネルを開く",
+        "description": "Kubernetes が有効なすべての SSH ターミナルの横に Kubernetes パネルを表示します。右端のボタンからいつでも開閉できます。"
+      },
+      "companionSide": {
+        "label": "Kubernetes パネルの表示位置",
+        "description": "ターミナルの横に Kubernetes パネルを表示する位置です。",
+        "right": "右",
+        "left": "左",
+        "bottom": "下"
+      },
+      "companionSize": {
+        "label": "Kubernetes パネルのサイズ",
+        "description": "ピクセル単位の幅、または下部に表示する場合の高さです。エッジをドラッグして調整することもできます。"
+      },
+      "companionEdgeButton": {
+        "label": "パネルボタンを表示する",
+        "description": "ターミナルの右端に、Kubernetes パネルを開く小さなボタンを表示します。"
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "このホストでは Kubernetes が有効になっていません",
+    "notEnabledHint": "クラスターを管理するには、このホストの設定で Kubernetes を有効にしてください。",
+    "validating": "クラスターを確認しています...",
+    "connecting": "接続中...",
+    "error": "エラー",
+    "errorCode": "エラーコード: {{code}}",
+    "connectionFailed": "接続に失敗しました",
+    "totpVerificationFailed": "認証に失敗しました。もう一度お試しください。",
+    "verificationCodePrompt": "確認コードを入力してください",
+    "browserSignInFailed": "サインインに失敗しました。もう一度お試しください。",
+    "noHostSelected": "ホストが選択されていません",
+    "refresh": "更新"
+  },
+  "cluster": {
+    "loading": "読み込み中...",
+    "empty": "{{kind}}がありません",
+    "noMatches": "フィルターに一致するものはありません",
+    "readOnly": "読み取り専用"
+  },
+  "sections": {
+    "workloads": "ワークロード",
+    "network": "ネットワーク",
+    "config": "設定",
+    "cluster": "クラスター",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "ボリューム要求",
+      "many": "ボリューム要求"
+    },
+    "pvs": {
+      "one": "永続ボリューム",
+      "many": "永続ボリューム"
+    },
+    "nodes": {
+      "one": "ノード",
+      "many": "ノード"
+    },
+    "namespaces": {
+      "one": "名前空間",
+      "many": "名前空間"
+    },
+    "events": {
+      "one": "イベント",
+      "many": "イベント"
+    }
+  },
+  "filters": {
+    "all": "すべて",
+    "healthy": "正常",
+    "problem": "問題あり",
+    "idle": "アイドル"
+  },
+  "toolbar": {
+    "namespace": "名前空間",
+    "allNamespaces": "すべての名前空間",
+    "context": "コンテキスト",
+    "kind": "リソースタイプ",
+    "search": "検索..."
+  },
+  "columns": {
+    "name": "名前",
+    "namespace": "名前空間",
+    "status": "ステータス",
+    "age": "作成から経過時間",
+    "ready": "準備完了",
+    "restarts": "再起動回数",
+    "node": "ノード",
+    "ip": "IP",
+    "owner": "所有者",
+    "upToDate": "最新の状態",
+    "available": "利用可能",
+    "images": "イメージ",
+    "completions": "完了数",
+    "duration": "所要時間",
+    "schedule": "スケジュール",
+    "active": "アクティブ",
+    "lastSchedule": "最終実行",
+    "type": "タイプ",
+    "clusterIP": "クラスター IP",
+    "externalIP": "外部 IP",
+    "ports": "ポート",
+    "class": "クラス",
+    "hosts": "ホスト",
+    "address": "アドレス",
+    "tls": "TLS",
+    "keys": "キー",
+    "capacity": "容量",
+    "access": "アクセス",
+    "storageClass": "ストレージクラス",
+    "volume": "ボリューム",
+    "reclaim": "リクレーム",
+    "claim": "クレーム",
+    "roles": "ロール",
+    "version": "バージョン",
+    "internalIP": "内部 IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "メモリ",
+    "reason": "理由",
+    "object": "オブジェクト",
+    "message": "メッセージ",
+    "count": "件数",
+    "cpuUsage": "CPU 使用率",
+    "memoryUsage": "メモリ使用率",
+    "container": "コンテナ",
+    "chart": "チャート",
+    "appVersion": "アプリバージョン",
+    "revision": "リビジョン"
+  },
+  "actions": {
+    "logs": "ログ",
+    "console": "シェル",
+    "scale": {
+      "label": "スケール",
+      "title": "{{name}} のスケール",
+      "replicas": "レプリカ",
+      "hint": "現在実行中: {{current}}",
+      "done": "{{name}} のスケール完了"
+    },
+    "restart": {
+      "label": "再起動",
+      "confirmTitle": "「{{name}}」を再起動しますか？",
+      "confirmText": "この {{kind}} のすべてのポッドが順次置き換えられます。",
+      "done": "「{{name}}」を再起動中"
+    },
+    "undo": {
+      "label": "ロールバック",
+      "done": "「{{name}}」をロールバックしました"
+    },
+    "setImage": {
+      "label": "イメージを変更",
+      "title": "「{{name}}」のイメージを変更",
+      "image": "イメージ",
+      "hint": "ポッドは新しいイメージで置き換えられます。",
+      "done": "「{{name}}」のイメージを変更しました"
+    },
+    "suspend": {
+      "label": "一時停止",
+      "confirmTitle": "{{name}} を一時停止しますか？",
+      "confirmText": "この {{kind}} は、再開するまで新しい実行を開始しなくなります。",
+      "done": "{{name}} を一時停止しました"
+    },
+    "resume": {
+      "label": "再開",
+      "done": "{{name}} を再開しました"
+    },
+    "trigger": {
+      "label": "今すぐ実行",
+      "done": "{{name}} からジョブを開始しました"
+    },
+    "cordon": {
+      "label": "コードン",
+      "confirmTitle": "{{name}} をコードンしますか？",
+      "confirmText": "この {{kind}} には新しいポッドがスケジュールされません。すでに実行中のポッドはそのまま続行されます。",
+      "done": "{{name}} をコードンしました"
+    },
+    "uncordon": {
+      "label": "アンコードン",
+      "done": "{{name}} をアンコードンしました"
+    },
+    "drain": {
+      "label": "ドレイン",
+      "title": "{{name}} をドレイン",
+      "text": "{{name}} をコードンし、ポッドを他のノードに移動させるために強制終了します。DaemonSet のポッドはそのまま残ります。",
+      "emptyDir": "emptyDir データを削除",
+      "emptyDirHint": "emptyDir ボリュームにデータを保持しているポッドを強制終了します。そのデータは失われます。",
+      "force": "強制",
+      "forceHint": "コントローラーが管理していないポッドも強制終了します。これらは再作成されません。",
+      "done": "{{name}} のドレインが完了しました"
+    },
+    "delete": {
+      "label": "削除",
+      "confirmTitle": "{{name}} を削除しますか？",
+      "confirmText": "この {{kind}} はクラスターから削除されます。",
+      "managedPodText": "このポッドはコントローラーに属しており、代わりに新しいポッドが起動されます。",
+      "namespaceText": "この名前空間内のすべてのリソースも削除されます。この操作は元に戻せません。",
+      "done": "{{name}} を削除しました"
+    }
+  },
+  "detail": {
+    "loading": "読み込み中...",
+    "noDescribe": "説明なし",
+    "noPods": "ポッドがありません",
+    "noEvents": "イベントがありません",
+    "tabs": {
+      "overview": "概要",
+      "pods": "ポッド",
+      "logs": "ログ",
+      "console": "シェル",
+      "metrics": "統計",
+      "history": "履歴",
+      "data": "データ",
+      "yaml": "YAML",
+      "events": "イベント"
+    }
+  },
+  "history": {
+    "none": "ロールアウト履歴がありません",
+    "noCause": "変更の原因なし",
+    "current": "現在",
+    "rollBack": "ロールバック",
+    "confirmTitle": "リビジョン {{revision}} にロールバックしますか？",
+    "confirmText": "{{name}} は、そのリビジョンのポッドテンプレートに戻ります。",
+    "rolledBack": "リビジョン {{revision}} にロールバックしました"
+  },
+  "data": {
+    "empty": "データがありません",
+    "reveal": "表示",
+    "hide": "非表示",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "secretHint": "値は表示するまで非表示のままです。表示操作は監査ログに記録されます。",
+    "secretNoPermission": "キーは表示できますが、値は表示できません。管理者に「Kubernetes シークレットの表示」権限を依頼してください。"
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "メモリ",
+    "collecting": "サンプルを収集しています...",
+    "unavailable": "メトリクスは利用できません",
+    "unavailableHint": "CPU とメモリの使用量を表示するには、クラスターに metrics-server をインストールしてください。",
+    "cpuUsage": "CPU 使用率",
+    "memoryUsage": "メモリ使用率",
+    "podInformation": "Pod 情報",
+    "containers": "コンテナ",
+    "cpuHistory": "CPU 履歴",
+    "memoryHistory": "メモリ履歴",
+    "loading": "統計情報をロード中...",
+    "error": "統計情報のロードに失敗しました",
+    "startPod": "Pod を起動して統計情報を表示してください。",
+    "noLimit": "制限なし",
+    "of": {
+      "limit": "limit",
+      "node": "node"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "チェック",
+    "diff": "差分",
+    "save": "保存",
+    "reload": "再読み込み",
+    "unsaved": "未保存の変更",
+    "valid": "問題ありません。以下の変更が適用されます:",
+    "noChanges": "変更なし",
+    "saved": "リソース {{count}} 個を保存しました"
+  },
+  "apply": {
+    "title": "YAML を適用",
+    "apply": "適用",
+    "hint": "1 つ以上のマニフェストを貼り付けてください。チェックはサーバー上でドライランを実行し、差分は変更内容を表示します。適用するまで変更は反映されません。",
+    "namespace": "{{namespace}} へ",
+    "defaultNamespace": "デフォルトの名前空間へ"
+  },
+  "helm": {
+    "none": "Helm リリースがありません",
+    "revision": "リビジョン {{revision}}",
+    "tabs": {
+      "history": "履歴",
+      "values": "値",
+      "manifest": "マニフェスト"
+    },
+    "allValues": "チャートのデフォルト値を含める",
+    "allValuesHint": "インストール時に設定された値だけでなく、すべての値を表示します。",
+    "rollbackTitle": "{{name}} をリビジョン {{revision}} にロールバックしますか？",
+    "rollbackText": "Helm は、古いリビジョンの設定を使用して新しいリビジョンを作成します。",
+    "rolledBack": "{{name}} をリビジョン {{revision}} にロールバックしました",
+    "uninstall": "アンインストール",
+    "uninstallTitle": "{{name}} をアンインストールしますか？",
+    "uninstallText": "Helm は、このリリースのすべてのリソースを削除します。",
+    "uninstalled": "{{name}} をアンインストールしました"
+  },
+  "logs": {
+    "container": "コンテナ",
+    "allContainers": "すべてのコンテナ",
+    "previous": "前回の実行",
+    "filter": "ログをフィルタ...",
+    "lines": "行",
+    "last50": "直近 50 行",
+    "last100": "直近 100 行",
+    "last500": "直近 500 行",
+    "last1000": "直近 1000 行",
+    "all": "すべて",
+    "timestamps": "タイムスタンプ",
+    "autoRefresh": "追従",
+    "copy": "ログをコピー",
+    "download": "ダウンロード",
+    "clear": "クリア",
+    "none": "ログがありません",
+    "noneMatching": "「{{query}}」に一致するログがありません",
+    "copied": "other: {{count}} 行をコピーしました",
+    "failedToCopy": "ログのコピーに失敗しました",
+    "downloaded": "ログをダウンロードしました",
+    "failedToDownload": "ログのダウンロードに失敗しました: {{error}}",
+    "failedToFetch": "ログの読み込みに失敗しました: {{error}}"
+  },
+  "console": {
+    "connect": "接続",
+    "disconnect": "切断",
+    "connecting": "接続中...",
+    "connectingTo": "{{name}} に接続中...",
+    "connectedTo": "{{name}} に接続済み",
+    "notConnected": "未接続",
+    "clickToConnect": "シェルを選択して「接続」をクリックしてください",
+    "disconnected": "切断済み",
+    "consoleError": "シェルエラー",
+    "errorMessage": "エラー: {{message}}",
+    "failedToConnect": "ポッドへの接続に失敗しました",
+    "failedToConnectWithError": "接続に失敗しました: {{error}}",
+    "selectShell": "シェル",
+    "copyConsole": "出力をコピー",
+    "consoleCopied": "出力をコピーしました",
+    "clear": "クリア",
+    "podMustBeRunning": "ポッドは実行中である必要があります",
+    "podNotRunning": "ポッドは実行されていません",
+    "podNotRunningHint": "ポッドを起動して、シェルを開いてください。",
+    "readOnly": "シェルは無効です",
+    "readOnlyHint": "このホストは読み取り専用であるため、ポッドのシェルは無効になっています。"
+  },
+  "terminal": {
+    "clipboardReadFailed": "クリップボードの読み取りに失敗しました。クリップボードの権限が付与されていることを確認してください。",
+    "clipboardWriteFailed": "クリップボードへのコピーに失敗しました。ページが HTTPS または localhost で提供されていることを確認してください。"
+  },
+  "errors": {
+    "remoteServerRequired": "リモートサーバーが必要です。この接続タイプを使用するには、設定でリモートサーバーを接続してください。"
+  },
+  "hosts": {
+    "docsLink": "ドキュメントを表示",
+    "hostNotFound": "ホストが見つかりません",
+    "loadingHost": "ホストを読み込んでいます..."
+  }
+}

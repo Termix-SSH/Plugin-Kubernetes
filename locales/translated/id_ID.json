@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Kelola klaster Kubernetes dari host Anda melalui SSH, dengan log, metrik, YAML, dan shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Panel Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Gunakan Kubernetes",
+      "description": "Buka tampilan Kubernetes dan shell pod pada host yang mengaktifkan Kubernetes."
+    },
+    "secrets": {
+      "title": "Tampilkan rahasia Kubernetes",
+      "description": "Tampilkan nilai yang telah didekode dari rahasia Kubernetes. Setiap penayangan dicatat dalam log audit."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Aktifkan Kubernetes",
+        "description": "Jalankan kubectl pada host ini melalui SSH untuk mengelola klaster yang dapat dijangkau."
+      },
+      "kubectlFlavor": {
+        "label": "Varian Kubernetes",
+        "description": "Perintah yang menjalankan kubectl pada host ini.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Path kubeconfig",
+        "description": "Biarkan kosong untuk menggunakan default pengguna SSH (~/.kube/config atau KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Konteks default",
+        "description": "Biarkan kosong untuk menggunakan konteks saat ini di kubeconfig. Anda dapat beralih konteks di tab Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Namespace default",
+        "description": "Namespace yang dibuka saat tab Kubernetes diakses.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Jalankan dengan sudo",
+        "description": "Jalankan kubectl dengan sudo -n, untuk pengaturan k3s dan MicroK8s di mana hanya root yang dapat membaca konfigurasi cluster. Pengguna SSH memerlukan sudo tanpa kata sandi."
+      },
+      "readOnly": {
+        "label": "Hanya baca",
+        "description": "Hanya melihat. Mencegah penskalaan, restart, penghapusan, perubahan YAML, perubahan Helm, dan shell pod untuk semua orang di host ini."
+      },
+      "showPanel": {
+        "label": "Tampilkan panel Kubernetes di terminal",
+        "description": "Izinkan panel Kubernetes terbuka di samping terminal SSH pada host ini."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Buka panel Kubernetes bersama terminal baru",
+        "description": "Tampilkan panel Kubernetes di samping setiap terminal SSH yang memiliki Kubernetes aktif. Anda masih dapat membukanya dan menutupnya dari tombol di tepi kanan."
+      },
+      "companionSide": {
+        "label": "Posisi panel Kubernetes",
+        "description": "Di mana panel Kubernetes berada di samping terminal.",
+        "right": "Kanan",
+        "left": "Kiri",
+        "bottom": "Bawah"
+      },
+      "companionSize": {
+        "label": "Ukuran panel Kubernetes",
+        "description": "Lebar dalam piksel, atau tinggi saat berada di bagian bawah. Anda juga dapat menyeret tepinya."
+      },
+      "companionEdgeButton": {
+        "label": "Tampilkan tombol panel",
+        "description": "Tampilkan tombol kecil di tepi kanan terminal yang membuka panel Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes tidak diaktifkan untuk host ini",
+    "notEnabledHint": "Aktifkan Kubernetes di pengaturan host ini untuk mengelola klusternya.",
+    "validating": "Memeriksa kluster...",
+    "connecting": "Menghubungkan...",
+    "error": "Kesalahan",
+    "errorCode": "Kode kesalahan: {{code}}",
+    "connectionFailed": "Gagal terhubung",
+    "totpVerificationFailed": "Verifikasi gagal. Silakan coba lagi.",
+    "verificationCodePrompt": "Masukkan kode verifikasi",
+    "browserSignInFailed": "Login gagal. Silakan coba lagi.",
+    "noHostSelected": "Tidak ada host yang dipilih",
+    "refresh": "Muat ulang"
+  },
+  "cluster": {
+    "loading": "Memuat...",
+    "empty": "Tidak ada {{kind}} di sini",
+    "noMatches": "Tidak ada yang cocok dengan filter Anda",
+    "readOnly": "Hanya baca"
+  },
+  "sections": {
+    "workloads": "Beban Kerja",
+    "network": "Jaringan",
+    "config": "Konfigurasi",
+    "cluster": "Kluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Klaim Volume",
+      "many": "Klaim Volume"
+    },
+    "pvs": {
+      "one": "Volume Persisten",
+      "many": "Volume Persisten"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "Semua",
+    "healthy": "Sehat",
+    "problem": "Masalah",
+    "idle": "Idle"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Semua namespace",
+    "context": "Konteks",
+    "kind": "Jenis Sumber Daya",
+    "search": "Cari..."
+  },
+  "columns": {
+    "name": "Nama",
+    "namespace": "Namespace",
+    "status": "Status",
+    "age": "Umur",
+    "ready": "Siap",
+    "restarts": "Restarts",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Pemilik",
+    "upToDate": "Terkini",
+    "available": "Tersedia",
+    "images": "Gambar",
+    "completions": "Penyelesaian",
+    "duration": "Durasi",
+    "schedule": "Jadwal",
+    "active": "Aktif",
+    "lastSchedule": "Jalankan terakhir",
+    "type": "Tipe",
+    "clusterIP": "IP Kluster",
+    "externalIP": "IP Eksternal",
+    "ports": "Port",
+    "class": "Kelas",
+    "hosts": "Host",
+    "address": "Alamat",
+    "tls": "TLS",
+    "keys": "Kunci",
+    "capacity": "Kapasitas",
+    "access": "Akses",
+    "storageClass": "Kelas penyimpanan",
+    "volume": "Volume",
+    "reclaim": "Pemulihan",
+    "claim": "Klaim",
+    "roles": "Peran",
+    "version": "Versi",
+    "internalIP": "IP Internal",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Memori",
+    "reason": "Alasan",
+    "object": "Objek",
+    "message": "Pesan",
+    "count": "Jumlah",
+    "cpuUsage": "Penggunaan CPU",
+    "memoryUsage": "Penggunaan memori",
+    "container": "Kontainer",
+    "chart": "Grafik",
+    "appVersion": "Versi aplikasi",
+    "revision": "Revisi"
+  },
+  "actions": {
+    "logs": "Log",
+    "console": "Shell",
+    "scale": {
+      "label": "Skala",
+      "title": "Skala {{name}}",
+      "replicas": "Replika",
+      "hint": "Berjalan sekarang: {{current}}",
+      "done": "{{name}} diskalakan"
+    },
+    "restart": {
+      "label": "Mulai ulang",
+      "confirmTitle": "Mulai ulang {{name}}?",
+      "confirmText": "Setiap pod dari {{kind}} ini diganti satu per satu.",
+      "done": "Memulai ulang {{name}}"
+    },
+    "undo": {
+      "label": "Kembalikan",
+      "done": "{{name}} dikembalikan"
+    },
+    "setImage": {
+      "label": "Ubah gambar",
+      "title": "Ubah gambar {{name}}",
+      "image": "Gambar",
+      "hint": "Pod diganti dengan gambar baru.",
+      "done": "Gambar {{name}} diubah"
+    },
+    "suspend": {
+      "label": "Tangguhkan",
+      "confirmTitle": "Tangguhkan {{name}}?",
+      "confirmText": "{{kind}} ini berhenti memulai eksekusi baru hingga Anda melanjutkannya.",
+      "done": "{{name}} ditangguhkan"
+    },
+    "resume": {
+      "label": "Lanjutkan",
+      "done": "{{name}} dilanjutkan"
+    },
+    "trigger": {
+      "label": "Jalankan sekarang",
+      "done": "Memulai pekerjaan dari {{name}}"
+    },
+    "cordon": {
+      "label": "Cordon",
+      "confirmTitle": "Cordon {{name}}?",
+      "confirmText": "Tidak ada pod baru yang dijadwalkan pada {{kind}} ini. Pod yang sudah berjalan tetap dilanjutkan.",
+      "done": "{{name}} telah di-cordon"
+    },
+    "uncordon": {
+      "label": "Buka Cordon",
+      "done": "{{name}} telah dibuka cordonya"
+    },
+    "drain": {
+      "label": "Drain",
+      "title": "Drain {{name}}",
+      "text": "Meng-cordon {{name}} dan mengusir pod-nya agar berpindah ke node lain. Pod DaemonSet tetap berjalan.",
+      "emptyDir": "Hapus data emptyDir",
+      "emptyDirHint": "Usir pod yang menyimpan data di volume emptyDir. Data tersebut akan hilang.",
+      "force": "Paksa",
+      "forceHint": "Juga evakuasi pod yang tidak dikelola oleh controller. Pod tersebut tidak akan dibuat ulang.",
+      "done": "{{name}} telah dikosongkan"
+    },
+    "delete": {
+      "label": "Hapus",
+      "confirmTitle": "Hapus {{name}}?",
+      "confirmText": "{{kind}} ini akan dihapus dari cluster.",
+      "managedPodText": "Pod ini milik controller, yang akan membuat pod baru untuk menggantikannya.",
+      "namespaceText": "Semua isi namespace ini juga akan dihapus. Tindakan ini tidak dapat dibatalkan.",
+      "done": "{{name}} telah dihapus"
+    }
+  },
+  "detail": {
+    "loading": "Memuat...",
+    "noDescribe": "Tidak ada deskripsi",
+    "noPods": "Tidak ada pod",
+    "noEvents": "Tidak ada peristiwa",
+    "tabs": {
+      "overview": "Ikhtisar",
+      "pods": "Pod",
+      "logs": "Log",
+      "console": "Shell",
+      "metrics": "Statistik",
+      "history": "Riwayat",
+      "data": "Data",
+      "yaml": "YAML",
+      "events": "Events"
+    }
+  },
+  "history": {
+    "none": "Tidak ada riwayat rollout",
+    "noCause": "Tidak ada penyebab perubahan",
+    "current": "Saat ini",
+    "rollBack": "Kembalikan",
+    "confirmTitle": "Kembalikan ke revisi {{revision}}?",
+    "confirmText": "{{name}} akan kembali ke template pod dari revisi tersebut.",
+    "rolledBack": "Dikembalikan ke revisi {{revision}}"
+  },
+  "data": {
+    "empty": "Tidak ada data",
+    "reveal": "Tampilkan",
+    "hide": "Sembunyikan",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "secretHint": "Nilai tetap tersembunyi hingga Anda menampilkannya. Tindakan menampilkan akan dicatat dalam log audit.",
+    "secretNoPermission": "Anda dapat melihat kunci tetapi tidak nilainya. Mintalah izin 'Reveal Kubernetes secrets' kepada administrator."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memori",
+    "collecting": "Mengumpulkan sampel...",
+    "unavailable": "Metrik tidak tersedia",
+    "unavailableHint": "Instal metrics-server di kluster untuk melihat penggunaan CPU dan memori.",
+    "cpuUsage": "Penggunaan CPU",
+    "memoryUsage": "Penggunaan memori",
+    "podInformation": "Informasi pod",
+    "containers": "Kontainer",
+    "cpuHistory": "Riwayat CPU",
+    "memoryHistory": "Riwayat memori",
+    "loading": "Memuat statistik...",
+    "error": "Gagal memuat statistik",
+    "startPod": "Mulai pod untuk melihat statistiknya.",
+    "noLimit": "tanpa batas",
+    "of": {
+      "limit": "batas",
+      "node": "node"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Periksa",
+    "diff": "Perbedaan",
+    "save": "Simpan",
+    "reload": "Muat Ulang",
+    "unsaved": "Perubahan belum disimpan",
+    "valid": "Terlihat baik. Ini akan berubah:",
+    "noChanges": "Tidak ada perubahan",
+    "saved": "Telah menyimpan {{count}} sumber daya"
+  },
+  "apply": {
+    "title": "Terapkan YAML",
+    "apply": "Terapkan",
+    "hint": "Tempel satu atau lebih manifest. Periksa menjalankan uji coba di server dan Perbedaan menunjukkan perubahan apa saja. Tidak ada yang berubah sampai Anda menerapkan.",
+    "namespace": "Ke {{namespace}}",
+    "defaultNamespace": "Ke namespace default"
+  },
+  "helm": {
+    "none": "Tidak ada rilis Helm",
+    "revision": "Revisi {{revision}}",
+    "tabs": {
+      "history": "Riwayat",
+      "values": "Nilai",
+      "manifest": "Manifest"
+    },
+    "allValues": "Sertakan default chart",
+    "allValuesHint": "Tampilkan setiap nilai, bukan hanya yang ditetapkan saat instalasi.",
+    "rollbackTitle": "Kembalikan {{name}} ke revisi {{revision}}?",
+    "rollbackText": "Helm membuat revisi baru dengan pengaturan yang lama.",
+    "rolledBack": "Telah mengembalikan {{name}} ke revisi {{revision}}",
+    "uninstall": "Copot Instal",
+    "uninstallTitle": "Copot instal {{name}}?",
+    "uninstallText": "Helm menghapus setiap sumber daya dari rilis ini.",
+    "uninstalled": "Telah mencopot instal {{name}}"
+  },
+  "logs": {
+    "container": "Kontainer",
+    "allContainers": "Semua kontainer",
+    "previous": "Jalankan sebelumnya",
+    "filter": "Saring log...",
+    "lines": "baris",
+    "last50": "50 Terakhir",
+    "last100": "100 Terakhir",
+    "last500": "500 Terakhir",
+    "last1000": "1000 Terakhir",
+    "all": "Semua",
+    "timestamps": "Stempel Waktu",
+    "autoRefresh": "Ikuti",
+    "copy": "Salin log",
+    "download": "Unduh",
+    "clear": "Bersihkan",
+    "none": "Tidak ada log",
+    "noneMatching": "Tidak ada log yang cocok dengan \"{{query}}\"",
+    "copied": "Telah menyalin {{count}} baris",
+    "failedToCopy": "Gagal menyalin log",
+    "downloaded": "Log diunduh",
+    "failedToDownload": "Gagal mengunduh log: {{error}}",
+    "failedToFetch": "Gagal memuat log: {{error}}"
+  },
+  "console": {
+    "connect": "Sambungkan",
+    "disconnect": "Putuskan",
+    "connecting": "Menyambung...",
+    "connectingTo": "Menyambung ke {{name}}...",
+    "connectedTo": "Tersambung ke {{name}}",
+    "notConnected": "Tidak tersambung",
+    "clickToConnect": "Pilih shell dan klik Sambungkan",
+    "disconnected": "Terputus",
+    "consoleError": "Kesalahan shell",
+    "errorMessage": "Kesalahan: {{message}}",
+    "failedToConnect": "Gagal terhubung ke pod",
+    "failedToConnectWithError": "Gagal terhubung: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Salin output",
+    "consoleCopied": "Output disalin",
+    "clear": "Bersihkan",
+    "podMustBeRunning": "Pod harus dalam keadaan berjalan",
+    "podNotRunning": "Pod tidak berjalan",
+    "podNotRunningHint": "Mulai pod untuk membuka shell di dalamnya.",
+    "readOnly": "Shell dinonaktifkan",
+    "readOnlyHint": "Host ini hanya baca, sehingga shell pod dinonaktifkan."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Gagal membaca dari papan klip. Pastikan izin papan klip telah diberikan.",
+    "clipboardWriteFailed": "Gagal menyalin ke papan klip. Pastikan halaman disajikan melalui HTTPS atau localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Server jarak jauh diperlukan. Hubungkan server jarak jauh di Pengaturan untuk menggunakan jenis koneksi ini."
+  },
+  "hosts": {
+    "docsLink": "Lihat dokumentasi",
+    "hostNotFound": "Host tidak ditemukan",
+    "loadingHost": "Memuat host..."
+  }
+}

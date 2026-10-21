@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Gestisci i cluster Kubernetes dai tuoi host tramite SSH, con log, metriche, YAML e shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Pannello Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Usa Kubernetes",
+      "description": "Apri la vista Kubernetes e le shell dei pod sugli host con Kubernetes abilitato."
+    },
+    "secrets": {
+      "title": "Mostra i segreti Kubernetes",
+      "description": "Mostra i valori decodificati dei segreti Kubernetes. Ogni visualizzazione viene registrata nel log di audit."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Abilita Kubernetes",
+        "description": "Esegui kubectl su questo host tramite SSH per gestire il cluster a cui può accedere."
+      },
+      "kubectlFlavor": {
+        "label": "Distribuzione Kubernetes",
+        "description": "Quale comando esegue kubectl su questo host.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Percorso kubeconfig",
+        "description": "Lascia vuoto per usare il valore predefinito per l'utente SSH (~/.kube/config o KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Contesto predefinito",
+        "description": "Lascia vuoto per usare il contesto corrente nel kubeconfig. Puoi cambiare contesto nella scheda Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Namespace predefinito",
+        "description": "Il namespace con cui si apre la scheda Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Esegui con sudo",
+        "description": "Esegui kubectl con sudo -n, per configurazioni k3s e MicroK8s in cui solo root può leggere la configurazione del cluster. L'utente SSH deve avere sudo senza password."
+      },
+      "readOnly": {
+        "label": "Sola lettura",
+        "description": "Solo visualizzazione. Blocca scaling, riavvii, eliminazioni, modifiche YAML, modifiche Helm e shell dei pod per tutti gli utenti su questo host."
+      },
+      "showPanel": {
+        "label": "Mostra il pannello Kubernetes nei terminali",
+        "description": "Consenti al pannello Kubernetes di aprirsi accanto ai terminali SSH su questo host."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Apri il pannello Kubernetes con i nuovi terminali",
+        "description": "Mostra il pannello Kubernetes accanto a ogni terminale SSH che ha Kubernetes attivo. Puoi comunque aprirlo e chiuderlo dal pulsante sul bordo destro."
+      },
+      "companionSide": {
+        "label": "Posizione del pannello Kubernetes",
+        "description": "Dove si trova il pannello Kubernetes accanto a un terminale.",
+        "right": "Destra",
+        "left": "Sinistra",
+        "bottom": "In basso"
+      },
+      "companionSize": {
+        "label": "Dimensione del pannello Kubernetes",
+        "description": "Larghezza in pixel, o altezza quando è in basso. Puoi anche trascinare il suo bordo."
+      },
+      "companionEdgeButton": {
+        "label": "Mostra il pulsante del pannello",
+        "description": "Mostra un piccolo pulsante sul bordo destro di un terminale che apre il pannello Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes non è abilitato per questo host",
+    "notEnabledHint": "Abilita Kubernetes nelle impostazioni di questo host per gestire il suo cluster.",
+    "validating": "Verifica del cluster in corso...",
+    "connecting": "Connessione in corso...",
+    "error": "Errore",
+    "errorCode": "Codice errore: {{code}}",
+    "connectionFailed": "Connessione non riuscita",
+    "totpVerificationFailed": "Verifica non riuscita. Riprova.",
+    "verificationCodePrompt": "Inserisci il codice di verifica",
+    "browserSignInFailed": "Accesso non riuscito. Riprova.",
+    "noHostSelected": "Nessun host selezionato",
+    "refresh": "Aggiorna"
+  },
+  "cluster": {
+    "loading": "Caricamento...",
+    "empty": "Nessun {{kind}} qui",
+    "noMatches": "Nessun risultato corrisponde ai filtri",
+    "readOnly": "Sola lettura"
+  },
+  "sections": {
+    "workloads": "Carichi di lavoro",
+    "network": "Rete",
+    "config": "Config",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingress"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMap"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secret"
+    },
+    "pvcs": {
+      "one": "Richiesta di volume",
+      "many": "Richieste di volume"
+    },
+    "pvs": {
+      "one": "Volume persistente",
+      "many": "Volumi persistenti"
+    },
+    "nodes": {
+      "one": "Nodo",
+      "many": "Nodi"
+    },
+    "namespaces": {
+      "one": "Spazio dei nomi",
+      "many": "Spazi dei nomi"
+    },
+    "events": {
+      "one": "Evento",
+      "many": "Eventi"
+    }
+  },
+  "filters": {
+    "all": "Tutti",
+    "healthy": "Sani",
+    "problem": "Problemi",
+    "idle": "Inattivi"
+  },
+  "toolbar": {
+    "namespace": "Spazio dei nomi",
+    "allNamespaces": "Tutti gli spazi dei nomi",
+    "context": "Contesto",
+    "kind": "Tipo di risorsa",
+    "search": "Cerca..."
+  },
+  "columns": {
+    "name": "Nome",
+    "namespace": "Spazio dei nomi",
+    "status": "Stato",
+    "age": "Età",
+    "ready": "Pronto",
+    "restarts": "Riavvii",
+    "node": "Nodo",
+    "ip": "IP",
+    "owner": "Proprietario",
+    "upToDate": "Aggiornato",
+    "available": "Disponibile",
+    "images": "Immagini",
+    "completions": "Completamenti",
+    "duration": "Durata",
+    "schedule": "Programma",
+    "active": "Attivo",
+    "lastSchedule": "Ultima esecuzione",
+    "type": "Tipo",
+    "clusterIP": "IP del cluster",
+    "externalIP": "IP esterno",
+    "ports": "Porte",
+    "class": "Classe",
+    "hosts": "Host",
+    "address": "Indirizzo",
+    "tls": "TLS",
+    "keys": "Chiavi",
+    "capacity": "Capacità",
+    "access": "Accesso",
+    "storageClass": "Classe di archiviazione",
+    "volume": "Volume",
+    "reclaim": "Ripristino",
+    "claim": "Richiesta",
+    "roles": "Ruoli",
+    "version": "Versione",
+    "internalIP": "IP interno",
+    "os": "Sistema operativo",
+    "cpu": "CPU",
+    "memory": "Memoria",
+    "reason": "Motivo",
+    "object": "Oggetto",
+    "message": "Messaggio",
+    "count": "Conteggio",
+    "cpuUsage": "Utilizzo CPU",
+    "memoryUsage": "Utilizzo memoria",
+    "container": "Contenitore",
+    "chart": "Grafico",
+    "appVersion": "Versione app",
+    "revision": "Revisione"
+  },
+  "actions": {
+    "logs": "Log",
+    "console": "Shell",
+    "scale": {
+      "label": "Scala",
+      "title": "Scala {{name}}",
+      "replicas": "Repliche",
+      "hint": "In esecuzione: {{current}}",
+      "done": "{{name}} scalato"
+    },
+    "restart": {
+      "label": "Riavvia",
+      "confirmTitle": "Riavviare {{name}}?",
+      "confirmText": "Ogni pod di questo {{kind}} viene sostituito uno alla volta.",
+      "done": "Riavvio di {{name}}"
+    },
+    "undo": {
+      "label": "Annulla",
+      "done": "Annullato per {{name}}"
+    },
+    "setImage": {
+      "label": "Cambia immagine",
+      "title": "Cambia l'immagine di {{name}}",
+      "image": "Immagine",
+      "hint": "I pod vengono sostituiti con la nuova immagine.",
+      "done": "Immagine di {{name}} modificata"
+    },
+    "suspend": {
+      "label": "Sospendi",
+      "confirmTitle": "Sospendere {{name}}?",
+      "confirmText": "Questo {{kind}} smetterà di avviare nuove esecuzioni finché non lo riprenderai.",
+      "done": "{{name}} sospeso"
+    },
+    "resume": {
+      "label": "Riprendi",
+      "done": "{{name}} ripreso"
+    },
+    "trigger": {
+      "label": "Esegui ora",
+      "done": "Avviato un job da {{name}}"
+    },
+    "cordon": {
+      "label": "Isola",
+      "confirmTitle": "Isolare {{name}}?",
+      "confirmText": "Nessun nuovo pod verrà pianificato su questo {{kind}}. I pod già in esecuzione continueranno a funzionare.",
+      "done": "{{name}} messo in cordone"
+    },
+    "uncordon": {
+      "label": "Rimuovi cordone",
+      "done": "Cordone rimosso da {{name}}"
+    },
+    "drain": {
+      "label": "Svuota",
+      "title": "Svuota {{name}}",
+      "text": "Mette in cordone {{name}} ed espelle i suoi pod in modo che vengano spostati su altri nodi. I pod DaemonSet rimangono.",
+      "emptyDir": "Elimina i dati di emptyDir",
+      "emptyDirHint": "Espelle i pod che conservano dati nei volumi emptyDir. Tali dati andranno persi.",
+      "force": "Forza",
+      "forceHint": "Espelle anche i pod non gestiti da alcun controller. Non verranno ricreati.",
+      "done": "{{name}} drenato"
+    },
+    "delete": {
+      "label": "Elimina",
+      "confirmTitle": "Eliminare {{name}}?",
+      "confirmText": "Questo {{kind}} verrà rimosso dal cluster.",
+      "managedPodText": "Questo pod appartiene a un controller, che ne avvierà uno nuovo al suo posto.",
+      "namespaceText": "Tutto ciò che si trova in questo namespace verrà eliminato. Questa operazione non può essere annullata.",
+      "done": "{{name}} eliminato"
+    }
+  },
+  "detail": {
+    "loading": "Caricamento...",
+    "noDescribe": "Nessuna descrizione",
+    "noPods": "Nessun pod",
+    "noEvents": "Nessun evento",
+    "tabs": {
+      "overview": "Panoramica",
+      "pods": "Pod",
+      "logs": "Log",
+      "console": "Shell",
+      "metrics": "Statistiche",
+      "history": "Cronologia",
+      "data": "Dati",
+      "yaml": "YAML",
+      "events": "Eventi"
+    }
+  },
+  "history": {
+    "none": "Nessun storico di rollout",
+    "noCause": "Nessuna causa del cambiamento",
+    "current": "Attuale",
+    "rollBack": "Riporta indietro",
+    "confirmTitle": "Riportare alla revisione {{revision}}?",
+    "confirmText": "{{name}} tornerà al modello del pod di quella revisione.",
+    "rolledBack": "Riportato alla revisione {{revision}}"
+  },
+  "data": {
+    "empty": "Nessun dato",
+    "reveal": "Mostra",
+    "hide": "Nascondi",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "secretHint": "I valori rimangono nascosti finché non li riveli. L'azione di rivelazione viene registrata nel log di audit.",
+    "secretNoPermission": "Puoi vedere le chiavi ma non i valori. Chiedi a un amministratore il permesso di rivelare i segreti di Kubernetes."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memoria",
+    "collecting": "Raccolta dei campioni in corso...",
+    "unavailable": "Le metriche non sono disponibili",
+    "unavailableHint": "Installa metrics-server nel cluster per visualizzare l'utilizzo di CPU e memoria.",
+    "cpuUsage": "Utilizzo CPU",
+    "memoryUsage": "Utilizzo memoria",
+    "podInformation": "Informazioni sul pod",
+    "containers": "Contenitori",
+    "cpuHistory": "Cronologia CPU",
+    "memoryHistory": "Cronologia memoria",
+    "loading": "Caricamento statistiche...",
+    "error": "Errore nel caricamento delle statistiche",
+    "startPod": "Avvia il pod per visualizzarne le statistiche.",
+    "noLimit": "nessun limite",
+    "of": {
+      "limit": "limite",
+      "node": "nodo"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Verifica",
+    "diff": "Diff",
+    "save": "Salva",
+    "reload": "Ricarica",
+    "unsaved": "Modifiche non salvate",
+    "valid": "Tutto a posto. Questi elementi verrebbero modificati:",
+    "noChanges": "Nessuna modifica",
+    "saved": "Salvati {{count}} risorse"
+  },
+  "apply": {
+    "title": "Applica YAML",
+    "apply": "Applica",
+    "hint": "Incolla uno o più manifest. Check esegue una simulazione sul server e Diff mostra le modifiche. Nessun cambiamento finché non applichi.",
+    "namespace": "In {{namespace}}",
+    "defaultNamespace": "Nello spazio dei nomi predefinito"
+  },
+  "helm": {
+    "none": "Nessuna release Helm",
+    "revision": "Revisione {{revision}}",
+    "tabs": {
+      "history": "Cronologia",
+      "values": "Valori",
+      "manifest": "Manifesto"
+    },
+    "allValues": "Includi valori predefiniti del chart",
+    "allValuesHint": "Mostra tutti i valori, non solo quelli impostati durante l'installazione.",
+    "rollbackTitle": "Ripristinare {{name}} alla revisione {{revision}}?",
+    "rollbackText": "Helm crea una nuova revisione con le impostazioni di quella precedente.",
+    "rolledBack": "Ripristinato {{name}} alla revisione {{revision}}",
+    "uninstall": "Disinstalla",
+    "uninstallTitle": "Disinstallare {{name}}?",
+    "uninstallText": "Helm elimina tutte le risorse di questa release.",
+    "uninstalled": "Disinstallato {{name}}"
+  },
+  "logs": {
+    "container": "Contenitore",
+    "allContainers": "Tutti i contenitori",
+    "previous": "Esecuzione precedente",
+    "filter": "Filtra i log...",
+    "lines": "righe",
+    "last50": "Ultime 50",
+    "last100": "Ultime 100",
+    "last500": "Ultime 500",
+    "last1000": "Ultime 1000",
+    "all": "Tutti",
+    "timestamps": "Timestamp",
+    "autoRefresh": "Segui",
+    "copy": "Copia log",
+    "download": "Scarica",
+    "clear": "Cancella",
+    "none": "Nessun log",
+    "noneMatching": "Nessun log corrisponde a \"{{query}}\"",
+    "copied": "Copiate {{count}} righe",
+    "failedToCopy": "Impossibile copiare i log",
+    "downloaded": "Log scaricati",
+    "failedToDownload": "Impossibile scaricare i log: {{error}}",
+    "failedToFetch": "Impossibile caricare i log: {{error}}"
+  },
+  "console": {
+    "connect": "Connetti",
+    "disconnect": "Disconnetti",
+    "connecting": "Connessione in corso...",
+    "connectingTo": "Connessione a {{name}}...",
+    "connectedTo": "Connesso a {{name}}",
+    "notConnected": "Non connesso",
+    "clickToConnect": "Seleziona una shell e fai clic su Connetti",
+    "disconnected": "Disconnesso",
+    "consoleError": "Errore shell",
+    "errorMessage": "Errore: {{message}}",
+    "failedToConnect": "Impossibile connettersi al pod",
+    "failedToConnectWithError": "Impossibile connettersi: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Copia output",
+    "consoleCopied": "Output copiato",
+    "clear": "Cancella",
+    "podMustBeRunning": "Il pod deve essere in esecuzione",
+    "podNotRunning": "Il pod non è in esecuzione",
+    "podNotRunningHint": "Avvia il pod per aprire una shell al suo interno.",
+    "readOnly": "Shell disattivata",
+    "readOnlyHint": "Questo host è in sola lettura, quindi le shell dei pod sono disattivate."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Impossibile leggere dagli appunti. Assicurati che i permessi per gli appunti siano concessi.",
+    "clipboardWriteFailed": "Impossibile copiare negli appunti. Assicurati che la pagina sia servita tramite HTTPS o localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Server remoto richiesto. Connetti un server remoto nelle Impostazioni per utilizzare questo tipo di connessione."
+  },
+  "hosts": {
+    "docsLink": "Visualizza documentazione",
+    "hostNotFound": "Host non trovato",
+    "loadingHost": "Caricamento host..."
+  }
+}

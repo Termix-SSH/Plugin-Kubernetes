@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Spravujte Kubernetes clustery z vašich hostů přes SSH, včetně logů, metrik, YAML a shellu."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Panel Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Používat Kubernetes",
+      "description": "Otevřít pohled Kubernetes a shell podů na hostech, kde je Kubernetes povolen."
+    },
+    "secrets": {
+      "title": "Zobrazit Kubernetes tajné informace",
+      "description": "Zobrazit dekodované hodnoty Kubernetes tajných informací. Každé zobrazení je zaznamenáno v audit logu."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Povolit Kubernetes",
+        "description": "Spouštět kubectl na tomto hostovi přes SSH pro správu clusteru, ke kterému má přístup."
+      },
+      "kubectlFlavor": {
+        "label": "Verze Kubernetes",
+        "description": "Který příkaz spouští kubectl na tomto hostiteli.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Cesta ke kubeconfig",
+        "description": "Ponechte prázdné pro použití výchozího nastavení pro SSH uživatele (~/.kube/config nebo KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Výchozí kontext",
+        "description": "Ponechte prázdné, pokud chcete použít aktuální kontext z kubeconfig. Kontexty můžete přepínat na kartě Kubernetes.",
+        "placeholder": "můj-cluster"
+      },
+      "namespace": {
+        "label": "Výchozí namespace",
+        "description": "Namespace, se kterým se otevře karta Kubernetes.",
+        "placeholder": "výchozí"
+      },
+      "useSudo": {
+        "label": "Spustit s sudo",
+        "description": "Spustí kubectl s příznakem sudo -n, pro konfigurace k3s a MicroK8s, kde může konfigurační soubor clusteru číst pouze root. SSH uživatel musí mít nastavené sudo bez hesla."
+      },
+      "readOnly": {
+        "label": "Pouze pro čtení",
+        "description": "Pouze prohlížení. Zablokuje škálování, restarty, mazání, změny YAML, změny Helm a přístup do shellu podů pro všechny uživatele na tomto hostiteli."
+      },
+      "showPanel": {
+        "label": "Zobrazit panel Kubernetes v terminálech",
+        "description": "Povolit panel Kubernetes, aby se otevíral vedle SSH terminálů na tomto hostiteli."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Otevřít panel Kubernetes s novými terminály",
+        "description": "Zobrazit panel Kubernetes vedle každého SSH terminálu, který má povolený Kubernetes. Stále jej můžete otevírat a zavírat pomocí tlačítka na pravém okraji."
+      },
+      "companionSide": {
+        "label": "Pozice panelu Kubernetes",
+        "description": "Umístění panelu Kubernetes vedle terminálu.",
+        "right": "Vpravo",
+        "left": "Vlevo",
+        "bottom": "Dole"
+      },
+      "companionSize": {
+        "label": "Velikost panelu Kubernetes",
+        "description": "Šířka v pixelech, nebo výška, když je umístěn dole. Můžete také přetáhnout jeho okraj."
+      },
+      "companionEdgeButton": {
+        "label": "Zobrazit tlačítko panelu",
+        "description": "Zobrazí malé tlačítko na pravém okraji terminálu, které otevře panel Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes není pro tohoto hostitele povolen",
+    "notEnabledHint": "Pro správu clusteru povolte Kubernetes v nastavení tohoto hostitele.",
+    "validating": "Kontrola clusteru...",
+    "connecting": "Připojování...",
+    "error": "Chyba",
+    "errorCode": "Kód chyby: {{code}}",
+    "connectionFailed": "Připojení se nezdařilo",
+    "totpVerificationFailed": "Ověření se nezdařilo. Zkuste to prosím znovu.",
+    "verificationCodePrompt": "Zadejte ověřovací kód",
+    "browserSignInFailed": "Přihlášení se nezdařilo. Zkuste to prosím znovu.",
+    "noHostSelected": "Nebyl vybrán žádný hostitel",
+    "refresh": "Obnovit"
+  },
+  "cluster": {
+    "loading": "Načítání...",
+    "empty": "Zde nejsou žádné {{kind}}",
+    "noMatches": "Nic neodpovídá vašim filtrům",
+    "readOnly": "Pouze pro čtení"
+  },
+  "sections": {
+    "workloads": "Zatížení",
+    "network": "Síť",
+    "config": "Konfigurace",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pody"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deploymenty"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSety"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSety"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSety"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Joby"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJoby"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Servisy"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingressy"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMapy"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrety"
+    },
+    "pvcs": {
+      "one": "Reklamace svazku",
+      "many": "Reklamace svazků"
+    },
+    "pvs": {
+      "one": "Perzistentní svazek",
+      "many": "Perzistentní svazky"
+    },
+    "nodes": {
+      "one": "Uzel",
+      "many": "Uzly"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespacy"
+    },
+    "events": {
+      "one": "Událost",
+      "many": "Události"
+    }
+  },
+  "filters": {
+    "all": "Vše",
+    "healthy": "Zdravé",
+    "problem": "Problémy",
+    "idle": "Nečinné"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Všechny namespacy",
+    "context": "Kontext",
+    "kind": "Typ zdroje",
+    "search": "Hledat..."
+  },
+  "columns": {
+    "name": "Název",
+    "namespace": "Namespace",
+    "status": "Stav",
+    "age": "Stáří",
+    "ready": "Připraveno",
+    "restarts": "Restarty",
+    "node": "Uzel",
+    "ip": "IP",
+    "owner": "Vlastník",
+    "upToDate": "Aktuální",
+    "available": "Dostupné",
+    "images": "Obrazy",
+    "completions": "Dokončení",
+    "duration": "Trvání",
+    "schedule": "Rozvrh",
+    "active": "Aktivní",
+    "lastSchedule": "Poslední spuštění",
+    "type": "Typ",
+    "clusterIP": "Clusterová IP",
+    "externalIP": "Externí IP",
+    "ports": "Porty",
+    "class": "Třída",
+    "hosts": "Hostitelé",
+    "address": "Adresa",
+    "tls": "TLS",
+    "keys": "Klíče",
+    "capacity": "Kapacita",
+    "access": "Přístup",
+    "storageClass": "Třída úložiště",
+    "volume": "Svazek",
+    "reclaim": "Uvolnit",
+    "claim": "Nárok",
+    "roles": "Role",
+    "version": "Verze",
+    "internalIP": "Interní IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Paměť",
+    "reason": "Důvod",
+    "object": "Objekt",
+    "message": "Zpráva",
+    "count": "Počet",
+    "cpuUsage": "Využití CPU",
+    "memoryUsage": "Využití paměti",
+    "container": "Kontejner",
+    "chart": "Graf",
+    "appVersion": "Verze aplikace",
+    "revision": "Revize"
+  },
+  "actions": {
+    "logs": "Protokoly",
+    "console": "Shell",
+    "scale": {
+      "label": "Škálovat",
+      "title": "Škálovat {{name}}",
+      "replicas": "Repliky",
+      "hint": "Aktuálně spuštěno: {{current}}",
+      "done": "Škálováno {{name}}"
+    },
+    "restart": {
+      "label": "Restartovat",
+      "confirmTitle": "Restartovat {{name}}?",
+      "confirmText": "Každý pod tohoto {{kind}} bude postupně nahrazen.",
+      "done": "Restartování {{name}}"
+    },
+    "undo": {
+      "label": "Vrátit zpět",
+      "done": "Nastavení {{name}} vráceno zpět"
+    },
+    "setImage": {
+      "label": "Změnit obraz",
+      "title": "Změnit obraz pro {{name}}",
+      "image": "Obraz",
+      "hint": "Pody budou nahrazeny novým obrazem.",
+      "done": "Obraz pro {{name}} byl změněn"
+    },
+    "suspend": {
+      "label": "Pozastavit",
+      "confirmTitle": "Pozastavit {{name}}?",
+      "confirmText": "Tento {{kind}} přestane spouštět nové běhy, dokud ho nezrušíte.",
+      "done": "{{name}} byl pozastaven"
+    },
+    "resume": {
+      "label": "Obnovit",
+      "done": "{{name}} byl obnoven"
+    },
+    "trigger": {
+      "label": "Spustit nyní",
+      "done": "Začal se úkol z {{name}}"
+    },
+    "cordon": {
+      "label": "Ohraničit",
+      "confirmTitle": "Ohraničit {{name}}?",
+      "confirmText": "Na tento {{kind}} se již neplánují nové pody. Pody, které na něm již běží, budou pokračovat v běhu.",
+      "done": "{{name}} byl uzamčen (cordon)"
+    },
+    "uncordon": {
+      "label": "Odemknout",
+      "done": "{{name}} byl odemknut"
+    },
+    "drain": {
+      "label": "Vyprázdnit",
+      "title": "Vyprázdnit {{name}}",
+      "text": "Uzamkne {{name}} a vysídí jeho pody, aby se přesunuly na jiné uzly. Pody DaemonSet zůstanou.",
+      "emptyDir": "Smazat data emptyDir",
+      "emptyDirHint": "Vysídit pody, které ukládají data do svazků emptyDir. Tato data budou ztracena.",
+      "force": "Vynutit",
+      "forceHint": "Odstranit také pody, které neříídí žádný controller. Nebudou znovu vytvořeny.",
+      "done": "Vyprázdněno {{name}}"
+    },
+    "delete": {
+      "label": "Smazat",
+      "confirmTitle": "Smazat {{name}}?",
+      "confirmText": "Tento {{kind}} bude odstraněn z clusteru.",
+      "managedPodText": "Tento pod patří pod controller, který na jeho místo spustí nový.",
+      "namespaceText": "Vše uvnitř tohoto namespace bude také smazáno. Tuto akci nelze vrátit zpět.",
+      "done": "Smazáno {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Načítání...",
+    "noDescribe": "Žádný popis",
+    "noPods": "Žádné pody",
+    "noEvents": "Žádné události",
+    "tabs": {
+      "overview": "Přehled",
+      "pods": "Pody",
+      "logs": "Protokoly",
+      "console": "Shell",
+      "metrics": "Statistiky",
+      "history": "Historie",
+      "data": "Data",
+      "yaml": "YAML",
+      "events": "Události"
+    }
+  },
+  "history": {
+    "none": "Žádná historie nasazení",
+    "noCause": "Žádná příčina změny",
+    "current": "Aktuální",
+    "rollBack": "Vrátit zpět",
+    "confirmTitle": "Vrátit zpět na revizi {{revision}}?",
+    "confirmText": "{{name}} se vrátí k šabloně podu z této revize.",
+    "rolledBack": "Vráceno zpět na revizi {{revision}}"
+  },
+  "data": {
+    "empty": "Žádná data",
+    "reveal": "Zobrazit",
+    "hide": "Skrýt",
+    "copy": "Kopírovat",
+    "copied": "Zkopírováno",
+    "secretHint": "Hodnoty zůstávají skryté, dokud je neodhalíte. Odhalení je zaznamenáno v auditním logu.",
+    "secretNoPermission": "Můžete vidět klíče, ale ne hodnoty. Požádejte administrátora o oprávnění Odhalit Kubernetes tajné informace."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Paměť",
+    "collecting": "Sbírám vzorky...",
+    "unavailable": "Metriky nejsou k dispozici",
+    "unavailableHint": "Pro zobrazení využití CPU a paměti nainstalujte metrics-server do clusteru.",
+    "cpuUsage": "Využití CPU",
+    "memoryUsage": "Využití paměti",
+    "podInformation": "Informace o podu",
+    "containers": "Kontejnery",
+    "cpuHistory": "Historie využití CPU",
+    "memoryHistory": "Historie využití paměti",
+    "loading": "Načítání statistik...",
+    "error": "Chyba při načítání statistik",
+    "startPod": "Pro zobrazení statistik spusťte pod.",
+    "noLimit": "bez limitu",
+    "of": {
+      "limit": "limit",
+      "node": "uzel"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Ověřit",
+    "diff": "Rozdíly",
+    "save": "Uložit",
+    "reload": "Obnovit",
+    "unsaved": "Neuložené změny",
+    "valid": "Vypadá to dobře. Změní se toto:",
+    "noChanges": "Žádné změny",
+    "saved": "Uloženo {{count}} zdrojů"
+  },
+  "apply": {
+    "title": "Použít YAML",
+    "apply": "Použít",
+    "hint": "Vložte jeden nebo více manifestů. Kontrola provede suchý průběh na serveru a Rozdíl zobrazí změny. Nic se nezmění, dokud to nepoužijete.",
+    "namespace": "Do {{namespace}}",
+    "defaultNamespace": "Do výchozího namespace"
+  },
+  "helm": {
+    "none": "Žádné Helm releasy",
+    "revision": "Revize {{revision}}",
+    "tabs": {
+      "history": "Historie",
+      "values": "Hodnoty",
+      "manifest": "Manifest"
+    },
+    "allValues": "Zahrnout výchozí hodnoty grafu",
+    "allValuesHint": "Zobrazit všechny hodnoty, nejen ty nastavené při instalaci.",
+    "rollbackTitle": "Vrátit {{name}} na revizi {{revision}}?",
+    "rollbackText": "Helm vytvoří novou revizi s nastavením z té staré.",
+    "rolledBack": "Vráceno {{name}} na revizi {{revision}}",
+    "uninstall": "Odinstalovat",
+    "uninstallTitle": "Odinstalovat {{name}}?",
+    "uninstallText": "Helm odstraní všechny zdroje této instalace.",
+    "uninstalled": "Odinstalováno {{name}}"
+  },
+  "logs": {
+    "container": "Kontejner",
+    "allContainers": "Všechny kontejnery",
+    "previous": "Předchozí spuštění",
+    "filter": "Filtrovat protokoly...",
+    "lines": "řádků",
+    "last50": "Posledních 50",
+    "last100": "Posledních 100",
+    "last500": "Posledních 500",
+    "last1000": "Posledních 1000",
+    "all": "Vše",
+    "timestamps": "Časová razítka",
+    "autoRefresh": "Sledovat",
+    "copy": "Kopírovat protokoly",
+    "download": "Stáhnout",
+    "clear": "Vymazat",
+    "none": "Žádné protokoly",
+    "noneMatching": "Žádné protokoly neodpovídají „{{query}}“",
+    "copied": "Kopírováno {{count}} řádků",
+    "failedToCopy": "Kopírování protokolů selhalo",
+    "downloaded": "Protokoly staženy",
+    "failedToDownload": "Nepodařilo se stáhnout protokoly: {{error}}",
+    "failedToFetch": "Nepodařilo se načíst protokoly: {{error}}"
+  },
+  "console": {
+    "connect": "Připojit",
+    "disconnect": "Odpojit",
+    "connecting": "Připojování...",
+    "connectingTo": "Připojování k {{name}}...",
+    "connectedTo": "Připojeno k {{name}}",
+    "notConnected": "Není připojeno",
+    "clickToConnect": "Vyberte shell a klikněte na Připojit",
+    "disconnected": "Odpojeno",
+    "consoleError": "Chyba shellu",
+    "errorMessage": "Chyba: {{message}}",
+    "failedToConnect": "Nepodařilo se připojit k podu",
+    "failedToConnectWithError": "Nepodařilo se připojit: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Kopírovat výstup",
+    "consoleCopied": "Výstup zkopírován",
+    "clear": "Vymazat",
+    "podMustBeRunning": "Pod musí běžet",
+    "podNotRunning": "Pod neběží",
+    "podNotRunningHint": "Spusťte pod, abyste v něm mohli otevřít shell.",
+    "readOnly": "Shell je vypnutý",
+    "readOnlyHint": "Tento host je pouze pro čtení, takže shelly podů jsou vypnuty."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Nepodařilo se číst ze schránky. Ujistěte se, že jsou udělena oprávnění pro schránku.",
+    "clipboardWriteFailed": "Nepodařilo se kopírovat do schránky. Ujistěte se, že je stránka poskytována přes HTTPS nebo localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Je vyžadován vzdálený server. Pro použití tohoto typu připojení připojte vzdálený server v Nastavení."
+  },
+  "hosts": {
+    "docsLink": "Zobrazit dokumentaci",
+    "hostNotFound": "Host nebyl nalezen",
+    "loadingHost": "Načítání hosta..."
+  }
+}

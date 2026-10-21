@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Διαχείριση συστάδων Kubernetes από τους hosts σας μέσω SSH, με ημερολόγια, μετρικές, YAML και shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Πίνακας Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Χρήση Kubernetes",
+      "description": "Άνοιγμα της προβολής Kubernetes και των shells των pods σε hosts με ενεργοποιημένο το Kubernetes."
+    },
+    "secrets": {
+      "title": "Αποκάλυψη μυστικών Kubernetes",
+      "description": "Εμφάνιση των αποκωδικοποιημένων τιμών των μυστικών Kubernetes. Κάθε αποκάλυψη καταγράφεται στο ημερολόγιο ελέγχου."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Ενεργοποίηση Kubernetes",
+        "description": "Εκτέλεση kubectl σε αυτόν τον host μέσω SSH για τη διαχείριση της συστάδας που μπορεί να φτάσει."
+      },
+      "kubectlFlavor": {
+        "label": "Εκδοχή Kubernetes",
+        "description": "Ποια εντολή εκτελεί το kubectl σε αυτόν τον υπολογιστή.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Διαδρομή Kubeconfig",
+        "description": "Αφήστε κενό για να χρησιμοποιηθεί η προεπιλογή για τον χρήστη SSH (~/.kube/config ή KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Προεπιλεγμένο πλαίσιο",
+        "description": "Αφήστε κενό για να χρησιμοποιηθεί το τρέχον context στο kubeconfig. Μπορείτε να αλλάξετε contexts στην καρτέλα Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Προεπιλεγμένος namespace",
+        "description": "Ο namespace που ανοίγει η καρτέλα Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Εκτέλεση με sudo",
+        "description": "Εκτέλεση του kubectl με sudo -n, για ρυθμίσεις k3s και MicroK8s όπου μόνο ο root μπορεί να διαβάσει τη διαμόρφωση του cluster. Ο χρήστης SSH χρειάζεται passwordless sudo."
+      },
+      "readOnly": {
+        "label": "Μόνο για ανάγνωση",
+        "description": "Μόνο για προβολή. Αποτρέπει το scaling, τις επανεκκινήσεις, τις διαγραφές, τις αλλαγές YAML, τις αλλαγές Helm και τα pod shells για όλους σε αυτόν τον host."
+      },
+      "showPanel": {
+        "label": "Εμφάνιση πάνελ Kubernetes στα τερματικά",
+        "description": "Επιτρέψτε στο πάνελ Kubernetes να ανοίγει δίπλα στα τερματικά SSH σε αυτόν τον υπολογιστή."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Άνοιγμα του πάνελ Kubernetes με νέα τερματικά",
+        "description": "Εμφάνιση του πάνελ Kubernetes δίπλα σε κάθε τερματικό SSH που έχει ενεργοποιημένο το Kubernetes. Μπορείτε πάντα να το ανοίγετε και να το κλείνετε από το κουμπί στην δεξιά άκρη."
+      },
+      "companionSide": {
+        "label": "Θέση πάνελ Kubernetes",
+        "description": "Πού εμφανίζεται το πάνελ Kubernetes δίπλα σε ένα τερματικό.",
+        "right": "Δεξιά",
+        "left": "Αριστερά",
+        "bottom": "Κάτω"
+      },
+      "companionSize": {
+        "label": "Μέγεθος πάνελ Kubernetes",
+        "description": "Πλάτος σε pixels, ή ύψος όταν είναι στην κάτω θέση. Μπορείτε επίσης να το σύρετε από την άκρη του."
+      },
+      "companionEdgeButton": {
+        "label": "Εμφάνιση του κουμπιού του πίνακα",
+        "description": "Εμφάνιση ενός μικρού κουμπιού στο δεξί άκρο ενός τερματικού που ανοίγει τον πίνακα Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Το Kubernetes δεν είναι ενεργοποιημένο για αυτόν τον υπολογιστή",
+    "notEnabledHint": "Ενεργοποιήστε το Kubernetes στις ρυθμίσεις αυτού του υπολογιστή για να διαχειριστείτε το cluster του.",
+    "validating": "Έλεγχος του cluster...",
+    "connecting": "Σύνδεση...",
+    "error": "Σφάλμα",
+    "errorCode": "Κωδικός σφάλματος: {{code}}",
+    "connectionFailed": "Αποτυχία σύνδεσης",
+    "totpVerificationFailed": "Αποτυχία επαλήθευσης. Παρακαλώ προσπαθήστε ξανά.",
+    "verificationCodePrompt": "Εισαγωγή κωδικού επαλήθευσης",
+    "browserSignInFailed": "Η σύνδεση απέτυχε. Παρακαλώ προσπαθήστε ξανά.",
+    "noHostSelected": "Δεν έχει επιλεγεί host",
+    "refresh": "Ανανέωση"
+  },
+  "cluster": {
+    "loading": "Φόρτωση...",
+    "empty": "Δεν υπάρχει {{kind}} εδώ",
+    "noMatches": "Τίποτα δεν ταιριάζει με τα φίλτρα σας",
+    "readOnly": "Μόνο για ανάγνωση"
+  },
+  "sections": {
+    "workloads": "Workloads",
+    "network": "Δίκτυο",
+    "config": "Ρύθμιση",
+    "cluster": "Σύμπλεγμα",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Υπηρεσία",
+      "many": "Υπηρεσίες"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Μυστικό",
+      "many": "Μυστικά"
+    },
+    "pvcs": {
+      "one": "Αίτημα όγκου",
+      "many": "Αιτήματα όγκου"
+    },
+    "pvs": {
+      "one": "Μόνιμος όγκος",
+      "many": "Μόνιμοι όγκοι"
+    },
+    "nodes": {
+      "one": "Κόμβος",
+      "many": "Κόμβοι"
+    },
+    "namespaces": {
+      "one": "Διαχωρισμός",
+      "many": "Διαχωρισμοί"
+    },
+    "events": {
+      "one": "Γεγονός",
+      "many": "Γεγονότα"
+    }
+  },
+  "filters": {
+    "all": "Όλα",
+    "healthy": "Υγιή",
+    "problem": "Προβλήματα",
+    "idle": "Αδρανής"
+  },
+  "toolbar": {
+    "namespace": "Διαχωρισμός",
+    "allNamespaces": "Όλοι οι διαχωρισμοί",
+    "context": "Σύνοψη",
+    "kind": "Τύπος πόρου",
+    "search": "Αναζήτηση..."
+  },
+  "columns": {
+    "name": "Όνομα",
+    "namespace": "Διαχωρισμός",
+    "status": "Κατάσταση",
+    "age": "Ηλικία",
+    "ready": "Έτοιμο",
+    "restarts": "Επανεκκινήσεις",
+    "node": "Κόμβος",
+    "ip": "IP",
+    "owner": "Ιδιοκτήτης",
+    "upToDate": "Ενημερωμένο",
+    "available": "Διαθέσιμο",
+    "images": "Εικόνες",
+    "completions": "Ολοκληρώσεις",
+    "duration": "Διάρκεια",
+    "schedule": "Πρόγραμμα",
+    "active": "Ενεργό",
+    "lastSchedule": "Τελευταία εκτέλεση",
+    "type": "Τύπος",
+    "clusterIP": "IP Cluster",
+    "externalIP": "Εξωτερική IP",
+    "ports": "Θύρες",
+    "class": "Κλάση",
+    "hosts": "Hosts",
+    "address": "Διεύθυνση",
+    "tls": "TLS",
+    "keys": "Κλειδιά",
+    "capacity": "Χωρητικότητα",
+    "access": "Πρόσβαση",
+    "storageClass": "Κλάση αποθήκευσης",
+    "volume": "Volume",
+    "reclaim": "Ανάκτηση",
+    "claim": "Claim",
+    "roles": "Ρόλοι",
+    "version": "Έκδοση",
+    "internalIP": "Εσωτερική IP",
+    "os": "ΛΣ",
+    "cpu": "CPU",
+    "memory": "Μνήμη",
+    "reason": "Αιτιολογία",
+    "object": "Αντικείμενο",
+    "message": "Μήνυμα",
+    "count": "Μέτρηση",
+    "cpuUsage": "Χρήση CPU",
+    "memoryUsage": "Χρήση μνήμης",
+    "container": "Container",
+    "chart": "Γράφημα",
+    "appVersion": "Έκδοση εφαρμογής",
+    "revision": "Αναθεώρηση"
+  },
+  "actions": {
+    "logs": "Logs",
+    "console": "Shell",
+    "scale": {
+      "label": "Κλιμάκωση",
+      "title": "Κλιμάκωση {{name}}",
+      "replicas": "Αντίγραφα",
+      "hint": "Τρέχοντα: {{current}}",
+      "done": "Κλιμάκωση {{name}}"
+    },
+    "restart": {
+      "label": "Επανεκκίνηση",
+      "confirmTitle": "Επανεκκίνηση {{name}};",
+      "confirmText": "Κάθε pod αυτού του {{kind}} αντικαθίσταται ένας-ένας.",
+      "done": "Επανεκκίνηση {{name}}"
+    },
+    "undo": {
+      "label": "Αναίρεση",
+      "done": "Αναίρεση {{name}}"
+    },
+    "setImage": {
+      "label": "Αλλαγή εικόνας",
+      "title": "Αλλαγή εικόνας του {{name}}",
+      "image": "Εικόνα",
+      "hint": "Τα pods αντικαθίστανται με τη νέα εικόνα.",
+      "done": "Αλλαγή εικόνας του {{name}}"
+    },
+    "suspend": {
+      "label": "Αναστολή",
+      "confirmTitle": "Αναστολή {{name}};",
+      "confirmText": "Αυτό το {{kind}} σταματά να ξεκινά νέες εκτελέσεις μέχρι να το ενεργοποιήσετε ξανά.",
+      "done": "Αναστολή {{name}}"
+    },
+    "resume": {
+      "label": "Συνέχεια",
+      "done": "Συνέχεια {{name}}"
+    },
+    "trigger": {
+      "label": "Εκτέλεση τώρα",
+      "done": "Έναρξη εργασίας από {{name}}"
+    },
+    "cordon": {
+      "label": "Cordon",
+      "confirmTitle": "Cordon {{name}};",
+      "confirmText": "Δεν προγραμματίζονται νέα pods σε αυτό το {{kind}}. Τα pods που ήδη εκτελούνται συνεχίζουν να λειτουργούν.",
+      "done": "Το {{name}} τέθηκε σε κατάσταση cordon"
+    },
+    "uncordon": {
+      "label": "Αφαίρεση cordon",
+      "done": "Το {{name}} αφαιρέθηκε από κατάσταση cordon"
+    },
+    "drain": {
+      "label": "Εκκένωση",
+      "title": "Εκκένωση του {{name}}",
+      "text": "Τοποθετεί το {{name}} σε κατάσταση cordon και εκδιώκει τα pods του ώστε να μετακινηθούν σε άλλους κόμβους. Τα pods DaemonSet παραμένουν.",
+      "emptyDir": "Διαγραφή δεδομένων emptyDir",
+      "emptyDirHint": "Εκδίωξη pods που διατηρούν δεδομένα σε όγκους emptyDir. Αυτά τα δεδομένα θα χαθούν.",
+      "force": "Αναγκαστικά",
+      "forceHint": "Επίσης, απομακρύνονται pods που δεν διαχειρίζεται κανένας ελεγκτής. Δεν θα δημιουργηθούν ξανά.",
+      "done": "Ο {{name}} αποστράγγισε"
+    },
+    "delete": {
+      "label": "Διαγραφή",
+      "confirmTitle": "Διαγραφή του {{name}};",
+      "confirmText": "Αυτό το {{kind}} αφαιρείται από το cluster.",
+      "managedPodText": "Αυτό το pod ανήκει σε έναν ελεγκτή, ο οποίος θα ξεκινήσει ένα νέο στη θέση του.",
+      "namespaceText": "Όλα τα στοιχεία μέσα σε αυτόν τον namespace διαγράφονται επίσης. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+      "done": "Διαγράφηκε το {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Φόρτωση...",
+    "noDescribe": "Χωρίς περιγραφή",
+    "noPods": "Κανένα pod",
+    "noEvents": "Κανένα συμβάν",
+    "tabs": {
+      "overview": "Επισκόπηση",
+      "pods": "Pods",
+      "logs": "Καταγραφές",
+      "console": "Shell",
+      "metrics": "Στατιστικά",
+      "history": "Ιστορικό",
+      "data": "Δεδομένα",
+      "yaml": "YAML",
+      "events": "Γεγονότα"
+    }
+  },
+  "history": {
+    "none": "Δεν υπάρχει ιστορικό εκδόσεων",
+    "noCause": "Χωρίς αιτία αλλαγής",
+    "current": "Τρέχον",
+    "rollBack": "Επιστροφή",
+    "confirmTitle": "Επιστροφή στην έκδοση {{revision}};",
+    "confirmText": "Το {{name}} επιστρέφει στο πρότυπο pod αυτής της έκδοσης.",
+    "rolledBack": "Επιστροφή στην έκδοση {{revision}}"
+  },
+  "data": {
+    "empty": "Χωρίς δεδομένα",
+    "reveal": "Εμφάνιση",
+    "hide": "Απόκρυψη",
+    "copy": "Αντιγραφή",
+    "copied": "Αντιγράφηκε",
+    "secretHint": "Οι τιμές παραμένουν κρυφές μέχρι να τις αποκαλύψετε. Η αποκάλυψη καταγράφεται στο αρχείο ελέγχου.",
+    "secretNoPermission": "Μπορείτε να δείτε τα κλειδιά αλλά όχι τις τιμές. Ζητήστε από έναν διαχειριστή την άδεια Αποκάλυψη μυστικών Kubernetes."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Μνήμη",
+    "collecting": "Συλλογή δειγμάτων...",
+    "unavailable": "Οι μετρήσεις δεν είναι διαθέσιμες",
+    "unavailableHint": "Εγκαταστήστε το metrics-server στο cluster για να δείτε τη χρήση CPU και μνήμης.",
+    "cpuUsage": "Χρήση CPU",
+    "memoryUsage": "Χρήση μνήμης",
+    "podInformation": "Πληροφορίες Pod",
+    "containers": "Δοχεία",
+    "cpuHistory": "Ιστορικό CPU",
+    "memoryHistory": "Ιστορικό μνήμης",
+    "loading": "Φόρτωση στατιστικών...",
+    "error": "Σφάλμα κατά τη φόρτωση των στατιστικών",
+    "startPod": "Εκκινήστε το pod για να δείτε τα στατιστικά του.",
+    "noLimit": "χωρίς όριο",
+    "of": {
+      "limit": "όριο",
+      "node": "κόμβος"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Έλεγχος",
+    "diff": "Διαφορές",
+    "save": "Αποθήκευση",
+    "reload": "Ανανέωση",
+    "unsaved": "Μη αποθηκευμένες αλλαγές",
+    "valid": "Φαίνεται εντάξει. Θα αλλάξουν τα εξής:",
+    "noChanges": "Καμία αλλαγή",
+    "saved": "Αποθηκεύτηκαν {{count}} πόροι"
+  },
+  "apply": {
+    "title": "Εφαρμογή YAML",
+    "apply": "Εφαρμογή",
+    "hint": "Επικολλήστε ένα ή περισσότερα manifests. Το Έλεγχος εκτελεί μια δοκιμαστική εκτέλεση στον server και το Διαφορές δείχνει ποιες αλλαγές θα γίνουν. Κανένα στοιχείο δεν αλλάζει μέχρι να κάνετε Εφαρμογή.",
+    "namespace": "Στον {{namespace}}",
+    "defaultNamespace": "Στον προεπιλεγμένο namespace"
+  },
+  "helm": {
+    "none": "Δεν υπάρχουν Helm releases",
+    "revision": "Έκδοση {{revision}}",
+    "tabs": {
+      "history": "Ιστορικό",
+      "values": "Τιμές",
+      "manifest": "Manifest"
+    },
+    "allValues": "Συμπερίληψη προεπιλογών chart",
+    "allValuesHint": "Εμφάνιση όλων των τιμών, όχι μόνο αυτών που ορίστηκαν κατά την εγκατάσταση.",
+    "rollbackTitle": "Επαναφορά του {{name}} στην έκδοση {{revision}};",
+    "rollbackText": "Το Helm δημιουργεί μια νέα έκδοση με τις ρυθμίσεις της παλιάς.",
+    "rolledBack": "Επαναφέρθηκε το {{name}} στην έκδοση {{revision}}",
+    "uninstall": "Απεγκατάσταση",
+    "uninstallTitle": "Απεγκατάσταση του {{name}};",
+    "uninstallText": "Το Helm διαγράφει όλους τους πόρους αυτής της έκδοσης.",
+    "uninstalled": "Απεγκαταστάθηκε το {{name}}"
+  },
+  "logs": {
+    "container": "Container",
+    "allContainers": "Όλα τα containers",
+    "previous": "Προηγούμενη εκτέλεση",
+    "filter": "Φιλτράρισμα logs...",
+    "lines": "γραμμές",
+    "last50": "Τελευταίες 50",
+    "last100": "Τελευταίες 100",
+    "last500": "Τελευταίες 500",
+    "last1000": "Τελευταίες 1000",
+    "all": "Όλα",
+    "timestamps": "Χρονικές στιγμές",
+    "autoRefresh": "Ακολούθησε",
+    "copy": "Αντιγραφή logs",
+    "download": "Λήψη",
+    "clear": "Εκκαθάριση",
+    "none": "Δεν υπάρχουν logs",
+    "noneMatching": "Κανένα log δεν ταιριάζει με το \"{{query}}\"",
+    "copied": "Αντιγράφηκαν {{count}} γραμμές",
+    "failedToCopy": "Αποτυχία αντιγραφής logs",
+    "downloaded": "Τα logs λήφθηκαν",
+    "failedToDownload": "Αποτυχία λήψης logs: {{error}}",
+    "failedToFetch": "Αποτυχία φόρτωσης logs: {{error}}"
+  },
+  "console": {
+    "connect": "Σύνδεση",
+    "disconnect": "Αποσύνδεση",
+    "connecting": "Σύνδεση...",
+    "connectingTo": "Σύνδεση στο {{name}}...",
+    "connectedTo": "Συνδεδεμένο στο {{name}}",
+    "notConnected": "Μη συνδεδεμένο",
+    "clickToConnect": "Επιλέξτε ένα shell και κάντε κλικ στο Σύνδεση",
+    "disconnected": "Αποσυνδεδεμένο",
+    "consoleError": "Σφάλμα shell",
+    "errorMessage": "Σφάλμα: {{message}}",
+    "failedToConnect": "Αποτυχία σύνδεσης με το pod",
+    "failedToConnectWithError": "Αποτυχία σύνδεσης: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Αντιγραφή εξόδου",
+    "consoleCopied": "Η έξοδος αντιγράφηκε",
+    "clear": "Εκκαθάριση",
+    "podMustBeRunning": "Το pod πρέπει να είναι σε λειτουργία",
+    "podNotRunning": "Το pod δεν είναι σε λειτουργία",
+    "podNotRunningHint": "Εκκινήστε το pod για να ανοίξετε ένα shell σε αυτό.",
+    "readOnly": "Το shell είναι απενεργοποιημένο",
+    "readOnlyHint": "Αυτός ο υπολογιστής είναι μόνο για ανάγνωση, επομένως τα shell των pods είναι απενεργοποιημένα."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Αποτυχία ανάγνωσης από το πρόχειρο. Βεβαιωθείτε ότι έχουν χορηγηθεί οι άδειες του προχείρου.",
+    "clipboardWriteFailed": "Αποτυχία αντιγραφής στο πρόχειρο. Βεβαιωθείτε ότι η σελίδα εξυπηρετείται μέσω HTTPS ή localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Απαιτείται απομακρυσμένος διακομιστής. Συνδέστε έναν απομακρυσμένο διακομιστή στις Ρυθμίσεις για να χρησιμοποιήσετε αυτόν τον τύπο σύνδεσης."
+  },
+  "hosts": {
+    "docsLink": "Προβολή τεκμηρίωσης",
+    "hostNotFound": "Ο υπολογιστής δεν βρέθηκε",
+    "loadingHost": "Φόρτωση υπολογιστή..."
+  }
+}

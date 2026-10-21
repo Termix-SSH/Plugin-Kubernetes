@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Hantera Kubernetes-kluster från dina värdar via SSH, med loggar, metrik, YAML och ett skal."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes-panel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Använd Kubernetes",
+      "description": "Öppna Kubernetes-vyn och poddskal på värdar där Kubernetes är aktiverat."
+    },
+    "secrets": {
+      "title": "Visa Kubernetes-hemligheter",
+      "description": "Visa de avkodade värdena för Kubernetes-hemligheter. Varje visning skrivs till granskningsloggen."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Aktivera Kubernetes",
+        "description": "Kör kubectl på denna värd via SSH för att hantera klustret den kan nå."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes-variant",
+        "description": "Vilket kommando som kör kubectl på denna värd.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Sökväg till kubeconfig",
+        "description": "Lämna tomt för att använda standardvärdet för SSH-användaren (~/.kube/config eller KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Standardkontext",
+        "description": "Lämna tomt för att använda den aktuella kontexten i kubeconfig. Du kan byta kontexter i Kubernetes-fliken.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Standardnamespace",
+        "description": "Det namespace som Kubernetes-fliken öppnas med.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Kör med sudo",
+        "description": "Kör kubectl med sudo -n, för k3s- och MicroK8s-installationer där endast root kan läsa klusterkonfigurationen. SSH-användaren behöver lösenordsfritt sudo."
+      },
+      "readOnly": {
+        "label": "Skrivskyddad",
+        "description": "Endast läsning. Blockerar skalning, omstartar, raderingar, YAML-ändringar, Helm-ändringar och poddskal för alla på denna värd."
+      },
+      "showPanel": {
+        "label": "Visa Kubernetes-panel i terminaler",
+        "description": "Tillåt att Kubernetes-panelen öppnas bredvid SSH-terminaler på denna värd."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Öppna Kubernetes-panelen med nya terminaler",
+        "description": "Visa Kubernetes-panelen bredvid varje SSH-terminal som har Kubernetes aktiverat. Du kan fortfarande öppna och stänga den från knappen på höger kant."
+      },
+      "companionSide": {
+        "label": "Placering av Kubernetes-panel",
+        "description": "Var Kubernetes-panelen sitter bredvid en terminal.",
+        "right": "Höger",
+        "left": "Vänster",
+        "bottom": "Botten"
+      },
+      "companionSize": {
+        "label": "Storlek på Kubernetes-panel",
+        "description": "Bredd i pixlar, eller höjd när den är längst ner. Du kan också dra i kanten."
+      },
+      "companionEdgeButton": {
+        "label": "Visa panelknappen",
+        "description": "Visa en liten knapp på höger kant av en terminal som öppnar Kubernetes-panelen."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes är inte aktiverat för denna värd",
+    "notEnabledHint": "Aktivera Kubernetes i inställningarna för denna värd för att hantera dess kluster.",
+    "validating": "Kontrollerar klustret...",
+    "connecting": "Ansluter...",
+    "error": "Fel",
+    "errorCode": "Felkod: {{code}}",
+    "connectionFailed": "Misslyckades med att ansluta",
+    "totpVerificationFailed": "Verifieringen misslyckades. Försök igen.",
+    "verificationCodePrompt": "Ange verifieringskod",
+    "browserSignInFailed": "Inloggningen misslyckades. Försök igen.",
+    "noHostSelected": "Ingen värd vald",
+    "refresh": "Uppdatera"
+  },
+  "cluster": {
+    "loading": "Laddar...",
+    "empty": "Inga {{kind}} här",
+    "noMatches": "Inget matchar dina filter",
+    "readOnly": "Skrivskyddad"
+  },
+  "sections": {
+    "workloads": "Arbetsbelastningar",
+    "network": "Nätverk",
+    "config": "Konfiguration",
+    "cluster": "Kluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volymanspråk",
+      "many": "Volymanspråk"
+    },
+    "pvs": {
+      "one": "Persistent volym",
+      "many": "Persistenta volymer"
+    },
+    "nodes": {
+      "one": "Nod",
+      "many": "Noder"
+    },
+    "namespaces": {
+      "one": "Namnområde",
+      "many": "Namnområden"
+    },
+    "events": {
+      "one": "Händelse",
+      "many": "Händelser"
+    }
+  },
+  "filters": {
+    "all": "Alla",
+    "healthy": "Friska",
+    "problem": "Problem",
+    "idle": "Inaktiv"
+  },
+  "toolbar": {
+    "namespace": "Namnområde",
+    "allNamespaces": "Alla namnområden",
+    "context": "Kontext",
+    "kind": "Resurstyp",
+    "search": "Sök..."
+  },
+  "columns": {
+    "name": "Namn",
+    "namespace": "Namnområde",
+    "status": "Status",
+    "age": "Ålder",
+    "ready": "Redo",
+    "restarts": "Omstarter",
+    "node": "Nod",
+    "ip": "IP",
+    "owner": "Ägare",
+    "upToDate": "Uppdaterad",
+    "available": "Tillgänglig",
+    "images": "Avbilder",
+    "completions": "Slutföranden",
+    "duration": "Varaktighet",
+    "schedule": "Schema",
+    "active": "Aktiv",
+    "lastSchedule": "Senast körd",
+    "type": "Typ",
+    "clusterIP": "Clustrets IP",
+    "externalIP": "Extern IP",
+    "ports": "Portar",
+    "class": "Klass",
+    "hosts": "Värdar",
+    "address": "Adress",
+    "tls": "TLS",
+    "keys": "Nycklar",
+    "capacity": "Kapacitet",
+    "access": "Åtkomst",
+    "storageClass": "Lagringssklass",
+    "volume": "Volym",
+    "reclaim": "Återvinning",
+    "claim": "Anspråk",
+    "roles": "Roller",
+    "version": "Version",
+    "internalIP": "Intern IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Minne",
+    "reason": "Anledning",
+    "object": "Objekt",
+    "message": "Meddelande",
+    "count": "Antal",
+    "cpuUsage": "CPU-användning",
+    "memoryUsage": "Minnesanvändning",
+    "container": "Behållare",
+    "chart": "Diagram",
+    "appVersion": "Appversion",
+    "revision": "Revision"
+  },
+  "actions": {
+    "logs": "Loggar",
+    "console": "Skal",
+    "scale": {
+      "label": "Skala",
+      "title": "Skala {{name}}",
+      "replicas": "Repliker",
+      "hint": "Körs just nu: {{current}}",
+      "done": "Skalade {{name}}"
+    },
+    "restart": {
+      "label": "Starta om",
+      "confirmTitle": "Starta om {{name}}?",
+      "confirmText": "Varje pod i denna {{kind}} ersätts en efter en.",
+      "done": "Startar om {{name}}"
+    },
+    "undo": {
+      "label": "Återställ",
+      "done": "Återställde {{name}}"
+    },
+    "setImage": {
+      "label": "Byt bild",
+      "title": "Byt bild för {{name}}",
+      "image": "Bild",
+      "hint": "Podarna ersätts med den nya bilden.",
+      "done": "Bytte bild för {{name}}"
+    },
+    "suspend": {
+      "label": "Pausa",
+      "confirmTitle": "Pausa {{name}}?",
+      "confirmText": "Denna {{kind}} slutar starta nya körningar tills du återupptar den.",
+      "done": "Pausade {{name}}"
+    },
+    "resume": {
+      "label": "Återuppta",
+      "done": "Återupptog {{name}}"
+    },
+    "trigger": {
+      "label": "Kör nu",
+      "done": "Startade ett jobb från {{name}}"
+    },
+    "cordon": {
+      "label": "Kordonera",
+      "confirmTitle": "Kordonera {{name}}?",
+      "confirmText": "Inga nya pods schemaläggs på denna {{kind}}. Pods som redan finns på den fortsätter att köras.",
+      "done": "Isolerade {{name}}"
+    },
+    "uncordon": {
+      "label": "Avmarkera",
+      "done": "Avmarkerade {{name}}"
+    },
+    "drain": {
+      "label": "Töm",
+      "title": "Töm {{name}}",
+      "text": "Isolerar {{name}} och utvisar dess pods så att de flyttas till andra noder. DaemonSet-pods behålls.",
+      "emptyDir": "Ta bort emptyDir-data",
+      "emptyDirHint": "Utvisa pods som sparar data i emptyDir-volymer. Denna data förloras.",
+      "force": "Tvinga",
+      "forceHint": "Utvisa även pods som inte hanteras av en controller. De skapas inte om.",
+      "done": "Tömde {{name}}"
+    },
+    "delete": {
+      "label": "Ta bort",
+      "confirmTitle": "Ta bort {{name}}?",
+      "confirmText": "Denna {{kind}} tas bort från klustret.",
+      "managedPodText": "Denna pod tillhör en controller, som startar en ny i dess ställe.",
+      "namespaceText": "Allt i detta namespace tas också bort. Detta kan inte ångras.",
+      "done": "Tog bort {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Laddar...",
+    "noDescribe": "Ingen beskrivning",
+    "noPods": "Inga pods",
+    "noEvents": "Inga händelser",
+    "tabs": {
+      "overview": "Översikt",
+      "pods": "Pods",
+      "logs": "Loggar",
+      "console": "Skal",
+      "metrics": "Statistik",
+      "history": "Historik",
+      "data": "Data",
+      "yaml": "YAML",
+      "events": "Händelser"
+    }
+  },
+  "history": {
+    "none": "Ingen rollout-historik",
+    "noCause": "Ingen ändringsorsak",
+    "current": "Aktuell",
+    "rollBack": "Återställ",
+    "confirmTitle": "Återställ till version {{revision}}?",
+    "confirmText": "{{name}} återgår till podmallen för den versionen.",
+    "rolledBack": "Återställd till version {{revision}}"
+  },
+  "data": {
+    "empty": "Ingen data",
+    "reveal": "Visa",
+    "hide": "Dölj",
+    "copy": "Kopiera",
+    "copied": "Kopierat",
+    "secretHint": "Värdena förblir dolda tills du visar dem. Att visa dem loggas i granskningsloggen.",
+    "secretNoPermission": "Du kan se nycklarna men inte värdena. Be en administratör om behörigheten Visa Kubernetes-hemligheter."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Minne",
+    "collecting": "Samlar in prover...",
+    "unavailable": "Statistik är inte tillgänglig",
+    "unavailableHint": "Installera metrics-server i klustret för att se CPU- och minnesanvändning.",
+    "cpuUsage": "CPU-användning",
+    "memoryUsage": "Minnesanvändning",
+    "podInformation": "Podinformation",
+    "containers": "Behållare",
+    "cpuHistory": "CPU-historik",
+    "memoryHistory": "Minneshistorik",
+    "loading": "Laddar statistik...",
+    "error": "Fel vid inläsning av statistik",
+    "startPod": "Starta podden för att se dess statistik.",
+    "noLimit": "ingen gräns",
+    "of": {
+      "limit": "gräns",
+      "node": "nod"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Kontrollera",
+    "diff": "Skillnad",
+    "save": "Spara",
+    "reload": "Ladda om",
+    "unsaved": "Osparade ändringar",
+    "valid": "Ser bra ut. Dessa skulle ändras:",
+    "noChanges": "Inga ändringar",
+    "saved": "Sparade {{count}} resurser"
+  },
+  "apply": {
+    "title": "Tillämpa YAML",
+    "apply": "Tillämpa",
+    "hint": "Klistra in ett eller flera manifest. Kontrollera kör en testkörning på servern och Skillnad visar vilka ändringar som sker. Inget ändras förrän du tillämpar.",
+    "namespace": "Till {{namespace}}",
+    "defaultNamespace": "Till standardnamespace"
+  },
+  "helm": {
+    "none": "Inga Helm-releaser",
+    "revision": "Revision {{revision}}",
+    "tabs": {
+      "history": "Historik",
+      "values": "Värden",
+      "manifest": "Manifest"
+    },
+    "allValues": "Inkludera standardvärden från diagrammet",
+    "allValuesHint": "Visa alla värden, inte bara de som angavs vid installation.",
+    "rollbackTitle": "Återställ {{name}} till revision {{revision}}?",
+    "rollbackText": "Helm skapar en ny revision med inställningarna från den gamla.",
+    "rolledBack": "Återställde {{name}} till revision {{revision}}",
+    "uninstall": "Avinstallera",
+    "uninstallTitle": "Avinstallera {{name}}?",
+    "uninstallText": "Helm tar bort alla resurser för denna release.",
+    "uninstalled": "Avinstallerade {{name}}"
+  },
+  "logs": {
+    "container": "Behållare",
+    "allContainers": "Alla behållare",
+    "previous": "Föregående körning",
+    "filter": "Filtrera loggar...",
+    "lines": "rader",
+    "last50": "Senaste 50",
+    "last100": "Senaste 100",
+    "last500": "Senaste 500",
+    "last1000": "Senaste 1000",
+    "all": "Alla",
+    "timestamps": "Tidsstämplar",
+    "autoRefresh": "Följ",
+    "copy": "Kopiera loggar",
+    "download": "Ladda ner",
+    "clear": "Rensa",
+    "none": "Inga loggar",
+    "noneMatching": "Inga loggar matchar \"{{query}}\"",
+    "copied": "Kopierade {{count}} rader",
+    "failedToCopy": "Kunde inte kopiera loggar",
+    "downloaded": "Loggar har laddats ner",
+    "failedToDownload": "Kunde inte ladda ner loggar: {{error}}",
+    "failedToFetch": "Kunde inte ladda loggar: {{error}}"
+  },
+  "console": {
+    "connect": "Anslut",
+    "disconnect": "Koppla från",
+    "connecting": "Ansluter...",
+    "connectingTo": "Ansluter till {{name}}...",
+    "connectedTo": "Ansluten till {{name}}",
+    "notConnected": "Ej ansluten",
+    "clickToConnect": "Välj ett skal och klicka på Anslut",
+    "disconnected": "Kopplad från",
+    "consoleError": "Skalfel",
+    "errorMessage": "Fel: {{message}}",
+    "failedToConnect": "Kunde inte ansluta till podden",
+    "failedToConnectWithError": "Kunde inte ansluta: {{error}}",
+    "selectShell": "Skal",
+    "copyConsole": "Kopiera utdata",
+    "consoleCopied": "Utdata kopierad",
+    "clear": "Rensa",
+    "podMustBeRunning": "Podden måste vara igång",
+    "podNotRunning": "Podden är inte igång",
+    "podNotRunningHint": "Starta podden för att öppna ett skal i den.",
+    "readOnly": "Skal är inaktiverat",
+    "readOnlyHint": "Denna värd är skrivskyddad, så skal för poddar är inaktiverade."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Kunde inte läsa från urklipp. Se till att behörigheter för urklipp är beviljade.",
+    "clipboardWriteFailed": "Kunde inte kopiera till urklipp. Se till att sidan levereras via HTTPS eller localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "En fjärrserver krävs. Anslut en fjärrserver i Inställningar för att använda den här anslutningstypen."
+  },
+  "hosts": {
+    "docsLink": "Visa dokumentation",
+    "hostNotFound": "Värd hittades inte",
+    "loadingHost": "Laddar värd..."
+  }
+}

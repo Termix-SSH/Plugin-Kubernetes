@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "通过 SSH 从您的主机管理 Kubernetes 集群，支持日志、指标、YAML 和 Shell。"
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes 面板"
+  },
+  "permissions": {
+    "use": {
+      "title": "使用 Kubernetes",
+      "description": "在已启用 Kubernetes 的主机上打开 Kubernetes 视图和 Pod Shell。"
+    },
+    "secrets": {
+      "title": "查看 Kubernetes 密钥",
+      "description": "显示 Kubernetes 密钥的解码值。每次查看都会记录到审计日志中。"
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "启用 Kubernetes",
+        "description": "通过 SSH 在此主机上运行 kubectl，以管理其可访问的集群。"
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes 发行版",
+        "description": "在此主机上运行 kubectl 的命令。",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig 路径",
+        "description": "留空则使用 SSH 用户的默认配置（~/.kube/config 或 KUBECONFIG）。",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "默认上下文",
+        "description": "留空以使用 kubeconfig 中的当前上下文。您可以在 Kubernetes 选项卡中切换上下文。",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "默认命名空间",
+        "description": "Kubernetes 选项卡打开时使用的命名空间。",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "使用 sudo 运行",
+        "description": "使用 sudo -n 运行 kubectl，适用于只有 root 用户才能读取集群配置的 k3s 和 MicroK8s 环境。SSH 用户需要配置无密码 sudo。"
+      },
+      "readOnly": {
+        "label": "只读",
+        "description": "仅查看。禁止在此主机上执行扩缩容、重启、删除、YAML 修改、Helm 修改以及进入 Pod 终端等操作。"
+      },
+      "showPanel": {
+        "label": "在终端中显示 Kubernetes 面板",
+        "description": "允许在此主机的 SSH 终端旁打开 Kubernetes 面板。"
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "在新终端中打开 Kubernetes 面板",
+        "description": "在启用了 Kubernetes 的每个 SSH 终端旁显示 Kubernetes 面板。您仍可以通过右侧边缘的按钮打开和关闭它。"
+      },
+      "companionSide": {
+        "label": "Kubernetes 面板位置",
+        "description": "Kubernetes 面板相对于终端的位置。",
+        "right": "右侧",
+        "left": "左侧",
+        "bottom": "底部"
+      },
+      "companionSize": {
+        "label": "Kubernetes 面板大小",
+        "description": "宽度（像素），位于底部时为高度。您也可以拖动其边缘进行调整。"
+      },
+      "companionEdgeButton": {
+        "label": "显示面板按钮",
+        "description": "在终端右侧边缘显示一个小按钮，点击可打开 Kubernetes 面板。"
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "此主机未启用 Kubernetes",
+    "notEnabledHint": "在此主机的设置中启用 Kubernetes 以管理其集群。",
+    "validating": "正在检查集群...",
+    "connecting": "正在连接...",
+    "error": "错误",
+    "errorCode": "错误代码：{{code}}",
+    "connectionFailed": "连接失败",
+    "totpVerificationFailed": "验证失败。请重试。",
+    "verificationCodePrompt": "输入验证码",
+    "browserSignInFailed": "登录失败。请重试。",
+    "noHostSelected": "未选择主机",
+    "refresh": "刷新"
+  },
+  "cluster": {
+    "loading": "加载中...",
+    "empty": "这里没有 {{kind}}",
+    "noMatches": "没有匹配筛选条件的结果",
+    "readOnly": "只读"
+  },
+  "sections": {
+    "workloads": "工作负载",
+    "network": "网络",
+    "config": "配置",
+    "cluster": "集群",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "部署",
+      "many": "部署"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingress"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMap"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secret"
+    },
+    "pvcs": {
+      "one": "存储卷声明",
+      "many": "存储卷声明"
+    },
+    "pvs": {
+      "one": "持久卷",
+      "many": "持久卷"
+    },
+    "nodes": {
+      "one": "节点",
+      "many": "节点"
+    },
+    "namespaces": {
+      "one": "命名空间",
+      "many": "命名空间"
+    },
+    "events": {
+      "one": "事件",
+      "many": "事件"
+    }
+  },
+  "filters": {
+    "all": "全部",
+    "healthy": "正常",
+    "problem": "异常",
+    "idle": "空闲"
+  },
+  "toolbar": {
+    "namespace": "命名空间",
+    "allNamespaces": "所有命名空间",
+    "context": "上下文",
+    "kind": "资源类型",
+    "search": "搜索..."
+  },
+  "columns": {
+    "name": "名称",
+    "namespace": "命名空间",
+    "status": "状态",
+    "age": "运行时长",
+    "ready": "就绪",
+    "restarts": "重启次数",
+    "node": "节点",
+    "ip": "IP",
+    "owner": "所有者",
+    "upToDate": "已是最新",
+    "available": "可用",
+    "images": "镜像",
+    "completions": "完成项",
+    "duration": "持续时间",
+    "schedule": "计划",
+    "active": "活跃",
+    "lastSchedule": "上次运行",
+    "type": "类型",
+    "clusterIP": "集群 IP",
+    "externalIP": "外部 IP",
+    "ports": "端口",
+    "class": "类别",
+    "hosts": "主机",
+    "address": "地址",
+    "tls": "TLS",
+    "keys": "密钥",
+    "capacity": "容量",
+    "access": "访问",
+    "storageClass": "存储类别",
+    "volume": "卷",
+    "reclaim": "回收",
+    "claim": "声明",
+    "roles": "角色",
+    "version": "版本",
+    "internalIP": "内部 IP",
+    "os": "操作系统",
+    "cpu": "CPU",
+    "memory": "内存",
+    "reason": "原因",
+    "object": "对象",
+    "message": "消息",
+    "count": "计数",
+    "cpuUsage": "CPU 使用率",
+    "memoryUsage": "内存使用率",
+    "container": "容器",
+    "chart": "图表",
+    "appVersion": "应用版本",
+    "revision": "修订版本"
+  },
+  "actions": {
+    "logs": "日志",
+    "console": "Shell",
+    "scale": {
+      "label": "扩缩容",
+      "title": "扩缩容 {{name}}",
+      "replicas": "副本数",
+      "hint": "当前运行：{{current}}",
+      "done": "已扩缩容 {{name}}"
+    },
+    "restart": {
+      "label": "重启",
+      "confirmTitle": "重启 {{name}}？",
+      "confirmText": "此 {{kind}} 的每个 Pod 将逐一替换。",
+      "done": "正在重启 {{name}}"
+    },
+    "undo": {
+      "label": "回滚",
+      "done": "已回滚 {{name}}"
+    },
+    "setImage": {
+      "label": "更改镜像",
+      "title": "更改 {{name}} 的镜像",
+      "image": "镜像",
+      "hint": "Pod 将被替换为新镜像。",
+      "done": "已更改 {{name}} 的镜像"
+    },
+    "suspend": {
+      "label": "暂停",
+      "confirmTitle": "暂停 {{name}}？",
+      "confirmText": "此 {{kind}} 将停止启动新任务，直到您恢复它。",
+      "done": "已暂停 {{name}}"
+    },
+    "resume": {
+      "label": "恢复",
+      "done": "已恢复 {{name}}"
+    },
+    "trigger": {
+      "label": "立即运行",
+      "done": "已从 {{name}} 启动任务"
+    },
+    "cordon": {
+      "label": "隔离",
+      "confirmTitle": "隔离 {{name}}？",
+      "confirmText": "此 {{kind}} 上不再调度新 Pod。已在其上的 Pod 将继续运行。",
+      "done": "已隔离 {{name}}"
+    },
+    "uncordon": {
+      "label": "取消隔离",
+      "done": "已取消隔离 {{name}}"
+    },
+    "drain": {
+      "label": "驱逐",
+      "title": "驱逐 {{name}}",
+      "text": "隔离 {{name}} 并驱逐其 Pod，使其迁移到其他节点。DaemonSet Pod 将保留。",
+      "emptyDir": "删除 emptyDir 数据",
+      "emptyDirHint": "驱逐使用 emptyDir 卷保存数据的 Pod。这些数据将丢失。",
+      "force": "强制",
+      "forceHint": "同时驱逐没有控制器管理的 Pod。它们不会被重新创建。",
+      "done": "已驱逐 {{name}}"
+    },
+    "delete": {
+      "label": "删除",
+      "confirmTitle": "删除 {{name}}？",
+      "confirmText": "此 {{kind}} 将从集群中移除。",
+      "managedPodText": "此 Pod 属于某个控制器，该控制器将启动一个新的 Pod 来替代它。",
+      "namespaceText": "此命名空间内的所有内容也将被删除。此操作无法撤销。",
+      "done": "已删除 {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "加载中...",
+    "noDescribe": "无描述",
+    "noPods": "无 Pod",
+    "noEvents": "无事件",
+    "tabs": {
+      "overview": "概览",
+      "pods": "Pod",
+      "logs": "日志",
+      "console": "Shell",
+      "metrics": "统计",
+      "history": "历史",
+      "data": "数据",
+      "yaml": "YAML",
+      "events": "事件"
+    }
+  },
+  "history": {
+    "none": "无发布历史",
+    "noCause": "无变更原因",
+    "current": "当前",
+    "rollBack": "回滚",
+    "confirmTitle": "回滚到修订版本 {{revision}}？",
+    "confirmText": "{{name}} 将恢复为该修订版本的 Pod 模板。",
+    "rolledBack": "已回滚到修订版本 {{revision}}"
+  },
+  "data": {
+    "empty": "无数据",
+    "reveal": "显示",
+    "hide": "隐藏",
+    "copy": "复制",
+    "copied": "已复制",
+    "secretHint": "值在显示前保持隐藏。显示操作将记录到审计日志中。",
+    "secretNoPermission": "您可以查看键，但无法查看值。请向管理员申请“显示 Kubernetes 密钥”权限。"
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "内存",
+    "collecting": "正在收集样本...",
+    "unavailable": "指标不可用",
+    "unavailableHint": "在集群中安装 metrics-server 以查看 CPU 和内存使用情况。",
+    "cpuUsage": "CPU 使用率",
+    "memoryUsage": "内存使用率",
+    "podInformation": "Pod 信息",
+    "containers": "容器",
+    "cpuHistory": "CPU 历史",
+    "memoryHistory": "内存历史",
+    "loading": "正在加载统计...",
+    "error": "加载统计出错",
+    "startPod": "启动 Pod 以查看其统计信息。",
+    "noLimit": "无限制",
+    "of": {
+      "limit": "限制",
+      "node": "节点"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "检查",
+    "diff": "差异",
+    "save": "保存",
+    "reload": "重新加载",
+    "unsaved": "未保存的更改",
+    "valid": "看起来没问题。这将更改以下内容：",
+    "noChanges": "无更改",
+    "saved": "已保存 {{count}} 个资源"
+  },
+  "apply": {
+    "title": "应用 YAML",
+    "apply": "应用",
+    "hint": "粘贴一个或多个清单。检查会在服务器上执行试运行，差异会显示更改内容。在应用之前不会发生任何更改。",
+    "namespace": "到 {{namespace}}",
+    "defaultNamespace": "到默认命名空间"
+  },
+  "helm": {
+    "none": "没有 Helm 发布",
+    "revision": "修订版 {{revision}}",
+    "tabs": {
+      "history": "历史记录",
+      "values": "值",
+      "manifest": "清单"
+    },
+    "allValues": "包含图表默认值",
+    "allValuesHint": "显示所有值，而不仅仅是安装时设置的值。",
+    "rollbackTitle": "是否将 {{name}} 回滚到修订版 {{revision}}？",
+    "rollbackText": "Helm 会使用旧版本的设置创建新修订版。",
+    "rolledBack": "已将 {{name}} 回滚到修订版 {{revision}}",
+    "uninstall": "卸载",
+    "uninstallTitle": "是否卸载 {{name}}？",
+    "uninstallText": "Helm 将删除此发布的所有资源。",
+    "uninstalled": "已卸载 {{name}}"
+  },
+  "logs": {
+    "container": "容器",
+    "allContainers": "所有容器",
+    "previous": "上一次运行",
+    "filter": "筛选日志...",
+    "lines": "行",
+    "last50": "最后 50 行",
+    "last100": "最后 100 行",
+    "last500": "最后 500 行",
+    "last1000": "最后 1000 行",
+    "all": "全部",
+    "timestamps": "时间戳",
+    "autoRefresh": "跟随",
+    "copy": "复制日志",
+    "download": "下载",
+    "clear": "清除",
+    "none": "无日志",
+    "noneMatching": "没有日志匹配“{{query}}”",
+    "copied": "已复制 {{count}} 行",
+    "failedToCopy": "复制日志失败",
+    "downloaded": "日志已下载",
+    "failedToDownload": "下载日志失败：{{error}}",
+    "failedToFetch": "加载日志失败：{{error}}"
+  },
+  "console": {
+    "connect": "连接",
+    "disconnect": "断开连接",
+    "connecting": "正在连接...",
+    "connectingTo": "正在连接到 {{name}}...",
+    "connectedTo": "已连接到 {{name}}",
+    "notConnected": "未连接",
+    "clickToConnect": "选择一个 shell 并点击连接",
+    "disconnected": "已断开连接",
+    "consoleError": "Shell 错误",
+    "errorMessage": "错误：{{message}}",
+    "failedToConnect": "无法连接到 Pod",
+    "failedToConnectWithError": "连接失败：{{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "复制输出",
+    "consoleCopied": "输出已复制",
+    "clear": "清空",
+    "podMustBeRunning": "Pod 必须处于运行状态",
+    "podNotRunning": "Pod 未运行",
+    "podNotRunningHint": "启动 Pod 以在其中打开 Shell。",
+    "readOnly": "Shell 已关闭",
+    "readOnlyHint": "此主机为只读模式，因此 Pod Shell 已关闭。"
+  },
+  "terminal": {
+    "clipboardReadFailed": "无法从剪贴板读取。请确保已授予剪贴板权限。",
+    "clipboardWriteFailed": "无法复制到剪贴板。请确保页面通过 HTTPS 或 localhost 提供服务。"
+  },
+  "errors": {
+    "remoteServerRequired": "需要远程服务器。请在设置中连接远程服务器以使用此连接类型。"
+  },
+  "hosts": {
+    "docsLink": "查看文档",
+    "hostNotFound": "未找到主机",
+    "loadingHost": "正在加载主机..."
+  }
+}

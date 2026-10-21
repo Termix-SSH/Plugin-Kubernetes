@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Gestionează clusterele Kubernetes de pe gazdele tale prin SSH, cu jurnale, metrici, YAML și un shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Panoul Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Folosește Kubernetes",
+      "description": "Deschide vizualizarea Kubernetes și shell-urile pentru pod-uri pe gazdele cu Kubernetes activat."
+    },
+    "secrets": {
+      "title": "Afișează secretele Kubernetes",
+      "description": "Afișează valorile decodificate ale secretelor Kubernetes. Fiecare afișare este înregistrată în jurnalul de audit."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Activează Kubernetes",
+        "description": "Rulează kubectl pe această gazdă prin SSH pentru a gestiona clusterul pe care îl poate atinge."
+      },
+      "kubectlFlavor": {
+        "label": "Varianta Kubernetes",
+        "description": "Comanda care rulează kubectl pe acest gazdă.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Calea către kubeconfig",
+        "description": "Lăsați gol pentru a folosi valoarea implicită pentru utilizatorul SSH (~/.kube/config sau KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Context implicit",
+        "description": "Lăsați gol pentru a utiliza contextul curent din kubeconfig. Puteți comuta între contexte în fila Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Spațiul de nume implicit",
+        "description": "Spațiul de nume cu care se deschide fila Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Execută cu sudo",
+        "description": "Execută kubectl cu sudo -n, pentru configurațiile k3s și MicroK8s în care doar root poate citi configurația clusterului. Utilizatorul SSH trebuie să aibă sudo fără parolă."
+      },
+      "readOnly": {
+        "label": "Doar citire",
+        "description": "Doar vizualizare. Blochează scalarea, restarturile, ștergerile, modificările YAML, modificările Helm și shell-urile pod-urilor pentru toți utilizatorii de pe acest host."
+      },
+      "showPanel": {
+        "label": "Afișează panoul Kubernetes în terminale",
+        "description": "Permite deschiderea panoului Kubernetes lângă terminalele SSH pe acest gazdă."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Deschide panoul Kubernetes cu terminalele noi",
+        "description": "Afișează panoul Kubernetes lângă fiecare terminal SSH care are Kubernetes activat. Îl poți deschide și închide în continuare din butonul de pe marginea dreaptă."
+      },
+      "companionSide": {
+        "label": "Poziția panoului Kubernetes",
+        "description": "Unde se află panoul Kubernetes lângă un terminal.",
+        "right": "Dreapta",
+        "left": "Stânga",
+        "bottom": "Jos"
+      },
+      "companionSize": {
+        "label": "Dimensiunea panoului Kubernetes",
+        "description": "Lățimea în pixeli, sau înălțimea când este poziționat jos. Poți ajusta și trăgând de marginea sa."
+      },
+      "companionEdgeButton": {
+        "label": "Afișează butonul din panou",
+        "description": "Afișează un buton mic pe marginea dreaptă a terminalului care deschide panoul Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes nu este activat pentru acest gazdă",
+    "notEnabledHint": "Activează Kubernetes în setările acestei gazde pentru a gestiona clusterul său.",
+    "validating": "Se verifică clusterul...",
+    "connecting": "Se conectează...",
+    "error": "Eroare",
+    "errorCode": "Cod eroare: {{code}}",
+    "connectionFailed": "Conectarea a eșuat",
+    "totpVerificationFailed": "Verificarea a eșuat. Încearcă din nou.",
+    "verificationCodePrompt": "Introduceți codul de verificare",
+    "browserSignInFailed": "Autentificarea a eșuat. Încercați din nou.",
+    "noHostSelected": "Niciun gazdă selectată",
+    "refresh": "Reîmprospătare"
+  },
+  "cluster": {
+    "loading": "Se încarcă...",
+    "empty": "Niciun {{kind}} aici",
+    "noMatches": "Nimic nu se potrivește cu filtrele dvs.",
+    "readOnly": "Doar citire"
+  },
+  "sections": {
+    "workloads": "Sarcini de lucru",
+    "network": "Rețea",
+    "config": "Config",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "Toate",
+    "healthy": "Sănătoase",
+    "problem": "Probleme",
+    "idle": "Inactive"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Toate namespace-urile",
+    "context": "Context",
+    "kind": "Tip resursă",
+    "search": "Caută..."
+  },
+  "columns": {
+    "name": "Nume",
+    "namespace": "Namespace",
+    "status": "Stare",
+    "age": "Vârstă",
+    "ready": "Gata",
+    "restarts": "Restartări",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Proprietar",
+    "upToDate": "Actualizat",
+    "available": "Disponibil",
+    "images": "Imagini",
+    "completions": "Finalizări",
+    "duration": "Durată",
+    "schedule": "Program",
+    "active": "Activ",
+    "lastSchedule": "Ultima execuție",
+    "type": "Tip",
+    "clusterIP": "IP cluster",
+    "externalIP": "IP extern",
+    "ports": "Porturi",
+    "class": "Clasă",
+    "hosts": "Gazde",
+    "address": "Adresă",
+    "tls": "TLS",
+    "keys": "Chei",
+    "capacity": "Capacitate",
+    "access": "Acces",
+    "storageClass": "Clasă de stocare",
+    "volume": "Volum",
+    "reclaim": "Recuperare",
+    "claim": "Reclamă",
+    "roles": "Roluri",
+    "version": "Versiune",
+    "internalIP": "IP intern",
+    "os": "Sistem de operare",
+    "cpu": "CPU",
+    "memory": "Memorie",
+    "reason": "Motiv",
+    "object": "Obiect",
+    "message": "Mesaj",
+    "count": "Număr",
+    "cpuUsage": "Utilizare CPU",
+    "memoryUsage": "Utilizare memorie",
+    "container": "Container",
+    "chart": "Grafic",
+    "appVersion": "Versiune aplicație",
+    "revision": "Revizuire"
+  },
+  "actions": {
+    "logs": "Jurnale",
+    "console": "Shell",
+    "scale": {
+      "label": "Scalare",
+      "title": "Scalează {{name}}",
+      "replicas": "Replici",
+      "hint": "Rulează acum: {{current}}",
+      "done": "Scalat {{name}}"
+    },
+    "restart": {
+      "label": "Redeschidere",
+      "confirmTitle": "Redeschide {{name}}?",
+      "confirmText": "Fiecare pod al acestui {{kind}} este înlocuit unul câte unul.",
+      "done": "Se redeschide {{name}}"
+    },
+    "undo": {
+      "label": "Revocare",
+      "done": "Revocat {{name}}"
+    },
+    "setImage": {
+      "label": "Schimbă imaginea",
+      "title": "Schimbă imaginea pentru {{name}}",
+      "image": "Imagine",
+      "hint": "Podurile sunt înlocuite cu noua imagine.",
+      "done": "Schimbată imaginea pentru {{name}}"
+    },
+    "suspend": {
+      "label": "Suspendă",
+      "confirmTitle": "Suspendă {{name}}?",
+      "confirmText": "Acest {{kind}} nu mai pornește execuții noi până când îl reiați.",
+      "done": "Suspendat {{name}}"
+    },
+    "resume": {
+      "label": "Reia",
+      "done": "Reluat {{name}}"
+    },
+    "trigger": {
+      "label": "Rulează acum",
+      "done": "Pornită o sarcină din {{name}}"
+    },
+    "cordon": {
+      "label": "Cordon",
+      "confirmTitle": "Cordon {{name}}?",
+      "confirmText": "Nu se mai programează poduri noi pe acest {{kind}}. Podurile care rulează deja continuă să funcționeze.",
+      "done": "{{name}} a fost izolat (cordonat)"
+    },
+    "uncordon": {
+      "label": "Dezizolare (Uncordon)",
+      "done": "{{name}} a fost dezizolat (uncordonat)"
+    },
+    "drain": {
+      "label": "Golire (Drain)",
+      "title": "Golește {{name}}",
+      "text": "Izolează {{name}} și elimină podurile sale, astfel încât acestea să se mute pe alte noduri. Podurile DaemonSet rămân.",
+      "emptyDir": "Șterge datele emptyDir",
+      "emptyDirHint": "Elimină podurile care păstrează date în volumele emptyDir. Aceste date se pierd.",
+      "force": "Forțează",
+      "forceHint": "Evacuează și podurile care nu sunt gestionate de niciun controller. Acestea nu vor fi recreate.",
+      "done": "S-a evacuat {{name}}"
+    },
+    "delete": {
+      "label": "Șterge",
+      "confirmTitle": "Ștergi {{name}}?",
+      "confirmText": "Acest {{kind}} va fi eliminat din cluster.",
+      "managedPodText": "Acest pod aparține unui controller, care va porni unul nou în locul său.",
+      "namespaceText": "Tot ce se află în acest namespace va fi, de asemenea, șters. Această acțiune nu poate fi anulată.",
+      "done": "S-a șters {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Se încarcă...",
+    "noDescribe": "Fără descriere",
+    "noPods": "Niciun pod",
+    "noEvents": "Niciun eveniment",
+    "tabs": {
+      "overview": "Prezentare generală",
+      "pods": "Pods",
+      "logs": "Jurnale",
+      "console": "Shell",
+      "metrics": "Statistici",
+      "history": "Istoric",
+      "data": "Date",
+      "yaml": "YAML",
+      "events": "Evenimente"
+    }
+  },
+  "history": {
+    "none": "Nicio istoric de lansare",
+    "noCause": "Nicio cauză a modificării",
+    "current": "Actual",
+    "rollBack": "Revocare",
+    "confirmTitle": "Revocare la revizia {{revision}}?",
+    "confirmText": "{{name}} revine la șablonul de pod al acelei revizii.",
+    "rolledBack": "Revocat la revizia {{revision}}"
+  },
+  "data": {
+    "empty": "Niciun date",
+    "reveal": "Afișare",
+    "hide": "Ascunde",
+    "copy": "Copiază",
+    "copied": "Copiat",
+    "secretHint": "Valorile rămân ascunse până le dezvălui. Dezvăluirea este înregistrată în jurnalul de audit.",
+    "secretNoPermission": "Poți vedea cheile, dar nu și valorile. Cere unui administrator permisiunea de a dezvălui secretele Kubernetes."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memorie",
+    "collecting": "Se colectează eșantioane...",
+    "unavailable": "Metricile nu sunt disponibile",
+    "unavailableHint": "Instalează metrics-server în cluster pentru a vedea utilizarea CPU și memoriei.",
+    "cpuUsage": "Utilizare CPU",
+    "memoryUsage": "Utilizare memorie",
+    "podInformation": "Informații despre pod",
+    "containers": "Containere",
+    "cpuHistory": "Istoric CPU",
+    "memoryHistory": "Istoric memorie",
+    "loading": "Se încarcă statisticile...",
+    "error": "Eroare la încărcarea statisticilor",
+    "startPod": "Pornește podul pentru a vedea statisticile sale.",
+    "noLimit": "fără limită",
+    "of": {
+      "limit": "limită",
+      "node": "nod"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Verificare",
+    "diff": "Diferențe",
+    "save": "Salvare",
+    "reload": "Reîncărcare",
+    "unsaved": "Modificări nesalvate",
+    "valid": "Arată bine. Acestea se vor modifica:",
+    "noChanges": "Nicio modificare",
+    "saved": "Salvate {{count}} resurse"
+  },
+  "apply": {
+    "title": "Aplică YAML",
+    "apply": "Aplică",
+    "hint": "Lipște unul sau mai multe manifeste. Verifică execută o simulare pe server, iar Diferențe arată ce se va schimba. Nimic nu se modifică până nu aplici.",
+    "namespace": "În {{namespace}}",
+    "defaultNamespace": "În spațiul de nume implicit"
+  },
+  "helm": {
+    "none": "Nicio lansare Helm",
+    "revision": "Revizia {{revision}}",
+    "tabs": {
+      "history": "Istoric",
+      "values": "Valori",
+      "manifest": "Manifest"
+    },
+    "allValues": "Include chart defaults",
+    "allValuesHint": "Show every value, not only the ones set at install.",
+    "rollbackTitle": "Roll back {{name}} to revision {{revision}}?",
+    "rollbackText": "Helm makes a new revision with the old one's settings.",
+    "rolledBack": "Rolled back {{name}} to revision {{revision}}",
+    "uninstall": "Uninstall",
+    "uninstallTitle": "Uninstall {{name}}?",
+    "uninstallText": "Helm deletes every resource of this release.",
+    "uninstalled": "Uninstalled {{name}}"
+  },
+  "logs": {
+    "container": "Container",
+    "allContainers": "Toate containerele",
+    "previous": "Rularea anterioară",
+    "filter": "Filtrează jurnalele...",
+    "lines": "linii",
+    "last50": "Ultimele 50",
+    "last100": "Ultimele 100",
+    "last500": "Ultimele 500",
+    "last1000": "Ultimele 1000",
+    "all": "Toate",
+    "timestamps": "Mărci temporale",
+    "autoRefresh": "Urmărește",
+    "copy": "Copiază jurnalele",
+    "download": "Descarcă",
+    "clear": "Șterge",
+    "none": "Niciun jurnal",
+    "noneMatching": "Niciun jurnal nu corespunde cu „{{query}}”",
+    "copied": "S-au copiat {{count}} linii",
+    "failedToCopy": "Copierea jurnalelor a eșuat",
+    "downloaded": "Jurnalele au fost descărcate",
+    "failedToDownload": "Nu s-au putut descărca jurnalele: {{error}}",
+    "failedToFetch": "Nu s-au putut încărca jurnalele: {{error}}"
+  },
+  "console": {
+    "connect": "Conectare",
+    "disconnect": "Deconectare",
+    "connecting": "Se conectează...",
+    "connectingTo": "Se conectează la {{name}}...",
+    "connectedTo": "Conectat la {{name}}",
+    "notConnected": "Nu este conectat",
+    "clickToConnect": "Selectați un shell și faceți clic pe Conectare",
+    "disconnected": "Deconectat",
+    "consoleError": "Eroare shell",
+    "errorMessage": "Eroare: {{message}}",
+    "failedToConnect": "Nu s-a putut conecta la pod",
+    "failedToConnectWithError": "Nu s-a putut conecta: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Copiază ieșirea",
+    "consoleCopied": "Ieșire copiată",
+    "clear": "Șterge",
+    "podMustBeRunning": "Podul trebuie să fie în execuție",
+    "podNotRunning": "Podul nu este în execuție",
+    "podNotRunningHint": "Pornește podul pentru a deschide un shell în acesta.",
+    "readOnly": "Shell-ul este dezactivat",
+    "readOnlyHint": "Acest host este doar în citire, așa că shell-urile podului sunt dezactivate."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Nu s-a putut citi din clipboard. Asigură-te că permisiunile pentru clipboard sunt acordate.",
+    "clipboardWriteFailed": "Nu s-a putut copia în clipboard. Asigură-te că pagina este servită prin HTTPS sau localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Server remote necesar. Conectează un server remote în Setări pentru a utiliza acest tip de conexiune."
+  },
+  "hosts": {
+    "docsLink": "Vezi documentația",
+    "hostNotFound": "Host-ul nu a fost găsit",
+    "loadingHost": "Se încarcă host-ul..."
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "SSH를 통해 호스트에서 Kubernetes 클러스터를 관리합니다. 로그, 메트릭, YAML 및 셸을 지원합니다."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes 패널"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes 사용",
+      "description": "Kubernetes가 활성화된 호스트에서 Kubernetes 뷰 및 포드 셸을 엽니다."
+    },
+    "secrets": {
+      "title": "Kubernetes 시크릿 표시",
+      "description": "Kubernetes 시크릿의 디코딩된 값을 표시합니다. 모든 표시 작업은 감사 로그에 기록됩니다."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes 활성화",
+        "description": "이 호스트에서 SSH를 통해 kubectl을 실행하여 접근 가능한 클러스터를 관리합니다."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes flavor",
+        "description": "이 호스트에서 kubectl을 실행하는 명령어입니다.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig 경로",
+        "description": "SSH 사용자의 기본값(~/.kube/config 또는 KUBECONFIG)을 사용하려면 비워두세요.",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "기본 컨텍스트",
+        "description": "kubeconfig의 현재 컨텍스트를 사용하려면 비워 두세요. Kubernetes 탭에서 컨텍스트를 전환할 수 있습니다.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "기본 네임스페이스",
+        "description": "Kubernetes 탭이 열릴 때 기본으로 사용되는 네임스페이스입니다.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "sudo로 실행",
+        "description": "k3s 및 MicroK8s와 같이 루트만 클러스터 구성을 읽을 수 있는 환경에서 sudo -n과 함께 kubectl을 실행합니다. SSH 사용자는 비밀번호 없는 sudo 권한이 필요합니다."
+      },
+      "readOnly": {
+        "label": "읽기 전용",
+        "description": "조회만 가능합니다. 이 호스트의 모든 사용자에게 스케일링, 재시작, 삭제, YAML 변경, Helm 변경 및 포드 셸을 차단합니다."
+      },
+      "showPanel": {
+        "label": "터미널에 Kubernetes 패널 표시",
+        "description": "이 호스트에서 SSH 터미널 옆에 Kubernetes 패널을 열 수 있도록 허용합니다."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "새 터미널과 함께 Kubernetes 패널 열기",
+        "description": "Kubernetes가 활성화된 모든 SSH 터미널 옆에 Kubernetes 패널을 표시합니다. 오른쪽 가장자리의 버튼을 통해 여전히 열고 닫을 수 있습니다."
+      },
+      "companionSide": {
+        "label": "Kubernetes 패널 위치",
+        "description": "터미널 옆에 Kubernetes 패널이 표시되는 위치입니다.",
+        "right": "오른쪽",
+        "left": "왼쪽",
+        "bottom": "아래쪽"
+      },
+      "companionSize": {
+        "label": "Kubernetes 패널 크기",
+        "description": "픽셀 단위의 너비 또는 아래쪽 위치일 때의 높이입니다. 가장자리를 드래그하여 조정할 수도 있습니다."
+      },
+      "companionEdgeButton": {
+        "label": "패널 버튼 표시",
+        "description": "터미널 오른쪽 가장자리에 Kubernetes 패널을 여는 작은 버튼을 표시합니다."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "이 호스트에서 Kubernetes가 활성화되지 않았습니다",
+    "notEnabledHint": "클러스터를 관리하려면 이 호스트의 설정에서 Kubernetes를 켜세요.",
+    "validating": "클러스터 확인 중...",
+    "connecting": "연결 중...",
+    "error": "오류",
+    "errorCode": "오류 코드: {{code}}",
+    "connectionFailed": "연결 실패",
+    "totpVerificationFailed": "인증 실패. 다시 시도해 주세요.",
+    "verificationCodePrompt": "인증 코드 입력",
+    "browserSignInFailed": "로그인에 실패했습니다. 다시 시도해 주세요.",
+    "noHostSelected": "호스트가 선택되지 않았습니다",
+    "refresh": "새로고침"
+  },
+  "cluster": {
+    "loading": "로딩 중...",
+    "empty": "{{kind}}이(가) 없습니다",
+    "noMatches": "필터와 일치하는 항목이 없습니다",
+    "readOnly": "읽기 전용"
+  },
+  "sections": {
+    "workloads": "워크로드",
+    "network": "네트워크",
+    "config": "설정",
+    "cluster": "클러스터",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "볼륨 클레임",
+      "many": "볼륨 클레임"
+    },
+    "pvs": {
+      "one": "영구 볼륨",
+      "many": "영구 볼륨"
+    },
+    "nodes": {
+      "one": "노드",
+      "many": "노드"
+    },
+    "namespaces": {
+      "one": "네임스페이스",
+      "many": "네임스페이스"
+    },
+    "events": {
+      "one": "이벤트",
+      "many": "이벤트"
+    }
+  },
+  "filters": {
+    "all": "전체",
+    "healthy": "정상",
+    "problem": "문제 발생",
+    "idle": "대기 중"
+  },
+  "toolbar": {
+    "namespace": "네임스페이스",
+    "allNamespaces": "모든 네임스페이스",
+    "context": "컨텍스트",
+    "kind": "리소스 유형",
+    "search": "검색..."
+  },
+  "columns": {
+    "name": "이름",
+    "namespace": "네임스페이스",
+    "status": "상태",
+    "age": "생성일",
+    "ready": "준비 완료",
+    "restarts": "재시작 횟수",
+    "node": "노드",
+    "ip": "IP",
+    "owner": "소유자",
+    "upToDate": "최신 버전",
+    "available": "사용 가능",
+    "images": "이미지",
+    "completions": "완료 횟수",
+    "duration": "소요 시간",
+    "schedule": "일정",
+    "active": "활성",
+    "lastSchedule": "마지막 실행",
+    "type": "유형",
+    "clusterIP": "클러스터 IP",
+    "externalIP": "외부 IP",
+    "ports": "포트",
+    "class": "클래스",
+    "hosts": "호스트",
+    "address": "주소",
+    "tls": "TLS",
+    "keys": "키",
+    "capacity": "용량",
+    "access": "액세스",
+    "storageClass": "스토리지 클래스",
+    "volume": "볼륨",
+    "reclaim": "회수 정책",
+    "claim": "클레임",
+    "roles": "역할",
+    "version": "버전",
+    "internalIP": "내부 IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "메모리",
+    "reason": "이유",
+    "object": "객체",
+    "message": "메시지",
+    "count": "횟수",
+    "cpuUsage": "CPU 사용량",
+    "memoryUsage": "메모리 사용량",
+    "container": "컨테이너",
+    "chart": "차트",
+    "appVersion": "앱 버전",
+    "revision": "수정 버전"
+  },
+  "actions": {
+    "logs": "로그",
+    "console": "쉘",
+    "scale": {
+      "label": "스케일 조정",
+      "title": "{{name}} 스케일 조정",
+      "replicas": "레플리카",
+      "hint": "현재 실행 중: {{current}}",
+      "done": "{{name}} 스케일 조정 완료"
+    },
+    "restart": {
+      "label": "재시작",
+      "confirmTitle": "{{name}}을(를) 재시작하시겠습니까?",
+      "confirmText": "이 {{kind}}의 모든 포드가 하나씩 교체됩니다.",
+      "done": "{{name}} 재시작 중"
+    },
+    "undo": {
+      "label": "롤백",
+      "done": "{{name}} 롤백 완료"
+    },
+    "setImage": {
+      "label": "이미지 변경",
+      "title": "{{name}}의 이미지 변경",
+      "image": "이미지",
+      "hint": "포드가 새 이미지로 교체됩니다.",
+      "done": "{{name}}의 이미지 변경 완료"
+    },
+    "suspend": {
+      "label": "일시 정지",
+      "confirmTitle": "{{name}}을(를) 일시 정지하시겠습니까?",
+      "confirmText": "이 {{kind}}는 재개할 때까지 새 실행을 시작하지 않습니다.",
+      "done": "{{name}} 일시 정지 완료"
+    },
+    "resume": {
+      "label": "재개",
+      "done": "{{name}} 재개 완료"
+    },
+    "trigger": {
+      "label": "지금 실행",
+      "done": "{{name}}에서 작업 시작"
+    },
+    "cordon": {
+      "label": "코돈",
+      "confirmTitle": "{{name}}을(를) 코돈하시겠습니까?",
+      "confirmText": "이 {{kind}}에는 새 파드가 예약되지 않습니다. 이미 실행 중인 파드는 계속 실행됩니다.",
+      "done": "{{name}}을(를) 코돈 처리했습니다"
+    },
+    "uncordon": {
+      "label": "코돈 해제",
+      "done": "{{name}}의 코돈을 해제했습니다"
+    },
+    "drain": {
+      "label": "드레인",
+      "title": "{{name}} 드레인",
+      "text": "{{name}}을(를) 코돈 처리하고 파드를 추방하여 다른 노드로 이동합니다. DaemonSet 파드는 그대로 유지됩니다.",
+      "emptyDir": "emptyDir 데이터 삭제",
+      "emptyDirHint": "emptyDir 볼륨에 데이터를 유지하는 파드를 추방합니다. 해당 데이터는 손실됩니다.",
+      "force": "강제",
+      "forceHint": "컨트롤러가 관리하지 않는 파드도 추방합니다. 이 파드들은 다시 생성되지 않습니다.",
+      "done": "{{name}}을(를) 드레인 처리했습니다"
+    },
+    "delete": {
+      "label": "삭제",
+      "confirmTitle": "{{name}}을(를) 삭제하시겠습니까?",
+      "confirmText": "이 {{kind}}는 클러스터에서 제거됩니다.",
+      "managedPodText": "이 파드는 컨트롤러에 속해 있으며, 컨트롤러가 대신 새 파드를 시작합니다.",
+      "namespaceText": "이 네임스페이스의 모든 내용이 함께 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+      "done": "{{name}}을(를) 삭제했습니다"
+    }
+  },
+  "detail": {
+    "loading": "로딩 중...",
+    "noDescribe": "설명 없음",
+    "noPods": "파드 없음",
+    "noEvents": "이벤트 없음",
+    "tabs": {
+      "overview": "개요",
+      "pods": "파드",
+      "logs": "로그",
+      "console": "셸",
+      "metrics": "통계",
+      "history": "기록",
+      "data": "데이터",
+      "yaml": "YAML",
+      "events": "이벤트"
+    }
+  },
+  "history": {
+    "none": "롤아웃 기록 없음",
+    "noCause": "변경 원인 없음",
+    "current": "현재",
+    "rollBack": "롤백",
+    "confirmTitle": "리비전 {{revision}}으로 롤백하시겠습니까?",
+    "confirmText": "{{name}}은(는) 해당 리비전의 파드 템플릿으로 되돌아갑니다.",
+    "rolledBack": "리비전 {{revision}}으로 롤백했습니다"
+  },
+  "data": {
+    "empty": "데이터 없음",
+    "reveal": "표시",
+    "hide": "숨기기",
+    "copy": "복사",
+    "copied": "복사됨",
+    "secretHint": "값은 표시하기 전까지 숨겨집니다. 표시 작업은 감사 로그에 기록됩니다.",
+    "secretNoPermission": "키는 볼 수 있지만 값은 볼 수 없습니다. 관리자에게 Kubernetes 시크릿 표시 권한을 요청하세요."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "메모리",
+    "collecting": "샘플 수집 중...",
+    "unavailable": "메트릭 사용 불가",
+    "unavailableHint": "CPU 및 메모리 사용량을 보려면 클러스터에 metrics-server를 설치하세요.",
+    "cpuUsage": "CPU 사용량",
+    "memoryUsage": "메모리 사용량",
+    "podInformation": "파드 정보",
+    "containers": "컨테이너",
+    "cpuHistory": "CPU 기록",
+    "memoryHistory": "메모리 기록",
+    "loading": "통계 로딩 중...",
+    "error": "통계 로딩 오류",
+    "startPod": "통계를 보려면 파드를 시작하세요.",
+    "noLimit": "제한 없음",
+    "of": {
+      "limit": "제한",
+      "node": "노드"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "확인",
+    "diff": "차이점",
+    "save": "저장",
+    "reload": "다시 로드",
+    "unsaved": "저장되지 않은 변경 사항",
+    "valid": "문제가 없습니다. 다음 항목이 변경됩니다:",
+    "noChanges": "변경 사항 없음",
+    "saved": "리소스 {{count}}개 저장됨"
+  },
+  "apply": {
+    "title": "YAML 적용",
+    "apply": "적용",
+    "hint": "하나 이상의 매니페스트를 붙여넣으세요. 확인은 서버에서 테스트 실행을 수행하고, 차이는 변경 사항을 표시합니다. 적용하기 전까지는 변경되지 않습니다.",
+    "namespace": "{{namespace}}(으)로",
+    "defaultNamespace": "기본 네임스페이스로"
+  },
+  "helm": {
+    "none": "Helm 릴리스 없음",
+    "revision": "리비전 {{revision}}",
+    "tabs": {
+      "history": "이력",
+      "values": "값",
+      "manifest": "매니페스트"
+    },
+    "allValues": "차트 기본값 포함",
+    "allValuesHint": "설치 시 설정된 값뿐만 아니라 모든 값을 표시합니다.",
+    "rollbackTitle": "{{name}}을(를) 리비전 {{revision}}으로 되돌리시겠습니까?",
+    "rollbackText": "Helm은 이전 설정을 사용하여 새 리비전을 생성합니다.",
+    "rolledBack": "{{name}}을(를) 리비전 {{revision}}으로 되돌렸습니다",
+    "uninstall": "제거",
+    "uninstallTitle": "{{name}}을(를) 제거하시겠습니까?",
+    "uninstallText": "Helm은 이 릴리스의 모든 리소스를 삭제합니다.",
+    "uninstalled": "{{name}}을(를) 제거했습니다"
+  },
+  "logs": {
+    "container": "컨테이너",
+    "allContainers": "모든 컨테이너",
+    "previous": "이전 실행",
+    "filter": "로그 필터링...",
+    "lines": "줄",
+    "last50": "최근 50개",
+    "last100": "최근 100개",
+    "last500": "최근 500개",
+    "last1000": "최근 1000개",
+    "all": "전체",
+    "timestamps": "타임스탬프",
+    "autoRefresh": "자동 스크롤",
+    "copy": "로그 복사",
+    "download": "다운로드",
+    "clear": "지우기",
+    "none": "로그 없음",
+    "noneMatching": "\"{{query}}\"와(과) 일치하는 로그가 없습니다",
+    "copied": "줄 {{count}}개 복사됨",
+    "failedToCopy": "로그 복사에 실패했습니다",
+    "downloaded": "로그가 다운로드되었습니다",
+    "failedToDownload": "로그 다운로드 실패: {{error}}",
+    "failedToFetch": "로그 로드 실패: {{error}}"
+  },
+  "console": {
+    "connect": "연결",
+    "disconnect": "연결 끊기",
+    "connecting": "연결 중...",
+    "connectingTo": "{{name}}(으)로 연결 중...",
+    "connectedTo": "{{name}}(으)로 연결됨",
+    "notConnected": "연결되지 않음",
+    "clickToConnect": "셸을 선택하고 연결을 클릭하세요",
+    "disconnected": "연결 끊김",
+    "consoleError": "셸 오류",
+    "errorMessage": "오류: {{message}}",
+    "failedToConnect": "포드에 연결하지 못했습니다",
+    "failedToConnectWithError": "연결 실패: {{error}}",
+    "selectShell": "셸",
+    "copyConsole": "출력 복사",
+    "consoleCopied": "출력이 복사되었습니다",
+    "clear": "지우기",
+    "podMustBeRunning": "포드가 실행 중이어야 합니다",
+    "podNotRunning": "포드가 실행 중이 아닙니다",
+    "podNotRunningHint": "포드에서 셸을 열려면 포드를 시작하세요.",
+    "readOnly": "셸이 꺼져 있습니다",
+    "readOnlyHint": "이 호스트는 읽기 전용이므로 포드 셸이 꺼져 있습니다."
+  },
+  "terminal": {
+    "clipboardReadFailed": "클립보드에서 읽지 못했습니다. 클립보드 권한이 부여되었는지 확인하세요.",
+    "clipboardWriteFailed": "클립보드에 복사하지 못했습니다. 페이지가 HTTPS 또는 localhost를 통해 제공되는지 확인하세요."
+  },
+  "errors": {
+    "remoteServerRequired": "원격 서버가 필요합니다. 이 연결 유형을 사용하려면 설정에서 원격 서버를 연결하세요."
+  },
+  "hosts": {
+    "docsLink": "문서 보기",
+    "hostNotFound": "호스트를 찾을 수 없습니다",
+    "loadingHost": "호스트 로딩 중..."
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Administrer Kubernetes-kluster fra dine værter via SSH, med logs, metrikker, YAML og en shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes-panel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Brug Kubernetes",
+      "description": "Åbn Kubernetes-visningen og pod-shells på værter, hvor Kubernetes er aktiveret."
+    },
+    "secrets": {
+      "title": "Afslør Kubernetes-hemmeligheder",
+      "description": "Vis de afkodede værdier af Kubernetes-hemmeligheder. Hver afsløring registreres i revisionsloggen."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Aktivér Kubernetes",
+        "description": "Kør kubectl på denne vært via SSH for at administrere det kluster, den kan nå."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes-variant",
+        "description": "Hvilken kommando kører kubectl på denne vært.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Sti til kubeconfig",
+        "description": "Lad være tom for at bruge standarden for SSH-brugeren (~/.kube/config eller KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Standardkontekst",
+        "description": "Lad være tom for at bruge den aktuelle kontekst i kubeconfig. Du kan skifte kontekster i fanen Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Standard namespace",
+        "description": "Det namespace, Kubernetes-fanen åbner med.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Kør med sudo",
+        "description": "Kør kubectl med sudo -n, til k3s- og MicroK8s-opstillinger, hvor kun root kan læse klusterkonfigurationen. SSH-brugeren skal have adgang til sudo uden adgangskode."
+      },
+      "readOnly": {
+        "label": "Skrivebeskyttet",
+        "description": "Kun læse. Blokerer skalering, genstart, sletning, YAML-ændringer, Helm-ændringer og pod-shells for alle på denne vært."
+      },
+      "showPanel": {
+        "label": "Vis Kubernetes-panel i terminaler",
+        "description": "Tillad Kubernetes-panelet at åbne ved siden af SSH-terminaler på denne vært."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Åbn Kubernetes-panelet med nye terminaler",
+        "description": "Vis Kubernetes-panelet ved siden af hver SSH-terminal, der har Kubernetes aktiveret. Du kan stadig åbne og lukke det fra knappen på højre kant."
+      },
+      "companionSide": {
+        "label": "Placering af Kubernetes-panelet",
+        "description": "Hvor Kubernetes-panelet sidder ved siden af en terminal.",
+        "right": "Højre",
+        "left": "Venstre",
+        "bottom": "Nederst"
+      },
+      "companionSize": {
+        "label": "Størrelse på Kubernetes-panelet",
+        "description": "Bredde i pixels, eller højde når det er placeret nederst. Du kan også trække i kanten."
+      },
+      "companionEdgeButton": {
+        "label": "Vis panelknappen",
+        "description": "Vis en lille knap på højre kant af terminalen, der åbner Kubernetes-panelet."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes er ikke aktiveret for denne vært",
+    "notEnabledHint": "Aktivér Kubernetes i indstillingerne for denne vært for at administrere dens cluster.",
+    "validating": "Tjekker cluster...",
+    "connecting": "Opretter forbindelse...",
+    "error": "Fejl",
+    "errorCode": "Fejlkode: {{code}}",
+    "connectionFailed": "Kunne ikke oprette forbindelse",
+    "totpVerificationFailed": "Verifikation mislykkedes. Prøv venligst igen.",
+    "verificationCodePrompt": "Indtast bekræftelseskode",
+    "browserSignInFailed": "Login mislykkedes. Prøv venligst igen.",
+    "noHostSelected": "Ingen vært valgt",
+    "refresh": "Opdater"
+  },
+  "cluster": {
+    "loading": "Indlæser...",
+    "empty": "Ingen {{kind}} her",
+    "noMatches": "Intet matcher dine filtre",
+    "readOnly": "Skrivebeskyttet"
+  },
+  "sections": {
+    "workloads": "Arbeidsbyrder",
+    "network": "Netværk",
+    "config": "Konfiguration",
+    "cluster": "Kluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Udrulning",
+      "many": "Udrulninger"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volumenkrav",
+      "many": "Volumenkrav"
+    },
+    "pvs": {
+      "one": "Peristent volumen",
+      "many": "Peristente volumener"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Hændelse",
+      "many": "Hændelser"
+    }
+  },
+  "filters": {
+    "all": "Alle",
+    "healthy": "Sunde",
+    "problem": "Problemer",
+    "idle": "Inaktiv"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "Alle namespaces",
+    "context": "Kontekst",
+    "kind": "Resourcetype",
+    "search": "Søg..."
+  },
+  "columns": {
+    "name": "Navn",
+    "namespace": "Namespace",
+    "status": "Status",
+    "age": "Alder",
+    "ready": "Klar",
+    "restarts": "Genstarte",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Ejer",
+    "upToDate": "Opdateret",
+    "available": "Tilgængelig",
+    "images": "Billeder",
+    "completions": "Fuldførte",
+    "duration": "Varighed",
+    "schedule": "Tidsplan",
+    "active": "Aktiv",
+    "lastSchedule": "Sidste kørsel",
+    "type": "Type",
+    "clusterIP": "Cluster-IP",
+    "externalIP": "Ekstern IP",
+    "ports": "Porte",
+    "class": "Klasse",
+    "hosts": "Værter",
+    "address": "Adresse",
+    "tls": "TLS",
+    "keys": "Nøgler",
+    "capacity": "Kapacitet",
+    "access": "Adgang",
+    "storageClass": "Lagerklasse",
+    "volume": "Volumen",
+    "reclaim": "Gendan",
+    "claim": "Krav",
+    "roles": "Rolle",
+    "version": "Version",
+    "internalIP": "Intern IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Hukommelse",
+    "reason": "Årsag",
+    "object": "Objekt",
+    "message": "Besked",
+    "count": "Antal",
+    "cpuUsage": "CPU-forbrug",
+    "memoryUsage": "Hukommelsesforbrug",
+    "container": "Container",
+    "chart": "Diagram",
+    "appVersion": "App-version",
+    "revision": "Revision"
+  },
+  "actions": {
+    "logs": "Logs",
+    "console": "Shell",
+    "scale": {
+      "label": "Skaler",
+      "title": "Skaler {{name}}",
+      "replicas": "Replikater",
+      "hint": "Kører nu: {{current}}",
+      "done": "{{name}} er skaleret"
+    },
+    "restart": {
+      "label": "Genstart",
+      "confirmTitle": "Genstart {{name}}?",
+      "confirmText": "Hver pod i denne {{kind}} erstattes én efter én.",
+      "done": "Genstarter {{name}}"
+    },
+    "undo": {
+      "label": "Rul tilbage",
+      "done": "Rullet {{name}} tilbage"
+    },
+    "setImage": {
+      "label": "Skift billede",
+      "title": "Skift billedet for {{name}}",
+      "image": "Billede",
+      "hint": "Pod'ene erstattes med det nye billede.",
+      "done": "Skiftede billedet for {{name}}"
+    },
+    "suspend": {
+      "label": "Suspend",
+      "confirmTitle": "Suspend {{name}}?",
+      "confirmText": "Denne {{kind}} stopper med at starte nye kørsler, indtil du genoptager den.",
+      "done": "{{name}} suspenderet"
+    },
+    "resume": {
+      "label": "Genoptag",
+      "done": "{{name}} genoptaget"
+    },
+    "trigger": {
+      "label": "Kør nu",
+      "done": "Startede en job fra {{name}}"
+    },
+    "cordon": {
+      "label": "Cordon",
+      "confirmTitle": "Cordon {{name}}?",
+      "confirmText": "Der planlægges ikke nye pods på denne {{kind}}. Pods, der allerede kører på den, fortsætter med at køre.",
+      "done": "{{name}} er cordoned"
+    },
+    "uncordon": {
+      "label": "Fjern cordon",
+      "done": "{{name}} er uncordoned"
+    },
+    "drain": {
+      "label": "Dræn",
+      "title": "Dræn {{name}}",
+      "text": "Cordoner {{name}} og udstøder dens pods, så de flyttes til andre noder. DaemonSet-pods forbliver.",
+      "emptyDir": "Slet emptyDir-data",
+      "emptyDirHint": "Udstød pods, der gemmer data i emptyDir-volumener. Disse data går tabt.",
+      "force": "Tving",
+      "forceHint": "Udstød også pods, der ikke styres af en controller. De oprettes ikke igen.",
+      "done": "Drænet {{name}}"
+    },
+    "delete": {
+      "label": "Slet",
+      "confirmTitle": "Slet {{name}}?",
+      "confirmText": "Denne {{kind}} fjernes fra klusteren.",
+      "managedPodText": "Denne pod tilhører en controller, som starter en ny i stedet.",
+      "namespaceText": "Alt i dette namespace slettes også. Dette kan ikke fortrydes.",
+      "done": "Slettet {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Indlæser...",
+    "noDescribe": "Ingen beskrivelse",
+    "noPods": "Ingen pods",
+    "noEvents": "Ingen begivenheder",
+    "tabs": {
+      "overview": "Oversigt",
+      "pods": "Pods",
+      "logs": "Logs",
+      "console": "Shell",
+      "metrics": "Statistik",
+      "history": "Historik",
+      "data": "Data",
+      "yaml": "YAML",
+      "events": "Hændelser"
+    }
+  },
+  "history": {
+    "none": "Ingen udgivelseshistorik",
+    "noCause": "Ingen årsag til ændring",
+    "current": "Nuværende",
+    "rollBack": "Rul tilbage",
+    "confirmTitle": "Rul tilbage til revision {{revision}}?",
+    "confirmText": "{{name}} vender tilbage til pod-skabelonen for den revision.",
+    "rolledBack": "Rullet tilbage til revision {{revision}}"
+  },
+  "data": {
+    "empty": "Ingen data",
+    "reveal": "Afslør",
+    "hide": "Skjul",
+    "copy": "Kopiér",
+    "copied": "Kopieret",
+    "secretHint": "Værdier forbliver skjulte, indtil du afslører dem. Afsløring registreres i revisionsloggen.",
+    "secretNoPermission": "Du kan se nøglerne, men ikke værdierne. Bed en administrator om tilladelsen 'Reveal Kubernetes secrets'."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Hukommelse",
+    "collecting": "Indsamler prøver...",
+    "unavailable": "Målepunkter er ikke tilgængelige",
+    "unavailableHint": "Installer metrics-server i klustret for at se CPU- og hukommelsesforbrug.",
+    "cpuUsage": "CPU-forbrug",
+    "memoryUsage": "Hukommelsesforbrug",
+    "podInformation": "Pod-oplysninger",
+    "containers": "Containere",
+    "cpuHistory": "CPU-historik",
+    "memoryHistory": "Hukommelseshistorik",
+    "loading": "Indlæser statistikker...",
+    "error": "Fejl ved indlæsning af statistikker",
+    "startPod": "Start podden for at se dens statistikker.",
+    "noLimit": "ingen grænse",
+    "of": {
+      "limit": "grænse",
+      "node": "node"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Tjek",
+    "diff": "Diff",
+    "save": "Gem",
+    "reload": "Genindlæs",
+    "unsaved": "Ugemte ændringer",
+    "valid": "Ser godt ud. Disse vil blive ændret:",
+    "noChanges": "Ingen ændringer",
+    "saved": "Gemte {{count}} ressourcer"
+  },
+  "apply": {
+    "title": "Anvend YAML",
+    "apply": "Anvend",
+    "hint": "Indsæt ét eller flere manifests. Tjek kører en dry run på serveren, og Diff viser, hvad der ændres. Intet ændres, før du anvender.",
+    "namespace": "Ind i {{namespace}}",
+    "defaultNamespace": "Ind i standardnavnerummet"
+  },
+  "helm": {
+    "none": "Ingen Helm-releases",
+    "revision": "Revision {{revision}}",
+    "tabs": {
+      "history": "Historik",
+      "values": "Værdier",
+      "manifest": "Manifest"
+    },
+    "allValues": "Inkluder chart-standarder",
+    "allValuesHint": "Vis alle værdier, ikke kun dem, der er sat ved installation.",
+    "rollbackTitle": "Rul {{name}} tilbage til revision {{revision}}?",
+    "rollbackText": "Helm opretter en ny revision med de gamle indstillinger.",
+    "rolledBack": "Rullede {{name}} tilbage til revision {{revision}}",
+    "uninstall": "Afinstaller",
+    "uninstallTitle": "Afinstaller {{name}}?",
+    "uninstallText": "Helm sletter alle ressourcer for denne release.",
+    "uninstalled": "Afinstallerede {{name}}"
+  },
+  "logs": {
+    "container": "Container",
+    "allContainers": "Alle containere",
+    "previous": "Forrige kørsel",
+    "filter": "Filtrer logs...",
+    "lines": "linjer",
+    "last50": "Seneste 50",
+    "last100": "Seneste 100",
+    "last500": "Seneste 500",
+    "last1000": "Seneste 1000",
+    "all": "Alle",
+    "timestamps": "Tidsstempler",
+    "autoRefresh": "Følg",
+    "copy": "Kopier logs",
+    "download": "Download",
+    "clear": "Ryd",
+    "none": "Ingen logs",
+    "noneMatching": "Ingen logs matcher \"{{query}}\"",
+    "copied": "Kopierede {{count}} linjer",
+    "failedToCopy": "Kunne ikke kopiere logs",
+    "downloaded": "Logs downloadet",
+    "failedToDownload": "Kunne ikke downloade logs: {{error}}",
+    "failedToFetch": "Kunne ikke indlæse logs: {{error}}"
+  },
+  "console": {
+    "connect": "Forbind",
+    "disconnect": "Afbryd",
+    "connecting": "Forbinder...",
+    "connectingTo": "Forbinder til {{name}}...",
+    "connectedTo": "Forbundet til {{name}}",
+    "notConnected": "Ikke forbundet",
+    "clickToConnect": "Vælg en shell og klik på Forbind",
+    "disconnected": "Afbrydt",
+    "consoleError": "Skalfejl",
+    "errorMessage": "Fejl: {{message}}",
+    "failedToConnect": "Kunne ikke oprette forbindelse til podden",
+    "failedToConnectWithError": "Kunne ikke oprette forbindelse: {{error}}",
+    "selectShell": "Skal",
+    "copyConsole": "Kopiér output",
+    "consoleCopied": "Output kopieret",
+    "clear": "Ryd",
+    "podMustBeRunning": "Podden skal være i gang",
+    "podNotRunning": "Podden kører ikke",
+    "podNotRunningHint": "Start podden for at åbne en skal i den.",
+    "readOnly": "Skal er slået fra",
+    "readOnlyHint": "Denne vært er skrivebeskyttet, så pod-skaller er slået fra."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Kunne ikke læse fra udklipsholderen. Sørg for, at tilladelser til udklipsholderen er givet.",
+    "clipboardWriteFailed": "Kunne ikke kopiere til udklipsholderen. Sørg for, at siden leveres via HTTPS eller localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Fjernserver påkrævet. Tilslut en fjernserver i Indstillinger for at bruge denne type forbindelse."
+  },
+  "hosts": {
+    "docsLink": "Se dokumentation",
+    "hostNotFound": "Vært ikke fundet",
+    "loadingHost": "Indlæser vært..."
+  }
+}

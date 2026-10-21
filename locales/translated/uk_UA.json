@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Керуйте кластерами Kubernetes з ваших хостів через SSH: логи, метрики, YAML та оболонка."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Панель Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Використовувати Kubernetes",
+      "description": "Відкривати перегляд Kubernetes та оболонки подів на хостах, де увімкнено Kubernetes."
+    },
+    "secrets": {
+      "title": "Показувати секрети Kubernetes",
+      "description": "Показувати декодовані значення секретів Kubernetes. Кожне відображення записується в журнал аудиту."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Увімкнути Kubernetes",
+        "description": "Запускати kubectl на цьому хості через SSH для керування кластером, до якого він має доступ."
+      },
+      "kubectlFlavor": {
+        "label": "Розповсюдження Kubernetes",
+        "description": "Яка команда запускає kubectl на цьому хості.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Шлях до kubeconfig",
+        "description": "Залиште порожнім, щоб використовувати значення за замовчуванням для користувача SSH (~/.kube/config або KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Контекст за замовчуванням",
+        "description": "Залиште порожнім, щоб використовувати поточний контекст у kubeconfig. Ви можете перемикати контексти на вкладці Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Простір імен за замовчуванням",
+        "description": "Простір імен, з яким відкривається вкладка Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Запускати з sudo",
+        "description": "Запускати kubectl з sudo -n, для конфігурацій k3s та MicroK8s, де лише root може читати конфігурацію кластера. Користувачу SSH потрібен sudo без пароля."
+      },
+      "readOnly": {
+        "label": "Тільки для читання",
+        "description": "Тільки перегляд. Блокує масштабування, перезапуск, видалення, зміни YAML, зміни Helm та оболонки подів для всіх на цьому хості."
+      },
+      "showPanel": {
+        "label": "Показувати панель Kubernetes у терміналах",
+        "description": "Дозволити відкривати панель Kubernetes поруч із SSH-терміналами на цьому хості."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Відкривати панель Kubernetes разом із новими терміналами",
+        "description": "Показувати панель Kubernetes поруч із кожним SSH-терміналом, де увімкнено Kubernetes. Ви все ще можете відкривати та закривати її за допомогою кнопки на правому краю."
+      },
+      "companionSide": {
+        "label": "Розташування панелі Kubernetes",
+        "description": "Де розташовується панель Kubernetes поруч із терміналом.",
+        "right": "Справа",
+        "left": "Сліва",
+        "bottom": "Знизу"
+      },
+      "companionSize": {
+        "label": "Розмір панелі Kubernetes",
+        "description": "Ширина в пікселях, або висота, коли вона знаходиться знизу. Ви також можете перетягувати її край."
+      },
+      "companionEdgeButton": {
+        "label": "Показувати кнопку панелі",
+        "description": "Показувати маленьку кнопку на правому краю терміналу, яка відкриває панель Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes не увімкнено для цього хоста",
+    "notEnabledHint": "Увімкніть Kubernetes у налаштуваннях цього хоста, щоб керувати його кластером.",
+    "validating": "Перевірка кластера...",
+    "connecting": "Підключення...",
+    "error": "Помилка",
+    "errorCode": "Код помилки: {{code}}",
+    "connectionFailed": "Не вдалося підключитися",
+    "totpVerificationFailed": "Не вдалося перевірити. Спробуйте ще раз.",
+    "verificationCodePrompt": "Введіть код перевірки",
+    "browserSignInFailed": "Не вдалося увійти. Спробуйте ще раз.",
+    "noHostSelected": "Хост не вибрано",
+    "refresh": "Оновити"
+  },
+  "cluster": {
+    "loading": "Завантаження...",
+    "empty": "Тут немає {{kind}}",
+    "noMatches": "Нічого не відповідає вашим фільтрам",
+    "readOnly": "Тільки для читання"
+  },
+  "sections": {
+    "workloads": "Навантаження",
+    "network": "Мережа",
+    "config": "Конфігурація",
+    "cluster": "Кластер",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Вузол",
+      "many": "Вузлів"
+    },
+    "namespaces": {
+      "one": "Простір імен",
+      "many": "Просторів імен"
+    },
+    "events": {
+      "one": "Подія",
+      "many": "Подій"
+    }
+  },
+  "filters": {
+    "all": "Усі",
+    "healthy": "Стабільні",
+    "problem": "Проблеми",
+    "idle": "Неактивні"
+  },
+  "toolbar": {
+    "namespace": "Простір імен",
+    "allNamespaces": "Усі простори імен",
+    "context": "Контекст",
+    "kind": "Тип ресурсу",
+    "search": "Пошук..."
+  },
+  "columns": {
+    "name": "Назва",
+    "namespace": "Простір імен",
+    "status": "Статус",
+    "age": "Вік",
+    "ready": "Готово",
+    "restarts": "Перезапусків",
+    "node": "Вузол",
+    "ip": "IP",
+    "owner": "Власник",
+    "upToDate": "Оновлено",
+    "available": "Доступно",
+    "images": "Образи",
+    "completions": "Виконано",
+    "duration": "Тривалість",
+    "schedule": "Розклад",
+    "active": "Активні",
+    "lastSchedule": "Останній запуск",
+    "type": "Тип",
+    "clusterIP": "IP кластера",
+    "externalIP": "Зовнішній IP",
+    "ports": "Порти",
+    "class": "Клас",
+    "hosts": "Хости",
+    "address": "Адреса",
+    "tls": "TLS",
+    "keys": "Ключі",
+    "capacity": "Ємність",
+    "access": "Доступ",
+    "storageClass": "Клас сховища",
+    "volume": "Том",
+    "reclaim": "Повернення",
+    "claim": "Заявка",
+    "roles": "Ролі",
+    "version": "Версія",
+    "internalIP": "Внутрішній IP",
+    "os": "ОС",
+    "cpu": "CPU",
+    "memory": "Пам'ять",
+    "reason": "Причина",
+    "object": "Об'єкт",
+    "message": "Повідомлення",
+    "count": "Кількість",
+    "cpuUsage": "Використання CPU",
+    "memoryUsage": "Використання пам'яті",
+    "container": "Контейнер",
+    "chart": "Графік",
+    "appVersion": "Версія додатка",
+    "revision": "Ревізія"
+  },
+  "actions": {
+    "logs": "Журнали",
+    "console": "Шел",
+    "scale": {
+      "label": "Масштабування",
+      "title": "Масштабувати {{name}}",
+      "replicas": "Репліки",
+      "hint": "Запущено зараз: {{current}}",
+      "done": "Масштабовано {{name}}"
+    },
+    "restart": {
+      "label": "Перезапустити",
+      "confirmTitle": "Перезапустити {{name}}?",
+      "confirmText": "Кожен под цього {{kind}} буде замінено по черзі.",
+      "done": "Перезапуск {{name}}"
+    },
+    "undo": {
+      "label": "Відкат",
+      "done": "Відкатано {{name}}"
+    },
+    "setImage": {
+      "label": "Змінити образ",
+      "title": "Змінити образ для {{name}}",
+      "image": "Образ",
+      "hint": "Поді будуть замінено на новий образ.",
+      "done": "Змінено образ для {{name}}"
+    },
+    "suspend": {
+      "label": "Призупинити",
+      "confirmTitle": "Призупинити {{name}}?",
+      "confirmText": "Цей {{kind}} припинить запуск нових виконань, доки ви не відновите його.",
+      "done": "Призупинено {{name}}"
+    },
+    "resume": {
+      "label": "Відновити",
+      "done": "Відновлено {{name}}"
+    },
+    "trigger": {
+      "label": "Запустити зараз",
+      "done": "Запущено завдання з {{name}}"
+    },
+    "cordon": {
+      "label": "Ізолювати",
+      "confirmTitle": "Ізолювати {{name}}?",
+      "confirmText": "На цьому {{kind}} більше не розподіляються нові поди. Поди, які вже працюють на ньому, продовжують свою роботу.",
+      "done": "Відключено від розподілу {{name}}"
+    },
+    "uncordon": {
+      "label": "Дозволити розподіл",
+      "done": "Дозволено розподіл на {{name}}"
+    },
+    "drain": {
+      "label": "Вивантажити",
+      "title": "Вивантажити {{name}}",
+      "text": "Відключає {{name}} від розподілу та видаляє з нього поди, щоб вони перемістилися на інші вузли. Поди DaemonSet залишаться.",
+      "emptyDir": "Видалити дані emptyDir",
+      "emptyDirHint": "Видалити поди, які зберігають дані в томах emptyDir. Ці дані будуть втрачені.",
+      "force": "Примусово",
+      "forceHint": "Також видалити поди, якими не керує жоден контролер. Вони не будуть відновлені.",
+      "done": "Вивантажено {{name}}"
+    },
+    "delete": {
+      "label": "Видалити",
+      "confirmTitle": "Видалити {{name}}?",
+      "confirmText": "Цей {{kind}} буде видалено з кластера.",
+      "managedPodText": "Цей под належить контролеру, який запустить новий под на його місце.",
+      "namespaceText": "Все, що знаходиться в цьому просторі імен, також буде видалено. Цю дію неможливо скасувати.",
+      "done": "Видалено {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Завантаження...",
+    "noDescribe": "Опис відсутній",
+    "noPods": "Подів немає",
+    "noEvents": "Подій немає",
+    "tabs": {
+      "overview": "Огляд",
+      "pods": "Поды",
+      "logs": "Журнали",
+      "console": "Шел",
+      "metrics": "Статистика",
+      "history": "Історія",
+      "data": "Дані",
+      "yaml": "YAML",
+      "events": "Події"
+    }
+  },
+  "history": {
+    "none": "Історії розгортання немає",
+    "noCause": "Причина зміни не вказана",
+    "current": "Поточна",
+    "rollBack": "Відкотити",
+    "confirmTitle": "Відкотити до ревізії {{revision}}?",
+    "confirmText": "{{name}} повернеться до шаблону поду з тієї ревізії.",
+    "rolledBack": "Відкотено до ревізії {{revision}}"
+  },
+  "data": {
+    "empty": "Даних немає",
+    "reveal": "Показати",
+    "hide": "Сховати",
+    "copy": "Копіювати",
+    "copied": "Скопійовано",
+    "secretHint": "Значення залишаються прихованими, доки ви їх не покажете. Показ значень фіксується в журналі аудиту.",
+    "secretNoPermission": "Ви можете бачити ключі, але не значення. Зверніться до адміністратора за дозволом Reveal Kubernetes secrets."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Пам'ять",
+    "collecting": "Збір зразків...",
+    "unavailable": "Метрики недоступні",
+    "unavailableHint": "Встановіть metrics-server у кластері, щоб переглядати використання CPU та пам'яті.",
+    "cpuUsage": "Використання CPU",
+    "memoryUsage": "Використання пам'яті",
+    "podInformation": "Інформація про под",
+    "containers": "Контейнери",
+    "cpuHistory": "Історія CPU",
+    "memoryHistory": "Історія пам'яті",
+    "loading": "Завантаження статистики...",
+    "error": "Помилка завантаження статистики",
+    "startPod": "Запустіть под, щоб побачити його статистику.",
+    "noLimit": "без обмежень",
+    "of": {
+      "limit": "ліміт",
+      "node": "вузол"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Перевірити",
+    "diff": "Різниця",
+    "save": "Зберегти",
+    "reload": "Оновити",
+    "unsaved": "Незбережені зміни",
+    "valid": "Все гаразд. Зміниться це:",
+    "noChanges": "Без змін",
+    "saved": "Збережено {{count}} ресурсів"
+  },
+  "apply": {
+    "title": "Застосувати YAML",
+    "apply": "Застосувати",
+    "hint": "Вставте один або кілька маніфестів. Перевірка виконує тестовий запуск на сервері, а Різниця показує зміни. Нічого не зміниться, доки ви не натиснете Застосувати.",
+    "namespace": "До {{namespace}}",
+    "defaultNamespace": "До простору імен за замовчуванням"
+  },
+  "helm": {
+    "none": "Немає релізів Helm",
+    "revision": "Ревізія {{revision}}",
+    "tabs": {
+      "history": "Історія",
+      "values": "Значення",
+      "manifest": "Маніфест"
+    },
+    "allValues": "Включити значення за замовчуванням чарта",
+    "allValuesHint": "Показати всі значення, а не лише ті, що встановлено під час встановлення.",
+    "rollbackTitle": "Повернути {{name}} до ревізії {{revision}}?",
+    "rollbackText": "Helm створить нову ревізію з налаштуваннями старої.",
+    "rolledBack": "Повернуто {{name}} до ревізії {{revision}}",
+    "uninstall": "Видалити",
+    "uninstallTitle": "Видалити {{name}}?",
+    "uninstallText": "Helm видалить усі ресурси цього релізу.",
+    "uninstalled": "Видалено {{name}}"
+  },
+  "logs": {
+    "container": "Контейнер",
+    "allContainers": "Усі контейнери",
+    "previous": "Попередній запуск",
+    "filter": "Фільтр журналів...",
+    "lines": "forms",
+    "last50": "Останні 50",
+    "last100": "Останні 100",
+    "last500": "Останні 500",
+    "last1000": "Останні 1000",
+    "all": "Усі",
+    "timestamps": "Мітки часу",
+    "autoRefresh": "Слідкувати",
+    "copy": "Копіювати журнали",
+    "download": "Завантажити",
+    "clear": "Очистити",
+    "none": "Немає журналів",
+    "noneMatching": "Жоден журнал не відповідає \"{{query}}\"",
+    "copied": "Скопійовано {{count}} рядків",
+    "failedToCopy": "Не вдалося скопіювати журнали",
+    "downloaded": "Журнали завантажено",
+    "failedToDownload": "Не вдалося завантажити журнали: {{error}}",
+    "failedToFetch": "Не вдалося завантажити журнали: {{error}}"
+  },
+  "console": {
+    "connect": "Підключитися",
+    "disconnect": "Відключитися",
+    "connecting": "Підключення...",
+    "connectingTo": "Підключення до {{name}}...",
+    "connectedTo": "Підключено до {{name}}",
+    "notConnected": "Не підключено",
+    "clickToConnect": "Оберіть оболонку та натисніть Підключитися",
+    "disconnected": "Відключено",
+    "consoleError": "Помилка оболонки",
+    "errorMessage": "Помилка: {{message}}",
+    "failedToConnect": "Не вдалося підключитися до поду",
+    "failedToConnectWithError": "Не вдалося підключитися: {{error}}",
+    "selectShell": "Оболонка",
+    "copyConsole": "Копіювати вивід",
+    "consoleCopied": "Вивід скопійовано",
+    "clear": "Очистити",
+    "podMustBeRunning": "Под має бути запущений",
+    "podNotRunning": "Под не запущений",
+    "podNotRunningHint": "Запустіть под, щоб відкрити оболонку всередині нього.",
+    "readOnly": "Оболонка вимкнена",
+    "readOnlyHint": "Цей хост доступний лише для читання, тому оболонки подів вимкнено."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Не вдалося прочитати з буфера обміну. Переконайтеся, що надано дозволи на доступ до буфера обміну.",
+    "clipboardWriteFailed": "Не вдалося скопіювати в буфер обміну. Переконайтеся, що сторінка доступна через HTTPS або localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Потрібен віддалений сервер. Підключіть віддалений сервер у Налаштуваннях, щоб використовувати цей тип підключення."
+  },
+  "hosts": {
+    "docsLink": "Переглянути документацію",
+    "hostNotFound": "Хост не знайдено",
+    "loadingHost": "Завантаження хоста..."
+  }
+}

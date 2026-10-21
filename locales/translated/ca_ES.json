@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Gestioneu els clústers de Kubernetes des dels vostres hosts a través d'SSH, amb registres, mètriques, YAML i una shell."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Panell de Kubernetes"
+  },
+  "permissions": {
+    "use": {
+      "title": "Utilitzar Kubernetes",
+      "description": "Obriu la vista de Kubernetes i les shells dels pods en els hosts amb Kubernetes activat."
+    },
+    "secrets": {
+      "title": "Mostrar els secrets de Kubernetes",
+      "description": "Mostra els valors desxifrats dels secrets de Kubernetes. Cada revelació s'escriu al registre d'auditoria."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Activar Kubernetes",
+        "description": "Executeu kubectl en aquest host a través d'SSH per gestionar el clúster al qual pot accedir."
+      },
+      "kubectlFlavor": {
+        "label": "Varietat de Kubernetes",
+        "description": "Quina comanda s'executa per a kubectl en aquest host.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Camí del Kubeconfig",
+        "description": "Deixeu-ho buit per utilitzar el valor predeterminat per a l'usuari SSH (~/.kube/config o KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Context predeterminat",
+        "description": "Deixeu-ho buit per utilitzar el context actual al kubeconfig. Podeu canviar de context a la pestanya de Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Espai de noms predeterminat",
+        "description": "L'espai de noms amb què s'obre la pestanya de Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Executar amb sudo",
+        "description": "Executa kubectl amb sudo -n, per a configuracions de k3s i MicroK8s on només root pot llegir la configuració del clúster. L'usuari SSH necessita sudo sense contrasenya."
+      },
+      "readOnly": {
+        "label": "Només lectura",
+        "description": "Només mirar. Bloqueja l'escalat, els reinicis, les esborrades, els canvis de YAML, els canvis de Helm i les consoles dels pods per a tothom en aquest host."
+      },
+      "showPanel": {
+        "label": "Mostra el panell de Kubernetes als terminals",
+        "description": "Permet obrir el panell de Kubernetes al costat dels terminals SSH en aquest host."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Obrir el panell de Kubernetes amb els nous terminals",
+        "description": "Mostra el panell de Kubernetes al costat de cada terminal SSH que tingui Kubernetes activat. Sempre el pots obrir i tancar des del botó del costat dret."
+      },
+      "companionSide": {
+        "label": "Posició del panell de Kubernetes",
+        "description": "On es troba el panell de Kubernetes al costat d'un terminal.",
+        "right": "Dreta",
+        "left": "Esquerra",
+        "bottom": "Inferior"
+      },
+      "companionSize": {
+        "label": "Mida del panell de Kubernetes",
+        "description": "Amplada en píxels, o alçada quan està a la part inferior. També pots arrossegar-ne el vora."
+      },
+      "companionEdgeButton": {
+        "label": "Mostra el botó del panell",
+        "description": "Mostra un petit botó al costat dret d'un terminal que obre el panell de Kubernetes."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes no està habilitat per a aquest host",
+    "notEnabledHint": "Activa Kubernetes a la configuració d'aquest host per gestionar el seu clúster.",
+    "validating": "Comprovant el clúster...",
+    "connecting": "Connectant...",
+    "error": "Error",
+    "errorCode": "Codi d'error: {{code}}",
+    "connectionFailed": "No s'ha pogut connectar",
+    "totpVerificationFailed": "La verificació ha fallat. Si us plau, torneu-ho a provar.",
+    "verificationCodePrompt": "Introduïu el codi de verificació",
+    "browserSignInFailed": "Ha fallat l'inici de sessió. Torneu-ho a intentar.",
+    "noHostSelected": "Cap amfitrió seleccionat",
+    "refresh": "Actualitza"
+  },
+  "cluster": {
+    "loading": "S'està carregant...",
+    "empty": "No hi ha cap {{kind}} aquí",
+    "noMatches": "Res no coincideix amb els vostres filtres",
+    "readOnly": "Només lectura"
+  },
+  "sections": {
+    "workloads": "Càrregues de treball",
+    "network": "Xarxa",
+    "config": "Configuració",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Desplegament",
+      "many": "Desplegaments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Treball",
+      "many": "Treballs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Servei",
+      "many": "Serveis"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Reclamació de volum",
+      "many": "Reclamacions de volum"
+    },
+    "pvs": {
+      "one": "Volum persistent",
+      "many": "Volums persistents"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Espai de noms",
+      "many": "Espais de noms"
+    },
+    "events": {
+      "one": "Esdeveniment",
+      "many": "Esdeveniments"
+    }
+  },
+  "filters": {
+    "all": "Tots",
+    "healthy": "Sens problemes",
+    "problem": "Problemes",
+    "idle": "Inactius"
+  },
+  "toolbar": {
+    "namespace": "Espai de noms",
+    "allNamespaces": "Tots els espais de noms",
+    "context": "Context",
+    "kind": "Tipus de recurs",
+    "search": "Cerca..."
+  },
+  "columns": {
+    "name": "Nom",
+    "namespace": "Espai de noms",
+    "status": "Estat",
+    "age": "Edat",
+    "ready": "Preparat",
+    "restarts": "Reinici",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Propietari",
+    "upToDate": "Actualitzat",
+    "available": "Disponible",
+    "images": "Imatges",
+    "completions": "Completions",
+    "duration": "Durada",
+    "schedule": "Programació",
+    "active": "Actiu",
+    "lastSchedule": "Última execució",
+    "type": "Tipus",
+    "clusterIP": "IP del clúster",
+    "externalIP": "IP externa",
+    "ports": "Ports",
+    "class": "Classe",
+    "hosts": "Hosts",
+    "address": "Adreça",
+    "tls": "TLS",
+    "keys": "Claus",
+    "capacity": "Capacitat",
+    "access": "Accés",
+    "storageClass": "Classe d'emmagatzematge",
+    "volume": "Volum",
+    "reclaim": "Recuperació",
+    "claim": "Reclamar",
+    "roles": "Rols",
+    "version": "Versió",
+    "internalIP": "IP interna",
+    "os": "SO",
+    "cpu": "CPU",
+    "memory": "Memòria",
+    "reason": "Motiu",
+    "object": "Objecte",
+    "message": "Missatge",
+    "count": "Comptador",
+    "cpuUsage": "Ús de la CPU",
+    "memoryUsage": "Ús de la memòria",
+    "container": "Contenidor",
+    "chart": "Gràfic",
+    "appVersion": "Versió de l'aplicació",
+    "revision": "Revisió"
+  },
+  "actions": {
+    "logs": "Registres",
+    "console": "Intèrpret d'ordres",
+    "scale": {
+      "label": "Escalar",
+      "title": "Escalar {{name}}",
+      "replicas": "Rèpliques",
+      "hint": "En execució ara: {{current}}",
+      "done": "S'ha escalat {{name}}"
+    },
+    "restart": {
+      "label": "Reiniciar",
+      "confirmTitle": "Vols reiniciar {{name}}?",
+      "confirmText": "Cada pod d'aquest {{kind}} es substitueix un per un.",
+      "done": "Reiniciant {{name}}"
+    },
+    "undo": {
+      "label": "Revertir",
+      "done": "S'ha revertit {{name}}"
+    },
+    "setImage": {
+      "label": "Canviar la imatge",
+      "title": "Canviar la imatge de {{name}}",
+      "image": "Imatge",
+      "hint": "Els pods es substitueixen amb la nova imatge.",
+      "done": "S'ha canviat la imatge de {{name}}"
+    },
+    "suspend": {
+      "label": "Suspèn",
+      "confirmTitle": "Vols suspendre {{name}}?",
+      "confirmText": "Aquest {{kind}} deixa d'iniciar noves execucions fins que el reactivis.",
+      "done": "S'ha suspès {{name}}"
+    },
+    "resume": {
+      "label": "Reactiva",
+      "done": "S'ha reactivat {{name}}"
+    },
+    "trigger": {
+      "label": "Executa ara",
+      "done": "S'ha iniciat una tasca des de {{name}}"
+    },
+    "cordon": {
+      "label": "Cordó",
+      "confirmTitle": "Vols aplicar cordó a {{name}}?",
+      "confirmText": "No es programaran nous pods en aquest {{kind}}. Els pods que ja s'hi executen continuaran funcionant.",
+      "done": "{{name}} cordat"
+    },
+    "uncordon": {
+      "label": "Descordar",
+      "done": "{{name}} descordat"
+    },
+    "drain": {
+      "label": "Buidar",
+      "title": "Buidar {{name}}",
+      "text": "Corda {{name}} i expulsa els seus pods perquè es moguin a altres nodes. Els pods de DaemonSet es mantenen.",
+      "emptyDir": "Esborrar les dades d'emptyDir",
+      "emptyDirHint": "Expulsa els pods que conserven dades en volums emptyDir. Es perdran aquestes dades.",
+      "force": "Forçar",
+      "forceHint": "També expulsa els pods que no gestiona cap controlador. No es tornen a crear.",
+      "done": "S'ha buidat {{name}}"
+    },
+    "delete": {
+      "label": "Suprimeix",
+      "confirmTitle": "Vols suprimir {{name}}?",
+      "confirmText": "Aquest {{kind}} s'elimina del clúster.",
+      "managedPodText": "Aquest pod pertany a un controlador, que en crearà un de nou al seu lloc.",
+      "namespaceText": "Tot el contingut d'aquest espai de noms també s'elimina. Aquesta acció no es pot desfer.",
+      "done": "S'ha suprimit {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "S'està carregant...",
+    "noDescribe": "Sense descripció",
+    "noPods": "Cap pod",
+    "noEvents": "Cap esdeveniment",
+    "tabs": {
+      "overview": "Vista general",
+      "pods": "Pods",
+      "logs": "Registres",
+      "console": "Intèrpret d'ordres",
+      "metrics": "Estadístiques",
+      "history": "Historial",
+      "data": "Dades",
+      "yaml": "YAML",
+      "events": "Esdeveniments"
+    }
+  },
+  "history": {
+    "none": "No hi ha historial de desplegaments",
+    "noCause": "Sense causa del canvi",
+    "current": "Actual",
+    "rollBack": "Revertir",
+    "confirmTitle": "Voleu revertir a la revisió {{revision}}?",
+    "confirmText": "{{name}} tornarà a la plantilla de pod d'aquesta revisió.",
+    "rolledBack": "S'ha revertit a la revisió {{revision}}"
+  },
+  "data": {
+    "empty": "Sense dades",
+    "reveal": "Mostra",
+    "hide": "Amaga",
+    "copy": "Copia",
+    "copied": "Copiat",
+    "secretHint": "Els valors es mantenen ocults fins que els revelis. L'acció de revelar es registra al registre d'auditoria.",
+    "secretNoPermission": "Pots veure les claus, però no els valors. Demana a un administrador el permís per revelar secrets de Kubernetes."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memòria",
+    "collecting": "Recollint mostres...",
+    "unavailable": "Les mètriques no estan disponibles",
+    "unavailableHint": "Instal·la metrics-server al clúster per veure l'ús de CPU i memòria.",
+    "cpuUsage": "Ús de la CPU",
+    "memoryUsage": "Ús de la memòria",
+    "podInformation": "Informació del pod",
+    "containers": "Contenidors",
+    "cpuHistory": "Historial de la CPU",
+    "memoryHistory": "Historial de la memòria",
+    "loading": "Carregant estadístiques...",
+    "error": "Error en carregar les estadístiques",
+    "startPod": "Inicia el pod per veure'n les estadístiques.",
+    "noLimit": "sense límit",
+    "of": {
+      "limit": "límit",
+      "node": "node"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Comprova",
+    "diff": "Diferències",
+    "save": "Desa",
+    "reload": "Recarrega",
+    "unsaved": "Canvis no desats",
+    "valid": "Tot correcte. Això canviaria:",
+    "noChanges": "Sense canvis",
+    "saved": "S'han desat {{count}} recursos"
+  },
+  "apply": {
+    "title": "Aplica YAML",
+    "apply": "Aplica",
+    "hint": "Enganxa un o més manifestos. Comprova executa una simulació al servidor i Diferències mostra què canviaria. Res no canvia fins que ho apliquis.",
+    "namespace": "A {{namespace}}",
+    "defaultNamespace": "A l'espai de noms per defecte"
+  },
+  "helm": {
+    "none": "Cap allistament de Helm",
+    "revision": "Revisió {{revision}}",
+    "tabs": {
+      "history": "Historial",
+      "values": "Valors",
+      "manifest": "Manifest"
+    },
+    "allValues": "Inclou els valors per defecte del gràfic",
+    "allValuesHint": "Mostra tots els valors, no només els establerts en instal·lar.",
+    "rollbackTitle": "Vols revertir {{name}} a la revisió {{revision}}?",
+    "rollbackText": "Helm crea una nova revisió amb la configuració de l'anterior.",
+    "rolledBack": "S'ha revertit {{name}} a la revisió {{revision}}",
+    "uninstall": "Desinstal·la",
+    "uninstallTitle": "Vols desinstal·lar {{name}}?",
+    "uninstallText": "Helm elimina tots els recursos d'aquest allistament.",
+    "uninstalled": "S'ha desinstal·lat {{name}}"
+  },
+  "logs": {
+    "container": "Contenidor",
+    "allContainers": "Tots els contenidors",
+    "previous": "Execució anterior",
+    "filter": "Filtra els registres...",
+    "lines": "línies",
+    "last50": "Últimes 50",
+    "last100": "Últimes 100",
+    "last500": "Últimes 500",
+    "last1000": "Últimes 1000",
+    "all": "Tots",
+    "timestamps": "Molletes de temps",
+    "autoRefresh": "Segueix",
+    "copy": "Copia els registres",
+    "download": "Descarrega",
+    "clear": "Neteja",
+    "none": "Cap registre",
+    "noneMatching": "Cap registre coincideix amb «{{query}}»",
+    "copied": "S'han copiat {{count}} línies",
+    "failedToCopy": "No s'han pogut copiar els registres",
+    "downloaded": "Registres descarregats",
+    "failedToDownload": "No s'han pogut descarregar els registres: {{error}}",
+    "failedToFetch": "No s'han pogut carregar els registres: {{error}}"
+  },
+  "console": {
+    "connect": "Connecta",
+    "disconnect": "Desconnecta",
+    "connecting": "Connectant...",
+    "connectingTo": "Connectant amb {{name}}...",
+    "connectedTo": "Connectat amb {{name}}",
+    "notConnected": "No connectat",
+    "clickToConnect": "Tria un shell i fes clic a Connecta",
+    "disconnected": "Desconnectat",
+    "consoleError": "Error de shell",
+    "errorMessage": "Error: {{message}}",
+    "failedToConnect": "No s'ha pogut connectar al pod",
+    "failedToConnectWithError": "No s'ha pogut connectar: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Copia la sortida",
+    "consoleCopied": "Sortida copiada",
+    "clear": "Neteja",
+    "podMustBeRunning": "El pod ha d'estar en execució",
+    "podNotRunning": "El pod no està en execució",
+    "podNotRunningHint": "Inicia el pod per obrir una shell dins seu.",
+    "readOnly": "La shell està desactivada",
+    "readOnlyHint": "Aquest host és de només lectura, per tant les shells dels pods estan desactivades."
+  },
+  "terminal": {
+    "clipboardReadFailed": "No s'ha pogut llegir del porta-retalls. Assegura't que els permisos del porta-retalls estan concedits.",
+    "clipboardWriteFailed": "No s'ha pogut copiar al porta-retalls. Assegura't que la pàgina s'executa a través d'HTTPS o localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Cal un servidor remot. Connecta un servidor remot a Configuració per utilitzar aquest tipus de connexió."
+  },
+  "hosts": {
+    "docsLink": "Visualitza la documentació",
+    "hostNotFound": "Host no trobat",
+    "loadingHost": "Carregant host..."
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Upravljajte Kubernetes klasterima s vaših hostova putem SSH-a, uz pristup logovima, metrikama, YAML datotekama i shellu."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes panel"
+  },
+  "permissions": {
+    "use": {
+      "title": "Koristi Kubernetes",
+      "description": "Otvori Kubernetes prikaz i pod shellove na hostovima na kojima je Kubernetes uključen."
+    },
+    "secrets": {
+      "title": "Prikaži Kubernetes tajne",
+      "description": "Prikaži dekodirane vrijednosti Kubernetes tajni. Svako otkrivanje bilježi se u revizijskom logu."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Uključi Kubernetes",
+        "description": "Pokreni kubectl na ovom hostu putem SSH-a za upravljanje klasterom na koji može pristupiti."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes distribucija",
+        "description": "Koju naredbu koristiti za pokretanje kubectl-a na ovom hostu.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Putanja do kubeconfig datoteke",
+        "description": "Ostavite prazno za korištenje zadane vrijednosti za SSH korisnika (~/.kube/config ili KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Zadani kontekst",
+        "description": "Ostavite prazno za korištenje trenutnog konteksta iz kubeconfig datoteke. Kontekste možete mijenjati na kartici Kubernetes.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Zadani namespace",
+        "description": "Namespace koji se otvara na kartici Kubernetes.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Pokreni s sudo",
+        "description": "Pokreni kubectl s sudo -n, za k3s i MicroK8s postavke gdje samo root može čitati konfiguraciju klastera. SSH korisnik mora imati sudo bez lozinke."
+      },
+      "readOnly": {
+        "label": "Samo za čitanje",
+        "description": "Samo gledanje. Blokira skaliranje, ponovne pokretanje, brisanje, promjene u YAML-u, promjene u Helm-u i pod shell-ove za sve korisnike na ovom hostu."
+      },
+      "showPanel": {
+        "label": "Prikaži Kubernetes panel u terminalima",
+        "description": "Dopusti otvaranje Kubernetes panela pored SSH terminala na ovom hostu."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Otvori Kubernetes panel s novim terminalima",
+        "description": "Prikaži Kubernetes panel pored svakog SSH terminala koji ima uključen Kubernetes. I dalje ga možete otvoriti i zatvoriti pomoću gumba na desnom rubu."
+      },
+      "companionSide": {
+        "label": "Položaj Kubernetes panela",
+        "description": "Gdje se Kubernetes panel nalazi pored terminala.",
+        "right": "Desno",
+        "left": "Lijevo",
+        "bottom": "Dolje"
+      },
+      "companionSize": {
+        "label": "Veličina Kubernetes panela",
+        "description": "Širina u pikselima, odnosno visina kada je panel na dnu. Rub panela možete i povući mišem."
+      },
+      "companionEdgeButton": {
+        "label": "Prikaži gumb na panelu",
+        "description": "Prikaži mali gumb na desnoj ivici terminala koji otvara Kubernetes panel."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes nije omogućen za ovaj host",
+    "notEnabledHint": "Uključite Kubernetes u postavkama ovog hosta za upravljanje njegovim klasterom.",
+    "validating": "Provjera klastera...",
+    "connecting": "Povezivanje...",
+    "error": "Greška",
+    "errorCode": "Kod greške: {{code}}",
+    "connectionFailed": "Povezivanje nije uspjelo",
+    "totpVerificationFailed": "Verifikacija nije uspjela. Pokušajte ponovno.",
+    "verificationCodePrompt": "Unesite kod za provjeru",
+    "browserSignInFailed": "Prijava nije uspjela. Pokušajte ponovno.",
+    "noHostSelected": "Nije odabran host",
+    "refresh": "Osvježi"
+  },
+  "cluster": {
+    "loading": "Učitavanje...",
+    "empty": "Ovdje nema {{kind}}",
+    "noMatches": "Ništa ne odgovara vašim filterima",
+    "readOnly": "Samo za čitanje"
+  },
+  "sections": {
+    "workloads": "Opterećenja",
+    "network": "Mreža",
+    "config": "Konfiguracija",
+    "cluster": "Klaster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Podovi"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deploymenti"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSetovi"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSetovi"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSetovi"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobovi"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobovi"
+    },
+    "services": {
+      "one": "Servis",
+      "many": "Servisi"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingressi"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMapovi"
+    },
+    "secrets": {
+      "one": "Tajna",
+      "many": "Tajne"
+    },
+    "pvcs": {
+      "one": "Zahtjev za volumen",
+      "many": "Zahtjevi za volumen"
+    },
+    "pvs": {
+      "one": "Trajni volumen",
+      "many": "Trajni volumeni"
+    },
+    "nodes": {
+      "one": "Čvor",
+      "many": "Čvorovi"
+    },
+    "namespaces": {
+      "one": "Imenski prostor",
+      "many": "Imenski prostori"
+    },
+    "events": {
+      "one": "Događaj",
+      "many": "Događaji"
+    }
+  },
+  "filters": {
+    "all": "Sve",
+    "healthy": "Zdravo",
+    "problem": "Problemi",
+    "idle": "Neaktivno"
+  },
+  "toolbar": {
+    "namespace": "Imenski prostor",
+    "allNamespaces": "Svi imenski prostori",
+    "context": "Kontekst",
+    "kind": "Vrsta resursa",
+    "search": "Pretraži..."
+  },
+  "columns": {
+    "name": "Naziv",
+    "namespace": "Imenski prostor",
+    "status": "Status",
+    "age": "Starost",
+    "ready": "Spremno",
+    "restarts": "Ponovna pokretanja",
+    "node": "Čvor",
+    "ip": "IP",
+    "owner": "Vlasnik",
+    "upToDate": "Ažurirano",
+    "available": "Dostupno",
+    "images": "Slike",
+    "completions": "Završeno",
+    "duration": "Trajanje",
+    "schedule": "Raspored",
+    "active": "Aktivno",
+    "lastSchedule": "Zadnje pokretanje",
+    "type": "Vrsta",
+    "clusterIP": "IP klastera",
+    "externalIP": "Vanjski IP",
+    "ports": "Portovi",
+    "class": "Klasa",
+    "hosts": "Hostovi",
+    "address": "Adresa",
+    "tls": "TLS",
+    "keys": "Ključevi",
+    "capacity": "Kapacitet",
+    "access": "Pristup",
+    "storageClass": "Klasa pohrane",
+    "volume": "Zapremina",
+    "reclaim": "Povrat",
+    "claim": "Zahtjev",
+    "roles": "Uloge",
+    "version": "Verzija",
+    "internalIP": "Interni IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Memorija",
+    "reason": "Razlog",
+    "object": "Objekt",
+    "message": "Poruka",
+    "count": "Broj",
+    "cpuUsage": "Korištenje CPU-a",
+    "memoryUsage": "Korištenje memorije",
+    "container": "Kontejner",
+    "chart": "Grafikon",
+    "appVersion": "Verzija aplikacije",
+    "revision": "Revizija"
+  },
+  "actions": {
+    "logs": "Zapisnici",
+    "console": "Shell",
+    "scale": {
+      "label": "Skaliranje",
+      "title": "Skaliranje {{name}}",
+      "replicas": "Replike",
+      "hint": "Trenutno pokrenuto: {{current}}",
+      "done": "Skalirano {{name}}"
+    },
+    "restart": {
+      "label": "Ponovno pokretanje",
+      "confirmTitle": "Ponovno pokrenuti {{name}}?",
+      "confirmText": "Svaki pod ove {{kind}} zamjenjuje se jedan po jedan.",
+      "done": "Ponovno pokretanje {{name}}"
+    },
+    "undo": {
+      "label": "Vraćanje",
+      "done": "Vraćeno {{name}}"
+    },
+    "setImage": {
+      "label": "Promjena slike",
+      "title": "Promjena slike za {{name}}",
+      "image": "Slika",
+      "hint": "Podovi se zamjenjuju novom slikom.",
+      "done": "Promijenjena slika za {{name}}"
+    },
+    "suspend": {
+      "label": "Obustava",
+      "confirmTitle": "Obustaviti {{name}}?",
+      "confirmText": "Ova {{kind}} prestaje pokretati nove zadatke dok je ne nastavite.",
+      "done": "Obustavljeno {{name}}"
+    },
+    "resume": {
+      "label": "Nastavak",
+      "done": "Nastavljeno {{name}}"
+    },
+    "trigger": {
+      "label": "Pokreni sada",
+      "done": "Pokrenut je zadatak iz {{name}}"
+    },
+    "cordon": {
+      "label": "Označi kao nedostupan",
+      "confirmTitle": "Označiti {{name}} kao nedostupan?",
+      "confirmText": "Na ovaj {{kind}} ne raspoređuju se novi podovi. Podovi koji se već nalaze na njemu nastavljaju s radom.",
+      "done": "Označen kao nedostupan: {{name}}"
+    },
+    "uncordon": {
+      "label": "Dopusti raspoređivanje",
+      "done": "Dopušteno raspoređivanje: {{name}}"
+    },
+    "drain": {
+      "label": "Isprazni",
+      "title": "Isprazni {{name}}",
+      "text": "Označava {{name}} kao nedostupan i izbacuje njegove podove kako bi se premjestili na druge čvorove. Podovi iz DaemonSeta ostaju.",
+      "emptyDir": "Izbriši emptyDir podatke",
+      "emptyDirHint": "Izbaci podove koji čuvaju podatke u emptyDir volumenima. Ti podaci će biti izgubljeni.",
+      "force": "Prisilno",
+      "forceHint": "Također izbaci podove koje ne upravlja kontroler. Oni se ne ponovno stvaraju.",
+      "done": "Ispražnjen {{name}}"
+    },
+    "delete": {
+      "label": "Izbriši",
+      "confirmTitle": "Izbrisati {{name}}?",
+      "confirmText": "Ovaj {{kind}} se uklanja iz klastera.",
+      "managedPodText": "Ovaj pod pripada kontroleru, koji će pokrenuti novi na njegovo mjesto.",
+      "namespaceText": "Sve unutar ovog imenskog prostora također se briše. Ovo se ne može poništiti.",
+      "done": "Izbrisan {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Učitavanje...",
+    "noDescribe": "Nema opisa",
+    "noPods": "Nema podova",
+    "noEvents": "Nema događaja",
+    "tabs": {
+      "overview": "Pregled",
+      "pods": "Podovi",
+      "logs": "Zapisnici",
+      "console": "Ljuska",
+      "metrics": "Statistika",
+      "history": "Povijest",
+      "data": "Podaci",
+      "yaml": "YAML",
+      "events": "Događaji"
+    }
+  },
+  "history": {
+    "none": "Nema povijesti ažuriranja",
+    "noCause": "Nema uzroka promjene",
+    "current": "Trenutno",
+    "rollBack": "Vrati",
+    "confirmTitle": "Vratiti na reviziju {{revision}}?",
+    "confirmText": "{{name}} se vraća na predložak poda te revizije.",
+    "rolledBack": "Vraćeno na reviziju {{revision}}"
+  },
+  "data": {
+    "empty": "Nema podataka",
+    "reveal": "Prikaži",
+    "hide": "Sakrij",
+    "copy": "Kopiraj",
+    "copied": "Kopirano",
+    "secretHint": "Vrijednosti ostaju skrivene dok ih ne otkrijete. Otkrivanje se bilježi u revizijski zapis.",
+    "secretNoPermission": "Možete vidjeti ključeve, ali ne i vrijednosti. Zatražite od administratora dozvolu za otkrivanje Kubernetes tajni."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memorija",
+    "collecting": "Prikupljanje uzoraka...",
+    "unavailable": "Metrike nisu dostupne",
+    "unavailableHint": "Instalirajte metrics-server u klasteru kako biste vidjeli korištenje CPU-a i memorije.",
+    "cpuUsage": "Korištenje CPU-a",
+    "memoryUsage": "Korištenje memorije",
+    "podInformation": "Informacije o podu",
+    "containers": "Kontejneri",
+    "cpuHistory": "Povijest CPU-a",
+    "memoryHistory": "Povijest memorije",
+    "loading": "Učitavanje statistike...",
+    "error": "Greška pri učitavanju statistike",
+    "startPod": "Pokrenite pod da biste vidjeli njegovu statistiku.",
+    "noLimit": "bez ograničenja",
+    "of": {
+      "limit": "limit",
+      "node": "čvor"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Provjeri",
+    "diff": "Razlike",
+    "save": "Spremi",
+    "reload": "Osveži",
+    "unsaved": "Nespremljene promjene",
+    "valid": "Izgleda dobro. Promijenit će se ovo:",
+    "noChanges": "Nema promjena",
+    "saved": "Spremljeno {{count}} resursa"
+  },
+  "apply": {
+    "title": "Primijeni YAML",
+    "apply": "Primijeni",
+    "hint": "Zalijepite jedan ili više manifesti. Provjera izvršava suho testiranje na poslužitelju, a Razlika prikazuje koje će se promjene dogoditi. Ništa se ne mijenja dok ne primijenite.",
+    "namespace": "U {{namespace}}",
+    "defaultNamespace": "U zadani prostor imena"
+  },
+  "helm": {
+    "none": "Nema Helm izdanja",
+    "revision": "Revizija {{revision}}",
+    "tabs": {
+      "history": "Povijest",
+      "values": "Vrijednosti",
+      "manifest": "Manifest"
+    },
+    "allValues": "Uključi zadane vrijednosti crteža",
+    "allValuesHint": "Prikaži sve vrijednosti, ne samo one postavljene prilikom instalacije.",
+    "rollbackTitle": "Vratiti {{name}} na reviziju {{revision}}?",
+    "rollbackText": "Helm stvara novu reviziju s postavkama stare.",
+    "rolledBack": "Vraćeno {{name}} na reviziju {{revision}}",
+    "uninstall": "Deinstaliraj",
+    "uninstallTitle": "Deinstalirati {{name}}?",
+    "uninstallText": "Helm briše sve resurse ove verzije.",
+    "uninstalled": "Deinstalirano {{name}}"
+  },
+  "logs": {
+    "container": "Kontejner",
+    "allContainers": "Svi kontejneri",
+    "previous": "Prethodna izvedba",
+    "filter": "Filtriraj dnevnike...",
+    "lines": "redaka",
+    "last50": "Posljednjih 50",
+    "last100": "Posljednjih 100",
+    "last500": "Posljednjih 500",
+    "last1000": "Posljednjih 1000",
+    "all": "Sve",
+    "timestamps": "Vremenske oznake",
+    "autoRefresh": "Prati",
+    "copy": "Kopiraj dnevnike",
+    "download": "Preuzmi",
+    "clear": "Očisti",
+    "none": "Nema dnevnika",
+    "noneMatching": "Nema dnevnika koji odgovaraju upitu „{{query}}“",
+    "copied": "Kopirano {{count}} redaka",
+    "failedToCopy": "Kopiranje dnevnika nije uspjelo",
+    "downloaded": "Dnevnici preuzeti",
+    "failedToDownload": "Preuzimanje dnevnika nije uspjelo: {{error}}",
+    "failedToFetch": "Učitavanje dnevnika nije uspjelo: {{error}}"
+  },
+  "console": {
+    "connect": "Poveži",
+    "disconnect": "Prekini vezu",
+    "connecting": "Povezivanje...",
+    "connectingTo": "Povezivanje s {{name}}...",
+    "connectedTo": "Povezano s {{name}}",
+    "notConnected": "Nije povezano",
+    "clickToConnect": "Odaberite ljusku i kliknite Poveži",
+    "disconnected": "Veza prekinuta",
+    "consoleError": "Greška u shellu",
+    "errorMessage": "Greška: {{message}}",
+    "failedToConnect": "Povezivanje s podom nije uspjelo",
+    "failedToConnectWithError": "Povezivanje nije uspjelo: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Kopiraj izlaz",
+    "consoleCopied": "Izlaz je kopiran",
+    "clear": "Očisti",
+    "podMustBeRunning": "Pod mora biti pokrenut",
+    "podNotRunning": "Pod nije pokrenut",
+    "podNotRunningHint": "Pokreni pod da bi otvorio shell u njemu.",
+    "readOnly": "Shell je isključen",
+    "readOnlyHint": "Ovaj host je samo za čitanje, stoga su pod shellovi isključeni."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Čitanje iz međuspremnika nije uspjelo. Provjeri jesu li odobrene dozvole za međuspremnik.",
+    "clipboardWriteFailed": "Kopiranje u međuspremnik nije uspjelo. Provjeri je li stranica poslužena putem HTTPS-a ili localhosta."
+  },
+  "errors": {
+    "remoteServerRequired": "Potreban je udaljeni poslužitelj. Poveži udaljeni poslužitelj u postavkama da bi koristio ovu vrstu veze."
+  },
+  "hosts": {
+    "docsLink": "Pogledaj dokumentaciju",
+    "hostNotFound": "Host nije pronađen",
+    "loadingHost": "Učitavanje hosta..."
+  }
+}

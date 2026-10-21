@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "SSH üzerinden ana bilgisayarlarınızdaki Kubernetes kümelerini günlükler, metrikler, YAML ve bir kabuk ile yönetin."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes paneli"
+  },
+  "permissions": {
+    "use": {
+      "title": "Kubernetes Kullan",
+      "description": "Kubernetes'in açık olduğu ana bilgisayarlarda Kubernetes görünümünü ve pod kabuklarını açın."
+    },
+    "secrets": {
+      "title": "Kubernetes gizli değerlerini göster",
+      "description": "Kubernetes gizli değerlerinin çözülmüş değerlerini gösterin. Her gösterim denetim günlüğüne yazılır."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Kubernetes'i Etkinleştir",
+        "description": "Ulaşabildiği kümeyi yönetmek için bu ana bilgisayarda SSH üzerinden kubectl çalıştırın."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes türü",
+        "description": "Bu ana bilgisayarda kubectl'ı çalıştıran komut.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig yolu",
+        "description": "SSH kullanıcısı için varsayılanı kullanmak (~/.kube/config veya KUBECONFIG) boş bırakın.",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Varsayılan bağlam",
+        "description": "Kubeconfig'taki geçerli bağlamı kullanmak için boş bırakın. Bağlamları Kubernetes sekmesinde değiştirebilirsiniz.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Varsayılan ad alanı",
+        "description": "Kubernetes sekmesinin açıldığı ad alanı.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "sudo ile çalıştır",
+        "description": "Sadece kök kullanıcının küme yapılandırmasını okuyabildiği k3s ve MicroK8s yapılandırmaları için kubectl'ı sudo -n ile çalıştırın. SSH kullanıcısının şifresiz sudo'ya ihtiyacı vardır."
+      },
+      "readOnly": {
+        "label": "Salt okunur",
+        "description": "Sadece bakın. Bu ana bilgisayardaki herkes için ölçeklendirmeyi, yeniden başlatmaları, silmeleri, YAML değişikliklerini, Helm değişikliklerini ve pod kabuklarını engeller."
+      },
+      "showPanel": {
+        "label": "Terminalde Kubernetes panelini göster",
+        "description": "Bu ana bilgisayarda SSH terminallerinin yanında Kubernetes panelinin açılmasına izin verin."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Yeni terminallerle Kubernetes panelini aç",
+        "description": "Kubernetes'in açık olduğu her SSH terminalinin yanında Kubernetes panelini gösterin. Sağ kenardaki düğmeden hala açabilir ve kapatabilirsiniz."
+      },
+      "companionSide": {
+        "label": "Kubernetes paneli konumu",
+        "description": "Kubernetes panelinin bir terminalin yanında nerede duracağı.",
+        "right": "Sağ",
+        "left": "Sol",
+        "bottom": "Alt"
+      },
+      "companionSize": {
+        "label": "Kubernetes paneli boyutu",
+        "description": "Piksel cinsinden genişlik veya altta olduğunda yükseklik. Kenarını sürükleyerek de ayarlayabilirsiniz."
+      },
+      "companionEdgeButton": {
+        "label": "Panel düğmesini göster",
+        "description": "Kubernetes panelini açan terminalin sağ kenarında küçük bir düğme gösterin."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Bu ana bilgisayar için Kubernetes etkin değil",
+    "notEnabledHint": "Kümesini yönetmek için bu ana bilgisayarın ayarlarında Kubernetes'i açın.",
+    "validating": "Küme kontrol ediliyor...",
+    "connecting": "Bağlanıyor...",
+    "error": "Hata",
+    "errorCode": "Hata kodu: {{code}}",
+    "connectionFailed": "Bağlanamadı",
+    "totpVerificationFailed": "Doğrulama başarısız oldu. Lütfen tekrar deneyin.",
+    "verificationCodePrompt": "Doğrulama kodunu girin",
+    "browserSignInFailed": "Oturum açma başarısız oldu. Lütfen tekrar deneyin.",
+    "noHostSelected": "Ana bilgisayar seçilmedi",
+    "refresh": "Yenile"
+  },
+  "cluster": {
+    "loading": "Yükleniyor...",
+    "empty": "Burada {{kind}} yok",
+    "noMatches": "Filtrelerinize uyan hiçbir şey yok",
+    "readOnly": "Salt okunur"
+  },
+  "sections": {
+    "workloads": "İş Yükleri",
+    "network": "Ağ",
+    "config": "Yapılandırma",
+    "cluster": "Küme",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Podlar"
+    },
+    "deployments": {
+      "one": "Dağıtım",
+      "many": "Dağıtımlar"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSetler"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSetler"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSetler"
+    },
+    "jobs": {
+      "one": "İş",
+      "many": "İşler"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJoblar"
+    },
+    "services": {
+      "one": "Hizmet",
+      "many": "Hizmetler"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingressler"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMapler"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secretler"
+    },
+    "pvcs": {
+      "one": "Depolama talebi",
+      "many": "Depolama talepleri"
+    },
+    "pvs": {
+      "one": "Kalıcı depolama",
+      "many": "Kalıcı depolamalar"
+    },
+    "nodes": {
+      "one": "Düğüm",
+      "many": "Düğümler"
+    },
+    "namespaces": {
+      "one": "Ad Alanı",
+      "many": "Ad Alanları"
+    },
+    "events": {
+      "one": "Olay",
+      "many": "Olaylar"
+    }
+  },
+  "filters": {
+    "all": "Tümü",
+    "healthy": "Sağlıklı",
+    "problem": "Sorunlar",
+    "idle": "Boşta"
+  },
+  "toolbar": {
+    "namespace": "Ad Alanı",
+    "allNamespaces": "Tüm ad alanları",
+    "context": "Bağlam",
+    "kind": "Kaynak türü",
+    "search": "Ara..."
+  },
+  "columns": {
+    "name": "Ad",
+    "namespace": "Ad Alanı",
+    "status": "Durum",
+    "age": "Yaş",
+    "ready": "Hazır",
+    "restarts": "Yeniden Başlatmalar",
+    "node": "Düğüm",
+    "ip": "IP",
+    "owner": "Sahip",
+    "upToDate": "Güncel",
+    "available": "Mevcut",
+    "images": "Görüntüler",
+    "completions": "Tamamlamalar",
+    "duration": "Süre",
+    "schedule": "Zamanlama",
+    "active": "Aktif",
+    "lastSchedule": "Son çalıştırma",
+    "type": "Tür",
+    "clusterIP": "Küme IP",
+    "externalIP": "Harici IP",
+    "ports": "Portlar",
+    "class": "Sınıf",
+    "hosts": "Sunucular",
+    "address": "Adres",
+    "tls": "TLS",
+    "keys": "Anahtarlar",
+    "capacity": "Kapasite",
+    "access": "Erişim",
+    "storageClass": "Depolama sınıfı",
+    "volume": "Birim",
+    "reclaim": "Geri al",
+    "claim": "Talep",
+    "roles": "Roller",
+    "version": "Sürüm",
+    "internalIP": "Dahili IP",
+    "os": "İşletim sistemi",
+    "cpu": "CPU",
+    "memory": "Bellek",
+    "reason": "Sebep",
+    "object": "Nesne",
+    "message": "Mesaj",
+    "count": "Sayı",
+    "cpuUsage": "CPU kullanımı",
+    "memoryUsage": "Bellek kullanımı",
+    "container": "Konteyner",
+    "chart": "Grafik",
+    "appVersion": "Uygulama sürümü",
+    "revision": "Revizyon"
+  },
+  "actions": {
+    "logs": "Günlükler",
+    "console": "Kabuk",
+    "scale": {
+      "label": "Ölçekle",
+      "title": "{{name}} ölçeklendir",
+      "replicas": "Kopyalar",
+      "hint": "Şu anda çalışan: {{current}}",
+      "done": "{{name}} ölçeklendirildi"
+    },
+    "restart": {
+      "label": "Yeniden başlat",
+      "confirmTitle": "{{name}} yeniden başlatılsın mı?",
+      "confirmText": "Bu {{kind}} türünün her pod'u teker teker değiştirilir.",
+      "done": "{{name}} yeniden başlatılıyor"
+    },
+    "undo": {
+      "label": "Geri al",
+      "done": "{{name}} geri alındı"
+    },
+    "setImage": {
+      "label": "Görseli değiştir",
+      "title": "{{name}} görselini değiştir",
+      "image": "Görsel",
+      "hint": "Pod'lar yeni görselle değiştirilir.",
+      "done": "{{name}} görseli değiştirildi"
+    },
+    "suspend": {
+      "label": "Askıya al",
+      "confirmTitle": "{{name}} askıya alınsın mı?",
+      "confirmText": "Bu {{kind}}, devam ettirene kadar yeni çalıştırmaları başlatmayı durdurur.",
+      "done": "{{name}} askıya alındı"
+    },
+    "resume": {
+      "label": "Devam et",
+      "done": "{{name}} devam ettirildi"
+    },
+    "trigger": {
+      "label": "Şimdi çalıştır",
+      "done": "{{name}} üzerinden bir iş başlatıldı"
+    },
+    "cordon": {
+      "label": "Kordonla",
+      "confirmTitle": "{{name}} kordonlansın mı?",
+      "confirmText": "Bu {{kind}} üzerinde yeni podlar planlanmaz. Üzerinde olan podlar çalışmaya devam eder.",
+      "done": "{{name}} kordonlandı"
+    },
+    "uncordon": {
+      "label": "Kordonu Kaldır",
+      "done": "{{name}} kordonu kaldırıldı"
+    },
+    "drain": {
+      "label": "Boşalt",
+      "title": "{{name}} Boşalt",
+      "text": "{{name}} kordonlanır ve podları diğer düğümlere taşınmak üzere çıkarılır. DaemonSet podları kalır.",
+      "emptyDir": "emptyDir verilerini sil",
+      "emptyDirHint": "emptyDir birimlerinde veri tutan podları çıkar. Bu veriler kaybolur.",
+      "force": "Zorla",
+      "forceHint": "Hiçbir kontrolcünün yönetmediği podları da çıkar. Bunlar yeniden oluşturulmaz.",
+      "done": "{{name}} boşaltıldı"
+    },
+    "delete": {
+      "label": "Sil",
+      "confirmTitle": "{{name}} silinsin mi?",
+      "confirmText": "Bu {{kind}} kümeden kaldırılır.",
+      "managedPodText": "Bu pod bir kontrolcüye aittir, onun yerine yeni bir tane başlatılır.",
+      "namespaceText": "Bu isim alanındaki her şey de silinir. Bu işlem geri alınamaz.",
+      "done": "{{name}} silindi"
+    }
+  },
+  "detail": {
+    "loading": "Yükleniyor...",
+    "noDescribe": "Açıklama yok",
+    "noPods": "Pod yok",
+    "noEvents": "Olay yok",
+    "tabs": {
+      "overview": "Genel Bakış",
+      "pods": "Podlar",
+      "logs": "Günlükler",
+      "console": "Kabuk",
+      "metrics": "İstatistikler",
+      "history": "Geçmiş",
+      "data": "Veri",
+      "yaml": "YAML",
+      "events": "Olaylar"
+    }
+  },
+  "history": {
+    "none": "Dağıtım geçmişi yok",
+    "noCause": "Değişim nedeni yok",
+    "current": "Mevcut",
+    "rollBack": "Geri al",
+    "confirmTitle": "{{revision}} revizyonuna geri dönsün mü?",
+    "confirmText": "{{name}}, o revizyonun pod şablonuna geri döner.",
+    "rolledBack": "{{revision}} revizyonuna geri alındı"
+  },
+  "data": {
+    "empty": "Veri yok",
+    "reveal": "Göster",
+    "hide": "Gizle",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "secretHint": "Değerler gösterilene kadar gizli kalır. Gösterme işlemi denetim günlüğüne yazılır.",
+    "secretNoPermission": "Anahtarları görebilirsiniz ancak değerleri göremezsiniz. Kubernetes sırlarını gösterme izni için bir yöneticiden yardım isteyin."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Bellek",
+    "collecting": "Örnekler toplanıyor...",
+    "unavailable": "Metrikler mevcut değil",
+    "unavailableHint": "CPU ve bellek kullanımını görmek için kümede metrics-server yükleyin.",
+    "cpuUsage": "CPU kullanımı",
+    "memoryUsage": "Bellek kullanımı",
+    "podInformation": "Pod bilgileri",
+    "containers": "Konteynerler",
+    "cpuHistory": "CPU geçmişi",
+    "memoryHistory": "Bellek geçmişi",
+    "loading": "İstatistikler yükleniyor...",
+    "error": "İstatistikler yüklenirken hata oluştu",
+    "startPod": "İstatistiklerini görmek için podu başlatın.",
+    "noLimit": "limit yok",
+    "of": {
+      "limit": "limit",
+      "node": "node"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Kontrol Et",
+    "diff": "Fark",
+    "save": "Kaydet",
+    "reload": "Yenile",
+    "unsaved": "Kaydedilmemiş değişiklikler",
+    "valid": "Görünüşe göre sorun yok. Şunlar değişecek:",
+    "noChanges": "Değişiklik yok",
+    "saved": "Kaydedilen {{count}} kaynak"
+  },
+  "apply": {
+    "title": "YAML Uygula",
+    "apply": "Uygula",
+    "hint": "Bir veya daha fazla manifest yapıştır. Kontrol, sunucuda kuru bir çalıştırma yapar ve Fark, hangi değişikliklerin yapılacağını gösterir. Uygulamadan önce hiçbir şey değişmez.",
+    "namespace": "{{namespace}} içine",
+    "defaultNamespace": "Varsayılan namespace'e"
+  },
+  "helm": {
+    "none": "Helm sürümü yok",
+    "revision": "Revizyon {{revision}}",
+    "tabs": {
+      "history": "Geçmiş",
+      "values": "Değerler",
+      "manifest": "Manifest"
+    },
+    "allValues": "Şablon varsayılanlarını dahil et",
+    "allValuesHint": "Sadece kurulumda ayarlananları değil, tüm değerleri göster.",
+    "rollbackTitle": "{{name}} revizyon {{revision}}'a geri döndürülsün mü?",
+    "rollbackText": "Helm, eski ayarlarla yeni bir revizyon oluşturur.",
+    "rolledBack": "{{name}} revizyon {{revision}}'a geri döndürüldü",
+    "uninstall": "Kaldır",
+    "uninstallTitle": "{{name}} kaldırılsın mı?",
+    "uninstallText": "Helm, bu sürümün tüm kaynaklarını siler.",
+    "uninstalled": "{{name}} kaldırıldı"
+  },
+  "logs": {
+    "container": "Konteyner",
+    "allContainers": "Tüm konteynerler",
+    "previous": "Önceki çalıştırma",
+    "filter": "Günlükleri filtrele...",
+    "lines": "satır",
+    "last50": "Son 50",
+    "last100": "Son 100",
+    "last500": "Son 500",
+    "last1000": "Son 1000",
+    "all": "Tümü",
+    "timestamps": "Zaman Damgaları",
+    "autoRefresh": "Takip Et",
+    "copy": "Günlükleri kopyala",
+    "download": "İndir",
+    "clear": "Temizle",
+    "none": "Günlük yok",
+    "noneMatching": "\"{{query}}\" ile eşleşen günlük yok",
+    "copied": "Kopyalanan {{count}} satır",
+    "failedToCopy": "Günlükler kopyalanamadı",
+    "downloaded": "Günlükler indirildi",
+    "failedToDownload": "Günlükler indirilemedi: {{error}}",
+    "failedToFetch": "Günlükler yüklenemedi: {{error}}"
+  },
+  "console": {
+    "connect": "Bağlan",
+    "disconnect": "Bağlantıyı Kes",
+    "connecting": "Bağlanıyor...",
+    "connectingTo": "{{name}}'a bağlanılıyor...",
+    "connectedTo": "{{name}}'a bağlandı",
+    "notConnected": "Bağlı değil",
+    "clickToConnect": "Bir kabuk seçin ve Bağlan'a tıklayın",
+    "disconnected": "Bağlantı kesildi",
+    "consoleError": "Kabuk hatası",
+    "errorMessage": "Hata: {{message}}",
+    "failedToConnect": "Pod'a bağlanılamadı",
+    "failedToConnectWithError": "Bağlanılamadı: {{error}}",
+    "selectShell": "Kabuk",
+    "copyConsole": "Çıktıyı kopyala",
+    "consoleCopied": "Çıktı kopyalandı",
+    "clear": "Temizle",
+    "podMustBeRunning": "Pod çalışıyor olmalıdır",
+    "podNotRunning": "Pod çalışmıyor",
+    "podNotRunningHint": "İçinde kabuk açmak için pod'u başlatın.",
+    "readOnly": "Kabuk kapalı",
+    "readOnlyHint": "Bu ana bilgisayar salt okunur olduğu için pod kabukları devre dışı bırakıldı."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Panodan okunamadı. Panoya erişim izninin verildiğinden emin olun.",
+    "clipboardWriteFailed": "Panoya kopyalanamadı. Sayfanın HTTPS veya localhost üzerinden sunulduğundan emin olun."
+  },
+  "errors": {
+    "remoteServerRequired": "Uzak sunucu gerekli. Bu bağlantı türünü kullanmak için Ayarlar'dan bir uzak sunucu bağlayın."
+  },
+  "hosts": {
+    "docsLink": "Dokümanları görüntüle",
+    "hostNotFound": "Ana bilgisayar bulunamadı",
+    "loadingHost": "Ana bilgisayar yükleniyor..."
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "plugin": {
+    "name": "Kubernetes",
+    "description": "Vadīt Kubernetes klasterus no saviem hostiem caur SSH, izmantojot žurnālus, metrikas, YAML un komandrindu."
+  },
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes panelis"
+  },
+  "permissions": {
+    "use": {
+      "title": "Izmantot Kubernetes",
+      "description": "Atvērt Kubernetes skatu un podu komandrindas hostos, kuriem ir ieslēgts Kubernetes."
+    },
+    "secrets": {
+      "title": "Atklāt Kubernetes noslēpumus",
+      "description": "Rādīt Kubernetes noslēpumu atšifrētās vērtības. Katrs atklājums tiek reģistrēts revīzijas žurnālā."
+    }
+  },
+  "settings": {
+    "host": {
+      "enable": {
+        "label": "Ieslēgt Kubernetes",
+        "description": "Izpildīt kubectl šajā hostā caur SSH, lai vadītu klasteri, ko tas var sasniegt."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes izlase",
+        "description": "Kuru komandu izmantot kubectl palaišanai šajā resursdatorā.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig ceļš",
+        "description": "Atstājiet tukšu, lai izmantotu noklusējumu SSH lietotājam (~/.kube/config vai KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Noklusējuma konteksts",
+        "description": "Atstājiet tukšu, lai izmantotu pašreizējo kontekstu no kubeconfig. Kontekstus varat pārslēgt Kubernetes cilnē.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Noklusējuma telpa (namespace)",
+        "description": "Telpa (namespace), kas tiek atvērta, atverot Kubernetes cilni.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Palaist ar sudo",
+        "description": "Palaist kubectl ar sudo -n, piemēram, k3s un MicroK8s konfigurācijās, kur klastera konfigurāciju var lasīt tikai root lietotājs. SSH lietotājam ir jābūt iespējai izmantot sudo bez paroles."
+      },
+      "readOnly": {
+        "label": "Tikai lasīšanai",
+        "description": "Tikai skatīties. Bloķē mērogošanu, restartēšanu, dzēšanu, YAML izmaiņas, Helm izmaiņas un podu shell piekļuvi visiem šī hosta lietotājiem."
+      },
+      "showPanel": {
+        "label": "Rādīt Kubernetes paneli termināļos",
+        "description": "Ļaut Kubernetes panelim atvērties blakus SSH termināļiem šajā resursdatorā."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Atvērt Kubernetes paneli kopā ar jauniem termināļiem",
+        "description": "Rādīt Kubernetes paneli blakus katram SSH terminālim, kurā ir ieslēgts Kubernetes. To joprojām var atvērt un aizvērt, izmantojot pogu labajā malā."
+      },
+      "companionSide": {
+        "label": "Kubernetes panela puse",
+        "description": "Kur atrodas Kubernetes panels blakus terminālim.",
+        "right": "Labajā pusē",
+        "left": "Kreisajā pusē",
+        "bottom": "Apakšā"
+      },
+      "companionSize": {
+        "label": "Kubernetes panela izmērs",
+        "description": "Platums pikseļos vai augstums, ja tas atrodas apakšā. Varat arī vilkt tā malu."
+      },
+      "companionEdgeButton": {
+        "label": "Rādīt panela pogu",
+        "description": "Rādīt mazu pogu termināļa labajā malā, kas atver Kubernetes paneli."
+      }
+    }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes šim resursam nav iespējots",
+    "notEnabledHint": "Iespējiet Kubernetes šī resursa iestatījumos, lai pārvaldītu tā klasteri.",
+    "validating": "Notiek klastera pārbaude...",
+    "connecting": "Notiek savienojuma izveide...",
+    "error": "Kļūda",
+    "errorCode": "Kļūdas kods: {{code}}",
+    "connectionFailed": "Neizdevās izveidot savienojumu",
+    "totpVerificationFailed": "Verifikācija neizdevās. Lūdzu, mēģiniet vēlreiz.",
+    "verificationCodePrompt": "Ievadiet verifikācijas kodu",
+    "browserSignInFailed": "Pieteikšanās neizdevās. Lūdzu, mēģiniet vēlreiz.",
+    "noHostSelected": "Nav izvēlēts mezgls",
+    "refresh": "Atsvaidzināt"
+  },
+  "cluster": {
+    "loading": "Ielādē...",
+    "empty": "Šeit nav {{kind}}",
+    "noMatches": "Nekas neatbilst jūsu filtru kritērijiem",
+    "readOnly": "Tikai lasīšanai"
+  },
+  "sections": {
+    "workloads": "Aplūkojumi",
+    "network": "Tīkls",
+    "config": "Konfigurācija",
+    "cluster": "Klusters",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Podi"
+    },
+    "deployments": {
+      "one": "Izvietošana",
+      "many": "Izvietošanas"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Darbs",
+      "many": "Darbi"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Pakalpojums",
+      "many": "Pakalpojumi"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Noslēpums",
+      "many": "Noslēpumi"
+    },
+    "pvcs": {
+      "one": "Saglabātā tilpuma pieprasījums",
+      "many": "Saglabāto tilpumu pieprasījumi"
+    },
+    "pvs": {
+      "one": "Pastāvīgais tilpums",
+      "many": "Pastāvīgie tilpumi"
+    },
+    "nodes": {
+      "one": "Mezgls",
+      "many": "Mezgls"
+    },
+    "namespaces": {
+      "one": "Vārdtelpa",
+      "many": "Vārdtelpas"
+    },
+    "events": {
+      "one": "Notikums",
+      "many": "Notikumi"
+    }
+  },
+  "filters": {
+    "all": "Visi",
+    "healthy": "Darbībā",
+    "problem": "Problēmas",
+    "idle": "Dīkstāvē"
+  },
+  "toolbar": {
+    "namespace": "Vārdtelpa",
+    "allNamespaces": "Visas vārdtelpas",
+    "context": "Konteksts",
+    "kind": "Resursa veids",
+    "search": "Meklēt..."
+  },
+  "columns": {
+    "name": "Nosaukums",
+    "namespace": "Vārdtelpa",
+    "status": "Statuss",
+    "age": "Vecums",
+    "ready": "Gatavs",
+    "restarts": "Pārlāpīšanas",
+    "node": "Mezgls",
+    "ip": "IP",
+    "owner": "Īpašnieks",
+    "upToDate": "Atjaunināts",
+    "available": "Pieejams",
+    "images": "Attēli",
+    "completions": "Pabeigti",
+    "duration": "Ilgums",
+    "schedule": "Grafiks",
+    "active": "Aktīvs",
+    "lastSchedule": "Pēdējais palaišana",
+    "type": "Tips",
+    "clusterIP": "Klustera IP",
+    "externalIP": "Ārējais IP",
+    "ports": "Porti",
+    "class": "Klase",
+    "hosts": "Resursdatori",
+    "address": "Adrese",
+    "tls": "TLS",
+    "keys": "Atslēgas",
+    "capacity": "Jauda",
+    "access": "Piekļuve",
+    "storageClass": "Glabāšanas klase",
+    "volume": "Sējums",
+    "reclaim": "Atgūšana",
+    "claim": "Pieteikums",
+    "roles": "Lomas",
+    "version": "Versija",
+    "internalIP": "Iekšējais IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Atmiņa",
+    "reason": "Iemesls",
+    "object": "Objekts",
+    "message": "Ziņa",
+    "count": "Skaits",
+    "cpuUsage": "CPU izmantošana",
+    "memoryUsage": "Atmiņas izmantošana",
+    "container": "Konteiners",
+    "chart": "Grafiks",
+    "appVersion": "Lietotnes versija",
+    "revision": "Revīzija"
+  },
+  "actions": {
+    "logs": "Žurnāli",
+    "console": "Apvalks",
+    "scale": {
+      "label": "Mērogošana",
+      "title": "Mērogot {{name}}",
+      "replicas": "Replikas",
+      "hint": "Pašlaik darbojas: {{current}}",
+      "done": "{{name}} mērogots"
+    },
+    "restart": {
+      "label": "Pārlādēt",
+      "confirmTitle": "Pārlādēt {{name}}?",
+      "confirmText": "Šī {{kind}} katrs pods tiek nomainīts viens pēc otra.",
+      "done": "Pārlādē {{name}}"
+    },
+    "undo": {
+      "label": "Atgriezties",
+      "done": "{{name}} atgriezts"
+    },
+    "setImage": {
+      "label": "Mainīt attēlu",
+      "title": "Mainīt {{name}} attēlu",
+      "image": "Attēls",
+      "hint": "Podi tiek nomainīti ar jauno attēlu.",
+      "done": "{{name}} attēls mainīts"
+    },
+    "suspend": {
+      "label": "Sasaldēt",
+      "confirmTitle": "Sasaldēt {{name}}?",
+      "confirmText": "Šis {{kind}} pārtrauc jaunu palaišanu, līdz to atsāksiet.",
+      "done": "{{name}} sasaldēts"
+    },
+    "resume": {
+      "label": "Atsākt",
+      "done": "{{name}} atsākts"
+    },
+    "trigger": {
+      "label": "Palaidiet tagad",
+      "done": "Sākta darba izpilde no {{name}}"
+    },
+    "cordon": {
+      "label": "Aizliegt",
+      "confirmTitle": "Aizliegt {{name}}?",
+      "confirmText": "Uz šo {{kind}} netiks plānotas jaunas podas. Podas, kas jau atrodas uz tā, turpina darboties.",
+      "done": "{{name}} ir izolēts"
+    },
+    "uncordon": {
+      "label": "Atcelt izolāciju",
+      "done": "{{name}} izolācija ir atcelta"
+    },
+    "drain": {
+      "label": "Iztukšot",
+      "title": "Iztukšot {{name}}",
+      "text": "Izolē {{name}} un izmet tā podas, lai tās pārvietotos uz citiem mezgliem. DaemonSet podas paliek.",
+      "emptyDir": "Dzēst emptyDir datus",
+      "emptyDirHint": "Izmet podas, kas glabā datus emptyDir datu nesējos. Šie dati tiks zaudēti.",
+      "force": "Piespiedu režīms",
+      "forceHint": "Tāpat izspiest podus, kurus nevada kontrolieris. Tie netiks atjaunoti.",
+      "done": "Izspiests {{name}}"
+    },
+    "delete": {
+      "label": "Dzēst",
+      "confirmTitle": "Dzēst {{name}}?",
+      "confirmText": "Šis {{kind}} tiks noņemts no klastera.",
+      "managedPodText": "Šis pods pieder kontrolierim, kas tā vietā palaiš jaunu.",
+      "namespaceText": "Viss, kas atrodas šajā telpā, tiks dzēsts arī. To nevar atsaukt.",
+      "done": "Dzēsts {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Ielādē...",
+    "noDescribe": "Nav apraksta",
+    "noPods": "Nav podu",
+    "noEvents": "Nav notikumu",
+    "tabs": {
+      "overview": "Pārskats",
+      "pods": "Podi",
+      "logs": "Žurnāli",
+      "console": "Komandrinda",
+      "metrics": "Statistika",
+      "history": "Vēsture",
+      "data": "Dati",
+      "yaml": "YAML",
+      "events": "Notikumi"
+    }
+  },
+  "history": {
+    "none": "Nav izplatīšanas vēstures",
+    "noCause": "Nav izmaiņu iemesla",
+    "current": "Pašreizējais",
+    "rollBack": "Atgriezties",
+    "confirmTitle": "Atgriezties pie revīzijas {{revision}}?",
+    "confirmText": "{{name}} atgriežas pie šīs revīzijas pod šablona.",
+    "rolledBack": "Atgriezās pie revīzijas {{revision}}"
+  },
+  "data": {
+    "empty": "Nav datu",
+    "reveal": "Rādīt",
+    "hide": "Paslēpt",
+    "copy": "Kopēt",
+    "copied": "Nokopēts",
+    "secretHint": "Vērtības paliek slēptas, līdz tās tiek atklātas. Atklāšana tiek reģistrēta revīzijas žurnālā.",
+    "secretNoPermission": "Jūs varat redzēt atslēgas, bet ne vērtības. Lūdziet administratoru piešķirt atļauju \"Atklāt Kubernetes noslēpumus\"."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Atmiņa",
+    "collecting": "Notiek paraugu vākšana...",
+    "unavailable": "Metrikas nav pieejamas",
+    "unavailableHint": "Lai redzētu CPU un atmiņas izmantošanu, instalējiet metrics-server klasterī.",
+    "cpuUsage": "CPU izmantošana",
+    "memoryUsage": "Atmiņas izmantošana",
+    "podInformation": "Pod informācija",
+    "containers": "Konteineri",
+    "cpuHistory": "CPU vēsture",
+    "memoryHistory": "Atmiņas vēsture",
+    "loading": "Ielādē statistiku...",
+    "error": "Kļūda, ielādējot statistiku",
+    "startPod": "Palaidiet pod, lai redzētu tā statistiku.",
+    "noLimit": "bez ierobežojuma",
+    "of": {
+      "limit": "limits",
+      "node": "mezgls"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Pārbaudīt",
+    "diff": "Atšķirības",
+    "save": "Saglabāt",
+    "reload": "Pārlādēt",
+    "unsaved": "Nesaglabātas izmaiņas",
+    "valid": "Izskatās labi. Mainīsies šādi:",
+    "noChanges": "Nav izmaiņu",
+    "saved": "Saglabāti {{count}} resursi"
+  },
+  "apply": {
+    "title": "Pielietot YAML",
+    "apply": "Pielietot",
+    "hint": "Ielīmējiet vienu vai vairākus manifestus. Pārbaude veic sausu palaipšanu serverī, bet Atšķirības parāda, kas mainīsies. Nekas nemainās, kamēr nepielietojat.",
+    "namespace": "Izvietot {{namespace}}",
+    "defaultNamespace": "Izvietot noklusējuma telpā"
+  },
+  "helm": {
+    "none": "Nav Helm izlaišņu",
+    "revision": "Revīzija {{revision}}",
+    "tabs": {
+      "history": "Vēsture",
+      "values": "Vērtības",
+      "manifest": "Manifests"
+    },
+    "allValues": "Iekļaut grafika noklusējuma vērtības",
+    "allValuesHint": "Rādīt visas vērtības, ne tikai tās, kas iestatītas uzstādīšanas laikā.",
+    "rollbackTitle": "Atgriezt {{name}} pie revīzijas {{revision}}?",
+    "rollbackText": "Helm izveidos jaunu revīziju ar iepriekšējās iestatījumiem.",
+    "rolledBack": "{{name}} atgriezts pie revīzijas {{revision}}",
+    "uninstall": "Atinstalēt",
+    "uninstallTitle": "Atinstalēt {{name}}?",
+    "uninstallText": "Helm dzēsīs šīs izlaišanas resursus.",
+    "uninstalled": "{{name}} atinstalēts"
+  },
+  "logs": {
+    "container": "Konteiners",
+    "allContainers": "Visi konteineri",
+    "previous": "Iepriekšējā palaišana",
+    "filter": "Filtrēt žurnālus...",
+    "lines": "rindas",
+    "last50": "Pēdējās 50",
+    "last100": "Pēdējās 100",
+    "last500": "Pēdējās 500",
+    "last1000": "Pēdējās 1000",
+    "all": "Visi",
+    "timestamps": "Laika zīmes",
+    "autoRefresh": "Sekot",
+    "copy": "Kopēt žurnālus",
+    "download": "Lejupielādēt",
+    "clear": "Notīrīt",
+    "none": "Nav žurnālu",
+    "noneMatching": "Nav žurnālu, kas atbilstu «{{query}}»",
+    "copied": "Kopētas {{count}} rindas",
+    "failedToCopy": "Neizdevās kopēt žurnālus",
+    "downloaded": "Žurnāli lejupielādēti",
+    "failedToDownload": "Neizdevās lejupielādēt žurnālus: {{error}}",
+    "failedToFetch": "Neizdevās ielādēt žurnālus: {{error}}"
+  },
+  "console": {
+    "connect": "Savienot",
+    "disconnect": "Atvienot",
+    "connecting": "Notiek savienojuma izveide...",
+    "connectingTo": "Notiek savienojuma izveide ar {{name}}...",
+    "connectedTo": "Savienojums ar {{name}} izveidots",
+    "notConnected": "Nav savienojuma",
+    "clickToConnect": "Izvēlieties komandrindu un noklikšķiniet uz Savienot",
+    "disconnected": "Atvienots",
+    "consoleError": "Kārklas kļūda",
+    "errorMessage": "Kļūda: {{message}}",
+    "failedToConnect": "Neizdevās izveidot savienojumu ar podu",
+    "failedToConnectWithError": "Neizdevās izveidot savienojumu: {{error}}",
+    "selectShell": "Kārkla",
+    "copyConsole": "Kopēt izvadi",
+    "consoleCopied": "Izvade nokopēta",
+    "clear": "Notīrīt",
+    "podMustBeRunning": "Podam ir jābūt palaistam",
+    "podNotRunning": "Pods nav palaists",
+    "podNotRunningHint": "Palaidiet podu, lai atvērtu kārklē to.",
+    "readOnly": "Kārkla ir izslēgta",
+    "readOnlyHint": "Šis resursdators ir tikai lasāms, tāpēc podu kārklas ir izslēgtas."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Neizdevās lasīt no starpliktuves. Pārliecinieties, ka ir piešķirtas starpliktuves atļaujas.",
+    "clipboardWriteFailed": "Neizdevās kopēt uz starpliktuvi. Pārliecinieties, ka lapa tiek apkalpota caur HTTPS vai localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Nepieciešams attālināts serveris. Savienojiet attālinātu serveri Iestatījumos, lai izmantotu šo savienojuma veidu."
+  },
+  "hosts": {
+    "docsLink": "Apskatīt dokumentāciju",
+    "hostNotFound": "Resursdators nav atrasts",
+    "loadingHost": "Notiek resursdatora ielāde..."
+  }
+}

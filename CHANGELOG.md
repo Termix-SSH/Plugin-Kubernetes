@@ -4,6 +4,18 @@
 
 ### Added
 
-- A tab with notes
-- One admin setting
-- One table with migrations for SQLite, PostgreSQL and MySQL
+- Browse pods, deployments, statefulsets, daemonsets, replicasets, jobs and cronjobs on a host's cluster over SSH
+- Services, ingresses, configmaps, secrets, volume claims, persistent volumes, nodes, namespaces and events
+- Scale, restart, roll back and change the image of workloads, with their rollout history
+- Suspend, resume and run cronjobs now
+- Cordon, uncordon and drain nodes
+- Pod logs with a container picker, the previous run, follow mode and download, plus logs for a whole workload
+- A shell inside a running pod
+- CPU and memory per pod, node and container from metrics-server
+- View, edit and apply YAML with a server side dry run and a diff first
+- Reveal secret values with the new Reveal Kubernetes secrets permission, written to the audit log
+- Helm releases with history, values, manifest, rollback and uninstall
+- kubectl, k3s, MicroK8s and OpenShift, with a kubeconfig path, context, namespace and sudo per host
+- A read only switch per host that blocks every change
+- A Kubernetes panel beside any SSH terminal and a homepage widget
+- kubernetes.workloads and kubernetes.events services for other plugins

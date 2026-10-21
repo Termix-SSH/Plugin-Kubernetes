@@ -1,34 +1,60 @@
 {
-  "id": "hello-world",
-  "name": "Hello World",
+  "id": "kubernetes",
+  "name": "Kubernetes",
   "version": "1.0.0",
-  "description": "A minimal Termix plugin: one tab, one route, one setting and one table.",
+  "description": "Manage Kubernetes clusters from your hosts over SSH, with logs, metrics, YAML and a shell.",
   "author": {
-    "name": "Your Name"
+    "name": "Termix"
   },
   "license": "Apache-2.0",
-  "repository": "https://github.com/your-org/termix-plugin-hello-world",
-  "docs": "https://github.com/your-org/termix-plugin-hello-world/tree/main/docs",
-  "category": "Productivity",
-  "icon": "Hand",
+  "repository": "https://github.com/Termix-SSH/Plugin-Kubernetes",
+  "docs": "https://docs.termix.site/plugins/kubernetes",
+  "category": "Infrastructure",
+  "icon": "ShipWheel",
   "features": [
-    "A tab opened from the sidebar",
-    "An admin setting",
-    "A table of greetings"
+    "Browse pods, deployments, statefulsets, daemonsets, jobs and cronjobs",
+    "Scale, restart, roll back and change images of workloads",
+    "Read and download pod logs, and open a shell inside a pod",
+    "View, edit and apply YAML with a dry run and diff first",
+    "Services, ingresses, configmaps, secrets, volumes, nodes and events",
+    "Cordon, uncordon and drain nodes",
+    "CPU and memory from metrics-server",
+    "Helm releases with history, values, rollback and uninstall",
+    "Works with kubectl, k3s, MicroK8s and OpenShift",
+    "A pods panel beside any SSH terminal"
   ],
-  "env": [],
   "engine": {
-    "termix": ">=26.10.0",
-    "api": "^1.2"
+    "termix": ">=26.10.3",
+    "api": "^1.9"
   },
-  "capabilities": ["db:own", "network:serve", "ui:surface"],
+  "capabilities": [
+    "hosts:read",
+    "credentials:use",
+    "ssh:connect",
+    "network:serve",
+    "ui:surface",
+    "events:core",
+    "users:impersonate"
+  ],
+  "provides": [
+    {
+      "service": "kubernetes.workloads",
+      "version": "1.0.0",
+      "permission": "kubernetes.use"
+    },
+    {
+      "service": "kubernetes.events",
+      "version": "1.0.0",
+      "permission": "kubernetes.use"
+    }
+  ],
   "contributes": {
     "tabs": [
       {
-        "id": "hello-world",
-        "titleKey": "tab.title",
-        "icon": "Hand",
-        "openFrom": ["rail"]
+        "id": "kubernetes",
+        "titleKey": "nav.kubernetes",
+        "icon": "ShipWheel",
+        "openFrom": ["host-context-menu", "palette"]
       }
     ],
     "permissions": [
@@ -37,19 +63,160 @@
         "titleKey": "permissions.use.title",
         "descriptionKey": "permissions.use.description",
         "defaultRoles": ["admin", "user"]
+      },
+      {
+        "name": "secrets",
+        "titleKey": "permissions.secrets.title",
+        "descriptionKey": "permissions.secrets.description",
+        "defaultRoles": ["admin"]
       }
     ],
     "settings": {
-      "admin": [
+      "host": {
+        "editorGroup": "ssh",
+        "editorOrder": 31,
+        "enableKey": "enableKubernetes",
+        "enableLabelKey": "settings.host.enable.label",
+        "enableDescriptionKey": "settings.host.enable.description",
+        "fields": [
+          {
+            "key": "kubectlFlavor",
+            "type": "select",
+            "labelKey": "settings.host.kubectlFlavor.label",
+            "descriptionKey": "settings.host.kubectlFlavor.description",
+            "requires": "enableKubernetes",
+            "default": "kubectl",
+            "options": [
+              {
+                "value": "kubectl",
+                "labelKey": "settings.host.kubectlFlavor.kubectl"
+              },
+              {
+                "value": "k3s",
+                "labelKey": "settings.host.kubectlFlavor.k3s"
+              },
+              {
+                "value": "microk8s",
+                "labelKey": "settings.host.kubectlFlavor.microk8s"
+              },
+              {
+                "value": "oc",
+                "labelKey": "settings.host.kubectlFlavor.oc"
+              }
+            ]
+          },
+          {
+            "key": "kubeconfig",
+            "type": "string",
+            "labelKey": "settings.host.kubeconfig.label",
+            "descriptionKey": "settings.host.kubeconfig.description",
+            "placeholderKey": "settings.host.kubeconfig.placeholder",
+            "default": "",
+            "requires": "enableKubernetes"
+          },
+          {
+            "key": "context",
+            "type": "string",
+            "labelKey": "settings.host.context.label",
+            "descriptionKey": "settings.host.context.description",
+            "placeholderKey": "settings.host.context.placeholder",
+            "default": "",
+            "requires": "enableKubernetes"
+          },
+          {
+            "key": "namespace",
+            "type": "string",
+            "labelKey": "settings.host.namespace.label",
+            "descriptionKey": "settings.host.namespace.description",
+            "placeholderKey": "settings.host.namespace.placeholder",
+            "default": "",
+            "requires": "enableKubernetes"
+          },
+          {
+            "key": "useSudo",
+            "type": "boolean",
+            "labelKey": "settings.host.useSudo.label",
+            "descriptionKey": "settings.host.useSudo.description",
+            "default": false,
+            "requires": "enableKubernetes"
+          },
+          {
+            "key": "readOnly",
+            "type": "boolean",
+            "labelKey": "settings.host.readOnly.label",
+            "descriptionKey": "settings.host.readOnly.description",
+            "default": false,
+            "requires": "enableKubernetes"
+          },
+          {
+            "key": "showPanel",
+            "type": "boolean",
+            "labelKey": "settings.host.showPanel.label",
+            "descriptionKey": "settings.host.showPanel.description",
+            "default": true,
+            "requires": "enableKubernetes"
+          }
+        ]
+      },
+      "user": [
         {
-          "key": "greeting",
-          "type": "string",
-          "labelKey": "settings.admin.greeting.label",
-          "descriptionKey": "settings.admin.greeting.description",
-          "default": "Hello"
+          "key": "companionAutoOpen",
+          "type": "boolean",
+          "labelKey": "settings.user.companionAutoOpen.label",
+          "descriptionKey": "settings.user.companionAutoOpen.description",
+          "default": false
+        },
+        {
+          "key": "companionSide",
+          "type": "select",
+          "labelKey": "settings.user.companionSide.label",
+          "descriptionKey": "settings.user.companionSide.description",
+          "default": "right",
+          "options": [
+            {
+              "value": "right",
+              "labelKey": "settings.user.companionSide.right"
+            },
+            {
+              "value": "left",
+              "labelKey": "settings.user.companionSide.left"
+            },
+            {
+              "value": "bottom",
+              "labelKey": "settings.user.companionSide.bottom"
+            }
+          ]
+        },
+        {
+          "key": "companionSize",
+          "type": "number",
+          "labelKey": "settings.user.companionSize.label",
+          "descriptionKey": "settings.user.companionSize.description",
+          "min": 240,
+          "max": 900,
+          "default": 380
+        },
+        {
+          "key": "companionEdgeButton",
+          "type": "boolean",
+          "labelKey": "settings.user.companionEdgeButton.label",
+          "descriptionKey": "settings.user.companionEdgeButton.description",
+          "default": true
         }
       ]
-    }
+    },
+    "uiPresets": {
+      "simple": {
+        "layout": "card"
+      },
+      "balanced": {
+        "layout": "table"
+      },
+      "advanced": {
+        "layout": "table"
+      }
+    },
+    "uses": ["homepage.widgets", "terminal.resolveTheme"]
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]

@@ -1,27 +1,461 @@
 {
   "plugin": {
-    "name": "Hello World",
-    "description": "A minimal Termix plugin: one tab, one route, one setting and one table."
+    "name": "Kubernetes",
+    "description": "Manage Kubernetes clusters from your hosts over SSH, with logs, metrics, YAML and a shell."
   },
-  "tab": {
-    "title": "Hello World",
-    "empty": "No notes yet.",
-    "placeholder": "Write a note",
-    "add": "Add",
-    "error": "Could not load or save notes."
+  "nav": {
+    "kubernetes": "Kubernetes",
+    "togglePanel": "Kubernetes panel"
   },
   "permissions": {
     "use": {
-      "title": "Use Hello World",
-      "description": "Open the Hello World tab and keep notes in it."
+      "title": "Use Kubernetes",
+      "description": "Open the Kubernetes view and pod shells on hosts with Kubernetes turned on."
+    },
+    "secrets": {
+      "title": "Reveal Kubernetes secrets",
+      "description": "Show the decoded values of Kubernetes secrets. Every reveal is written to the audit log."
     }
   },
   "settings": {
-    "admin": {
-      "greeting": {
-        "label": "Greeting",
-        "description": "Shown at the top of the Hello World tab."
+    "host": {
+      "enable": {
+        "label": "Enable Kubernetes",
+        "description": "Run kubectl on this host over SSH to manage the cluster it can reach."
+      },
+      "kubectlFlavor": {
+        "label": "Kubernetes flavor",
+        "description": "Which command runs kubectl on this host.",
+        "kubectl": "kubectl",
+        "k3s": "k3s (k3s kubectl)",
+        "microk8s": "MicroK8s (microk8s kubectl)",
+        "oc": "OpenShift (oc)"
+      },
+      "kubeconfig": {
+        "label": "Kubeconfig path",
+        "description": "Leave empty to use the default for the SSH user (~/.kube/config or KUBECONFIG).",
+        "placeholder": "~/.kube/config"
+      },
+      "context": {
+        "label": "Default context",
+        "description": "Leave empty to use the current context in the kubeconfig. You can switch contexts in the Kubernetes tab.",
+        "placeholder": "my-cluster"
+      },
+      "namespace": {
+        "label": "Default namespace",
+        "description": "The namespace the Kubernetes tab opens with.",
+        "placeholder": "default"
+      },
+      "useSudo": {
+        "label": "Run with sudo",
+        "description": "Run kubectl with sudo -n, for k3s and MicroK8s setups where only root can read the cluster config. The SSH user needs passwordless sudo."
+      },
+      "readOnly": {
+        "label": "Read only",
+        "description": "Only look. Blocks scaling, restarts, deletes, YAML changes, Helm changes and pod shells for everyone on this host."
+      },
+      "showPanel": {
+        "label": "Show Kubernetes panel in terminals",
+        "description": "Allow the Kubernetes panel to open beside SSH terminals on this host."
+      }
+    },
+    "user": {
+      "companionAutoOpen": {
+        "label": "Open the Kubernetes panel with new terminals",
+        "description": "Show the Kubernetes panel beside every SSH terminal that has Kubernetes on. You can still open and close it from the button on the right edge."
+      },
+      "companionSide": {
+        "label": "Kubernetes panel side",
+        "description": "Where the Kubernetes panel sits next to a terminal.",
+        "right": "Right",
+        "left": "Left",
+        "bottom": "Bottom"
+      },
+      "companionSize": {
+        "label": "Kubernetes panel size",
+        "description": "Width in pixels, or height when it is at the bottom. You can also drag its edge."
+      },
+      "companionEdgeButton": {
+        "label": "Show the panel button",
+        "description": "Show a small button on the right edge of a terminal that opens the Kubernetes panel."
       }
     }
+  },
+  "kube": {
+    "notEnabled": "Kubernetes is not enabled for this host",
+    "notEnabledHint": "Turn on Kubernetes in this host's settings to manage its cluster.",
+    "validating": "Checking the cluster...",
+    "connecting": "Connecting...",
+    "error": "Error",
+    "errorCode": "Error code: {{code}}",
+    "connectionFailed": "Failed to connect",
+    "totpVerificationFailed": "Verification failed. Please try again.",
+    "verificationCodePrompt": "Enter verification code",
+    "browserSignInFailed": "Sign-in failed. Please try again.",
+    "noHostSelected": "No host selected",
+    "refresh": "Refresh"
+  },
+  "cluster": {
+    "loading": "Loading...",
+    "empty": "No {{kind}} here",
+    "noMatches": "Nothing matches your filters",
+    "readOnly": "Read only"
+  },
+  "sections": {
+    "workloads": "Workloads",
+    "network": "Network",
+    "config": "Config",
+    "cluster": "Cluster",
+    "helm": "Helm"
+  },
+  "kinds": {
+    "pods": {
+      "one": "Pod",
+      "many": "Pods"
+    },
+    "deployments": {
+      "one": "Deployment",
+      "many": "Deployments"
+    },
+    "statefulsets": {
+      "one": "StatefulSet",
+      "many": "StatefulSets"
+    },
+    "daemonsets": {
+      "one": "DaemonSet",
+      "many": "DaemonSets"
+    },
+    "replicasets": {
+      "one": "ReplicaSet",
+      "many": "ReplicaSets"
+    },
+    "jobs": {
+      "one": "Job",
+      "many": "Jobs"
+    },
+    "cronjobs": {
+      "one": "CronJob",
+      "many": "CronJobs"
+    },
+    "services": {
+      "one": "Service",
+      "many": "Services"
+    },
+    "ingresses": {
+      "one": "Ingress",
+      "many": "Ingresses"
+    },
+    "configmaps": {
+      "one": "ConfigMap",
+      "many": "ConfigMaps"
+    },
+    "secrets": {
+      "one": "Secret",
+      "many": "Secrets"
+    },
+    "pvcs": {
+      "one": "Volume claim",
+      "many": "Volume claims"
+    },
+    "pvs": {
+      "one": "Persistent volume",
+      "many": "Persistent volumes"
+    },
+    "nodes": {
+      "one": "Node",
+      "many": "Nodes"
+    },
+    "namespaces": {
+      "one": "Namespace",
+      "many": "Namespaces"
+    },
+    "events": {
+      "one": "Event",
+      "many": "Events"
+    }
+  },
+  "filters": {
+    "all": "All",
+    "healthy": "Healthy",
+    "problem": "Problems",
+    "idle": "Idle"
+  },
+  "toolbar": {
+    "namespace": "Namespace",
+    "allNamespaces": "All namespaces",
+    "context": "Context",
+    "kind": "Resource type",
+    "search": "Search..."
+  },
+  "columns": {
+    "name": "Name",
+    "namespace": "Namespace",
+    "status": "Status",
+    "age": "Age",
+    "ready": "Ready",
+    "restarts": "Restarts",
+    "node": "Node",
+    "ip": "IP",
+    "owner": "Owner",
+    "upToDate": "Up to date",
+    "available": "Available",
+    "images": "Images",
+    "completions": "Completions",
+    "duration": "Duration",
+    "schedule": "Schedule",
+    "active": "Active",
+    "lastSchedule": "Last run",
+    "type": "Type",
+    "clusterIP": "Cluster IP",
+    "externalIP": "External IP",
+    "ports": "Ports",
+    "class": "Class",
+    "hosts": "Hosts",
+    "address": "Address",
+    "tls": "TLS",
+    "keys": "Keys",
+    "capacity": "Capacity",
+    "access": "Access",
+    "storageClass": "Storage class",
+    "volume": "Volume",
+    "reclaim": "Reclaim",
+    "claim": "Claim",
+    "roles": "Roles",
+    "version": "Version",
+    "internalIP": "Internal IP",
+    "os": "OS",
+    "cpu": "CPU",
+    "memory": "Memory",
+    "reason": "Reason",
+    "object": "Object",
+    "message": "Message",
+    "count": "Count",
+    "cpuUsage": "CPU use",
+    "memoryUsage": "Memory use",
+    "container": "Container",
+    "chart": "Chart",
+    "appVersion": "App version",
+    "revision": "Revision"
+  },
+  "actions": {
+    "logs": "Logs",
+    "console": "Shell",
+    "scale": {
+      "label": "Scale",
+      "title": "Scale {{name}}",
+      "replicas": "Replicas",
+      "hint": "Running now: {{current}}",
+      "done": "Scaled {{name}}"
+    },
+    "restart": {
+      "label": "Restart",
+      "confirmTitle": "Restart {{name}}?",
+      "confirmText": "Every pod of this {{kind}} is replaced one by one.",
+      "done": "Restarting {{name}}"
+    },
+    "undo": {
+      "label": "Roll back",
+      "done": "Rolled back {{name}}"
+    },
+    "setImage": {
+      "label": "Change image",
+      "title": "Change the image of {{name}}",
+      "image": "Image",
+      "hint": "The pods are replaced with the new image.",
+      "done": "Changed the image of {{name}}"
+    },
+    "suspend": {
+      "label": "Suspend",
+      "confirmTitle": "Suspend {{name}}?",
+      "confirmText": "This {{kind}} stops starting new runs until you resume it.",
+      "done": "Suspended {{name}}"
+    },
+    "resume": {
+      "label": "Resume",
+      "done": "Resumed {{name}}"
+    },
+    "trigger": {
+      "label": "Run now",
+      "done": "Started a job from {{name}}"
+    },
+    "cordon": {
+      "label": "Cordon",
+      "confirmTitle": "Cordon {{name}}?",
+      "confirmText": "No new pods are scheduled on this {{kind}}. Pods already on it keep running.",
+      "done": "Cordoned {{name}}"
+    },
+    "uncordon": {
+      "label": "Uncordon",
+      "done": "Uncordoned {{name}}"
+    },
+    "drain": {
+      "label": "Drain",
+      "title": "Drain {{name}}",
+      "text": "Cordons {{name}} and evicts its pods so they move to other nodes. DaemonSet pods stay.",
+      "emptyDir": "Delete emptyDir data",
+      "emptyDirHint": "Evict pods that keep data in emptyDir volumes. That data is lost.",
+      "force": "Force",
+      "forceHint": "Also evict pods no controller manages. They are not recreated.",
+      "done": "Drained {{name}}"
+    },
+    "delete": {
+      "label": "Delete",
+      "confirmTitle": "Delete {{name}}?",
+      "confirmText": "This {{kind}} is removed from the cluster.",
+      "managedPodText": "This pod belongs to a controller, which starts a new one in its place.",
+      "namespaceText": "Everything inside this namespace is deleted too. This cannot be undone.",
+      "done": "Deleted {{name}}"
+    }
+  },
+  "detail": {
+    "loading": "Loading...",
+    "noDescribe": "No description",
+    "noPods": "No pods",
+    "noEvents": "No events",
+    "tabs": {
+      "overview": "Overview",
+      "pods": "Pods",
+      "logs": "Logs",
+      "console": "Shell",
+      "metrics": "Stats",
+      "history": "History",
+      "data": "Data",
+      "yaml": "YAML",
+      "events": "Events"
+    }
+  },
+  "history": {
+    "none": "No rollout history",
+    "noCause": "No change cause",
+    "current": "Current",
+    "rollBack": "Roll back",
+    "confirmTitle": "Roll back to revision {{revision}}?",
+    "confirmText": "{{name}} goes back to the pod template of that revision.",
+    "rolledBack": "Rolled back to revision {{revision}}"
+  },
+  "data": {
+    "empty": "No data",
+    "reveal": "Reveal",
+    "hide": "Hide",
+    "copy": "Copy",
+    "copied": "Copied",
+    "secretHint": "Values stay hidden until you reveal them. Revealing is written to the audit log.",
+    "secretNoPermission": "You can see the keys but not the values. Ask an admin for the Reveal Kubernetes secrets permission."
+  },
+  "metrics": {
+    "cpu": "CPU",
+    "memory": "Memory",
+    "collecting": "Collecting samples...",
+    "unavailable": "Metrics are not available",
+    "unavailableHint": "Install metrics-server in the cluster to see CPU and memory use.",
+    "cpuUsage": "CPU usage",
+    "memoryUsage": "Memory usage",
+    "podInformation": "Pod information",
+    "containers": "Containers",
+    "cpuHistory": "CPU history",
+    "memoryHistory": "Memory history",
+    "loading": "Loading stats...",
+    "error": "Error loading stats",
+    "startPod": "Start the pod to see its stats.",
+    "noLimit": "no limit",
+    "of": {
+      "limit": "limit",
+      "node": "node"
+    }
+  },
+  "yaml": {
+    "editor": "YAML",
+    "check": "Check",
+    "diff": "Diff",
+    "save": "Save",
+    "reload": "Reload",
+    "unsaved": "Unsaved changes",
+    "valid": "Looks good. These would change:",
+    "noChanges": "No changes",
+    "saved": "Saved {{count}} resources"
+  },
+  "apply": {
+    "title": "Apply YAML",
+    "apply": "Apply",
+    "hint": "Paste one or more manifests. Check runs a dry run on the server and Diff shows what changes. Nothing changes until you apply.",
+    "namespace": "Into {{namespace}}",
+    "defaultNamespace": "Into the default namespace"
+  },
+  "helm": {
+    "none": "No Helm releases",
+    "revision": "Revision {{revision}}",
+    "tabs": {
+      "history": "History",
+      "values": "Values",
+      "manifest": "Manifest"
+    },
+    "allValues": "Include chart defaults",
+    "allValuesHint": "Show every value, not only the ones set at install.",
+    "rollbackTitle": "Roll back {{name}} to revision {{revision}}?",
+    "rollbackText": "Helm makes a new revision with the old one's settings.",
+    "rolledBack": "Rolled back {{name}} to revision {{revision}}",
+    "uninstall": "Uninstall",
+    "uninstallTitle": "Uninstall {{name}}?",
+    "uninstallText": "Helm deletes every resource of this release.",
+    "uninstalled": "Uninstalled {{name}}"
+  },
+  "logs": {
+    "container": "Container",
+    "allContainers": "All containers",
+    "previous": "Previous run",
+    "filter": "Filter logs...",
+    "lines": "lines",
+    "last50": "Last 50",
+    "last100": "Last 100",
+    "last500": "Last 500",
+    "last1000": "Last 1000",
+    "all": "All",
+    "timestamps": "Timestamps",
+    "autoRefresh": "Follow",
+    "copy": "Copy logs",
+    "download": "Download",
+    "clear": "Clear",
+    "none": "No logs",
+    "noneMatching": "No logs match \"{{query}}\"",
+    "copied": "Copied {{count}} lines",
+    "failedToCopy": "Failed to copy logs",
+    "downloaded": "Logs downloaded",
+    "failedToDownload": "Failed to download logs: {{error}}",
+    "failedToFetch": "Failed to load logs: {{error}}"
+  },
+  "console": {
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "connecting": "Connecting...",
+    "connectingTo": "Connecting to {{name}}...",
+    "connectedTo": "Connected to {{name}}",
+    "notConnected": "Not connected",
+    "clickToConnect": "Pick a shell and click Connect",
+    "disconnected": "Disconnected",
+    "consoleError": "Shell error",
+    "errorMessage": "Error: {{message}}",
+    "failedToConnect": "Failed to connect to the pod",
+    "failedToConnectWithError": "Failed to connect: {{error}}",
+    "selectShell": "Shell",
+    "copyConsole": "Copy output",
+    "consoleCopied": "Output copied",
+    "clear": "Clear",
+    "podMustBeRunning": "The pod must be running",
+    "podNotRunning": "The pod is not running",
+    "podNotRunningHint": "Start the pod to open a shell in it.",
+    "readOnly": "Shell is off",
+    "readOnlyHint": "This host is read only, so pod shells are turned off."
+  },
+  "terminal": {
+    "clipboardReadFailed": "Failed to read from clipboard. Make sure clipboard permissions are granted.",
+    "clipboardWriteFailed": "Failed to copy to clipboard. Make sure the page is served over HTTPS or localhost."
+  },
+  "errors": {
+    "remoteServerRequired": "Remote server required. Connect a remote server in Settings to use this connection type."
+  },
+  "hosts": {
+    "docsLink": "View docs",
+    "hostNotFound": "Host not found",
+    "loadingHost": "Loading host..."
   }
 }

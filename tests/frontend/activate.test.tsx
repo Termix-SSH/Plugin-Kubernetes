@@ -1,5 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   renderWithApp,
   type RenderedPluginApp,
@@ -11,6 +10,9 @@ import locales from "../../locales/en.json";
 
 const manifest = manifestJson as unknown as PluginManifest;
 
+const declared = (views?: Array<{ id: string }>) =>
+  (views ?? []).map((view) => view.id).sort();
+
 let rendered: RenderedPluginApp | null = null;
 
 afterEach(async () => {
@@ -19,52 +21,38 @@ afterEach(async () => {
 });
 
 describe(`${manifest.id} activate`, () => {
-  it("registers the rail item and tab", async () => {
+  it("activates and registers only views its manifest declares", async () => {
     rendered = await renderWithApp(plugin, { manifest, locales });
-    expect(rendered.registered.tabs()).toEqual(["hello-world"]);
-    expect(rendered.registered.railItems()).toEqual([
-      expect.objectContaining({
-        id: "hello-world",
-        permission: "hello-world.use",
-      }),
+    const contributes = manifest.contributes as unknown as Record<
+      string,
+      Array<{ id: string }> | undefined
+    >;
+    const tabs = declared(contributes.tabs);
+    // A rail panel may reuse one of the plugin's tab ids.
+    const panels = [...declared(contributes.panels), ...tabs];
+    const cards = declared(contributes.dashboardCards);
+    for (const id of rendered.registered.tabs()) expect(tabs).toContain(id);
+    for (const id of rendered.registered.panels()) expect(panels).toContain(id);
+    for (const id of rendered.registered.dashboardCards()) {
+      expect(cards).toContain(id);
+    }
+    // Host settings render from the manifest; there is no editor tab.
+    expect(rendered.registered.hostEditorSections()).toEqual([]);
+    expect(rendered.registered.hostActions()).toEqual([
+      expect.objectContaining({ id: "kubernetes", tabType: "kubernetes" }),
     ]);
   });
 
-  it("shows the greeting and notes", async () => {
-    rendered = await renderWithApp(plugin, {
-      manifest,
-      locales,
-      api: {
-        get: vi.fn(async () => ({
-          data: {
-            greeting: "Hi there",
-            notes: [{ id: 1, text: "first", createdAt: "" }],
-          },
-        })),
-      } as never,
-    });
-    rendered.renderTab("hello-world", { isVisible: true });
-    expect(await screen.findByText("Hi there")).toBeTruthy();
-    expect(screen.getByText("first")).toBeTruthy();
-  });
-
-  it("shows an error when a note cannot be saved", async () => {
-    rendered = await renderWithApp(plugin, {
-      manifest,
-      locales,
-      api: {
-        get: vi.fn(async () => ({ data: { greeting: "Hello", notes: [] } })),
-        post: vi.fn(async () => {
-          throw new Error("offline");
-        }),
-      } as never,
-    });
-    rendered.renderTab("hello-world", { isVisible: true });
-    await screen.findByText(locales.tab.empty);
-    fireEvent.change(screen.getByPlaceholderText(locales.tab.placeholder), {
-      target: { value: "note" },
-    });
-    fireEvent.click(screen.getByText(locales.tab.add));
-    expect(await screen.findByText(locales.tab.error)).toBeTruthy();
+  it("removes everything it registered on deactivate", async () => {
+    const app = await renderWithApp(plugin, { manifest, locales });
+    await app.deactivate();
+    expect(app.registered.tabs()).toEqual([]);
+    expect(app.registered.panels()).toEqual([]);
+    expect(app.registered.railItems()).toEqual([]);
+    expect(app.registered.hostActions()).toEqual([]);
+    expect(app.registered.hostEditorSections()).toEqual([]);
+    expect(app.registered.dashboardCards()).toEqual([]);
+    expect(app.registered.settingsComponents()).toEqual([]);
+    expect(app.registered.actions()).toEqual([]);
   });
 });

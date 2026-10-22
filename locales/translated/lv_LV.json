@@ -457,5 +457,15 @@
     "docsLink": "Apskatīt dokumentāciju",
     "hostNotFound": "Resursdators nav atrasts",
     "loadingHost": "Notiek resursdatora ielāde..."
+  },
+  "card": {
+    "title": "Kubernetes klasteri",
+    "loading": "Ielādē...",
+    "refresh": "Pārbaudīt vēlreiz",
+    "empty": "Nav hostu, kuriem ir ieslēgts Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} mezgli gatavi | {{running}}/{{pods}} podi darbojas",
+    "failing_zero": "0 neveiksmīgi",
+    "failing_one": "{{count}} neveiksmīgs",
+    "failing_other": "{{count}} neveiksmīgi"
   }
 }

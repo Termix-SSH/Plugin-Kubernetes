@@ -457,5 +457,14 @@
     "docsLink": "Se dokumentation",
     "hostNotFound": "Vært ikke fundet",
     "loadingHost": "Indlæser vært..."
+  },
+  "card": {
+    "title": "Kubernetes-kluster",
+    "loading": "Indlæser...",
+    "refresh": "Tjek igen",
+    "empty": "Ingen værter har Kubernetes aktiveret.",
+    "counts": "{{ready}}/{{nodes}} noder klar | {{running}}/{{pods}} pods kører",
+    "failing_one": "{{count}} fejl",
+    "failing_other": "{{count}} fejl"
   }
 }

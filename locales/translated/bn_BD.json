@@ -457,5 +457,14 @@
     "docsLink": "ডক্স দেখুন",
     "hostNotFound": "হোস্ট পাওয়া যায়নি",
     "loadingHost": "হোস্ট লোড হচ্ছে..."
+  },
+  "card": {
+    "title": "Kubernetes ক্লাস্টার",
+    "loading": "লোড হচ্ছে...",
+    "refresh": "আবার চেক করুন",
+    "empty": "কোনো হোস্টে Kubernetes চালু নেই।",
+    "counts": "{{ready}}/{{nodes}} নোড প্রস্তুত | {{running}}/{{pods}} পড চলছে",
+    "failing_one": "{{count}}টি ব্যর্থ",
+    "failing_other": "{{count}}টি ব্যর্থ"
   }
 }

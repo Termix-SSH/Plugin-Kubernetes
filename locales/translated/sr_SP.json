@@ -457,5 +457,15 @@
     "docsLink": "Погледај документацију",
     "hostNotFound": "Домаћин није пронађен",
     "loadingHost": "Учитавање домаћина..."
+  },
+  "card": {
+    "title": "Kubernetes кластери",
+    "loading": "Учитавање...",
+    "refresh": "Провери поново",
+    "empty": "Ниједан хост нема укључен Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} чворова спремно | {{running}}/{{pods}} подова у раду",
+    "failing_one": "{{count}} неуспешан",
+    "failing_few": "{{count}} неуспешна",
+    "failing_other": "{{count}} неуспешних"
   }
 }

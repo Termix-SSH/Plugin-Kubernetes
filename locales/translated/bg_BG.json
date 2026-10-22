@@ -457,5 +457,14 @@
     "docsLink": "Преглед на документацията",
     "hostNotFound": "Хостът не е намерен",
     "loadingHost": "Зареждане на хоста..."
+  },
+  "card": {
+    "title": "Кластери Kubernetes",
+    "loading": "Зареждане...",
+    "refresh": "Провери отново",
+    "empty": "Няма хостове с включен Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} възела готови | {{running}}/{{pods}} пода работят",
+    "failing_one": "{{count}} неуспешен",
+    "failing_other": "{{count}} неуспешни"
   }
 }

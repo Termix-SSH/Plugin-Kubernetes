@@ -457,5 +457,18 @@
     "docsLink": "عرض التوثيق",
     "hostNotFound": "المضيف غير موجود",
     "loadingHost": "جاري تحميل المضيف..."
+  },
+  "card": {
+    "title": "عناقيد Kubernetes",
+    "loading": "جارٍ التحميل...",
+    "refresh": "تحقق مرة أخرى",
+    "empty": "لا توجد مضيفات تم فيها تشغيل Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} عقدة جاهزة | {{running}}/{{pods}} حاوية قيد التشغيل",
+    "failing_zero": "لا يوجد فشل",
+    "failing_one": "عنصر واحد فاشل",
+    "failing_two": "عنصران فاشلان",
+    "failing_few": "{{count}} عناصر فاشلة",
+    "failing_many": "{{count}} عنصرًا فاشلًا",
+    "failing_other": "{{count}} عنصر فاشل"
   }
 }

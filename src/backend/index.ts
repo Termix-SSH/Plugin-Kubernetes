@@ -9,6 +9,7 @@ import { registerHelm } from "./helm.js";
 import { registerManifests } from "./manifests.js";
 import { registerConsole } from "./console.js";
 import { registerServices } from "./services.js";
+import { registerSummary } from "./summary.js";
 
 export type {
   KubeEventsV1,
@@ -29,6 +30,7 @@ export async function activate(ctx: PluginContext) {
   registerMetrics(router, deps, kit);
   registerHelm(router, deps, kit);
   registerManifests(router, deps, kit);
+  registerSummary(router, ctx);
   registerConsole(ctx, log);
   registerServices(ctx, log);
 

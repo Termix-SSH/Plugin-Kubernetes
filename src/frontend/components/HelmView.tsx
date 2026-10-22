@@ -14,6 +14,7 @@ import {
   TabStrip,
   useConfirm,
   type DataColumn,
+  type GridSize,
   type PanelViewMode,
 } from "@termix-ssh/plugin-sdk/ui";
 import { useCluster } from "../cluster-context";
@@ -36,11 +37,13 @@ export function helmTone(
 export function HelmList({
   releases,
   view,
+  size,
   showNamespace,
   onOpen,
 }: {
   releases: HelmRelease[];
   view: PanelViewMode;
+  size?: GridSize;
   showNamespace: boolean;
   onOpen: (release: HelmRelease) => void;
 }) {
@@ -104,6 +107,7 @@ export function HelmList({
       view={view}
       getKey={(r) => `${r.namespace}/${r.name}`}
       columns={{ base: 1, md: 2, xl: 3 }}
+      size={size}
       listColumns={columns}
       onRowClick={onOpen}
       empty={<EmptyState icon={Package} title={t("helm.none")} />}

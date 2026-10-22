@@ -457,5 +457,13 @@
     "docsLink": "Lihat dokumentasi",
     "hostNotFound": "Host tidak ditemukan",
     "loadingHost": "Memuat host..."
+  },
+  "card": {
+    "title": "Cluster Kubernetes",
+    "loading": "Memuat...",
+    "refresh": "Periksa lagi",
+    "empty": "Tidak ada host yang mengaktifkan Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} node siap | {{running}}/{{pods}} pod berjalan",
+    "failing_other": "{{count}} gagal"
   }
 }

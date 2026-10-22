@@ -457,5 +457,16 @@
     "docsLink": "Zobacz dokumentację",
     "hostNotFound": "Host nie został znaleziony",
     "loadingHost": "Ładowanie hosta..."
+  },
+  "card": {
+    "title": "Klusty Kubernetes",
+    "loading": "Ładowanie...",
+    "refresh": "Sprawdź ponownie",
+    "empty": "Żaden host nie ma włączonego Kubernetesa.",
+    "counts": "{{ready}}/{{nodes}} węzłów gotowych | {{running}}/{{pods}} podów uruchomionych",
+    "failing_one": "{{count}} nieudanych",
+    "failing_few": "{{count}} nieudanych",
+    "failing_many": "{{count}} nieudanych",
+    "failing_other": "{{count}} nieudanych"
   }
 }

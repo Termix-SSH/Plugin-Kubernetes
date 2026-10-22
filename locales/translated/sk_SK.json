@@ -457,5 +457,16 @@
     "docsLink": "Zobraziť dokumentáciu",
     "hostNotFound": "Hostiteľ sa nenašiel",
     "loadingHost": "Načítava sa hostiteľ..."
+  },
+  "card": {
+    "title": "Kubernetes clustre",
+    "loading": "Načítava sa...",
+    "refresh": "Skontrolovať znova",
+    "empty": "Žiadny hostiteľ nemá povolený Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} uzlov pripravených | {{running}}/{{pods}} podov beží",
+    "failing_one": "{{count}} zlyhanie",
+    "failing_few": "{{count}} zlyhania",
+    "failing_many": "{{count}} zlyhaní",
+    "failing_other": "{{count}} zlyhaní"
   }
 }

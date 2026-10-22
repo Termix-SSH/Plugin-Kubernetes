@@ -457,5 +457,13 @@
     "docsLink": "Xem tài liệu",
     "hostNotFound": "Không tìm thấy máy chủ",
     "loadingHost": "Đang tải máy chủ..."
+  },
+  "card": {
+    "title": "Các cụm Kubernetes",
+    "loading": "Đang tải...",
+    "refresh": "Kiểm tra lại",
+    "empty": "Không có host nào bật Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} nút sẵn sàng | {{running}}/{{pods}} pod đang chạy",
+    "failing_other": "{{count}} lỗi"
   }
 }

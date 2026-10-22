@@ -457,5 +457,14 @@
     "docsLink": "Visa dokumentation",
     "hostNotFound": "Värd hittades inte",
     "loadingHost": "Laddar värd..."
+  },
+  "card": {
+    "title": "Kubernetes-kluster",
+    "loading": "Laddar...",
+    "refresh": "Kontrollera igen",
+    "empty": "Inga värdar har Kubernetes aktiverat.",
+    "counts": "{{ready}}/{{nodes}} noder redo | {{running}}/{{pods}} poddar körs",
+    "failing_one": "{{count}} misslyckad",
+    "failing_other": "{{count}} misslyckade"
   }
 }

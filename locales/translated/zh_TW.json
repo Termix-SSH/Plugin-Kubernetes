@@ -457,5 +457,13 @@
     "docsLink": "查看說明文件",
     "hostNotFound": "找不到主機",
     "loadingHost": "正在載入主機..."
+  },
+  "card": {
+    "title": "Kubernetes 叢集",
+    "loading": "載入中...",
+    "refresh": "再次檢查",
+    "empty": "沒有主機啟用 Kubernetes。",
+    "counts": "{{ready}}/{{nodes}} 個節點就緒 | {{running}}/{{pods}} 個 Pod 正在執行",
+    "failing_other": "{{count}} 個失敗"
   }
 }

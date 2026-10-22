@@ -457,5 +457,15 @@
     "docsLink": "Visualitza la documentació",
     "hostNotFound": "Host no trobat",
     "loadingHost": "Carregant host..."
+  },
+  "card": {
+    "title": "Clusters de Kubernetes",
+    "loading": "S'està carregant...",
+    "refresh": "Comprovar de nou",
+    "empty": "Cap amfitrió té Kubernetes activat.",
+    "counts": "{{ready}}/{{nodes}} nodes preparats | {{running}}/{{pods}} pods en execució",
+    "failing_one": "{{count}} fallit",
+    "failing_many": "{{count}} fallits",
+    "failing_other": "{{count}} fallits"
   }
 }

@@ -457,5 +457,14 @@
     "docsLink": "Dokumentáció megtekintése",
     "hostNotFound": "A gép nem található",
     "loadingHost": "Gép betöltése..."
+  },
+  "card": {
+    "title": "Kubernetes klaszterek",
+    "loading": "Betöltés...",
+    "refresh": "Újrapróbál",
+    "empty": "Nincs olyan host, amelyen a Kubernetes be van kapcsolva.",
+    "counts": "{{ready}}/{{nodes}} csomópont kész | {{running}}/{{pods}} pod fut",
+    "failing_one": "{{count}} hiba",
+    "failing_other": "{{count}} hiba"
   }
 }

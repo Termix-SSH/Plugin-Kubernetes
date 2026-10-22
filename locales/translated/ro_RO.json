@@ -457,5 +457,15 @@
     "docsLink": "Vezi documentația",
     "hostNotFound": "Host-ul nu a fost găsit",
     "loadingHost": "Se încarcă host-ul..."
+  },
+  "card": {
+    "title": "Clustere Kubernetes",
+    "loading": "Se încarcă...",
+    "refresh": "Verifică din nou",
+    "empty": "Niciun gazdă nu are Kubernetes activat.",
+    "counts": "{{ready}}/{{nodes}} noduri gata | {{running}}/{{pods}} poduri în execuție",
+    "failing_one": "{{count}} eșuat",
+    "failing_few": "{{count}} eșuate",
+    "failing_other": "{{count}} eșuate"
   }
 }

@@ -12,6 +12,7 @@ import {
   type ClusterValue,
 } from "../../../src/frontend/cluster-context";
 import type { KubernetesApi } from "../../../src/frontend/kubernetes-api";
+import type { HelmRelease } from "../../../src/frontend/types";
 
 const api = {
   checkManifest: vi.fn(),
@@ -33,6 +34,7 @@ const { LogViewer } =
   await import("../../../src/frontend/components/LogViewer");
 const { ResourceActions } =
   await import("../../../src/frontend/components/ResourceActions");
+const { HelmList } = await import("../../../src/frontend/components/HelmView");
 
 function cluster(extra: Partial<ClusterValue> = {}): ClusterValue {
   return {
@@ -233,5 +235,35 @@ describe("ResourceActions", () => {
     expect(screen.getByLabelText("actions.uncordon.label")).toBeTruthy();
     expect(screen.getByLabelText("actions.drain.label")).toBeTruthy();
     expect(screen.queryByLabelText("actions.delete.label")).toBeNull();
+  });
+});
+
+describe("HelmList", () => {
+  const releases: HelmRelease[] = [
+    {
+      name: "podinfo",
+      namespace: "demo",
+      revision: 2,
+      status: "deployed",
+      chart: "podinfo-6.0.0",
+      appVersion: "6.0.0",
+      updated: "",
+    },
+  ];
+
+  it("uses the picked cards per row", () => {
+    const { container } = render(
+      <HelmList
+        releases={releases}
+        view="grid"
+        size="3"
+        showNamespace
+        onOpen={() => {}}
+      />,
+    );
+    const grid = container.querySelector<HTMLElement>(
+      "[style*='grid-template-columns']",
+    );
+    expect(grid?.style.gridTemplateColumns).toContain("/ 3");
   });
 });

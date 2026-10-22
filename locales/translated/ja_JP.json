@@ -457,5 +457,13 @@
     "docsLink": "ドキュメントを表示",
     "hostNotFound": "ホストが見つかりません",
     "loadingHost": "ホストを読み込んでいます..."
+  },
+  "card": {
+    "title": "Kubernetes クラスター",
+    "loading": "読み込み中...",
+    "refresh": "再確認",
+    "empty": "Kubernetes が有効になっているホストがありません。",
+    "counts": "{{ready}}/{{nodes}} ノードが準備完了 | {{running}}/{{pods}} ポッドが実行中",
+    "failing_other": "{{count}} 件失敗"
   }
 }

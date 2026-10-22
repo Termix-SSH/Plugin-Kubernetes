@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.1
+
+### Added
+
+- Kubernetes clusters dashboard card: ready nodes and running and failing pods on each cluster
+
+### Changed
+
+- The resource and Helm grids fit as many cards as the tab has room for, or pick how many per row next to the grid and list switch
+
 ## 1.0.0
 
 ### Added

@@ -457,5 +457,15 @@
     "docsLink": "צפייה בתיעוד",
     "hostNotFound": "המארח לא נמצא",
     "loadingHost": "טוען מארח..."
+  },
+  "card": {
+    "title": "צבאות Kubernetes",
+    "loading": "טוען...",
+    "refresh": "בדוק שוב",
+    "empty": "לא מוגדרים מארחים עם Kubernetes פעיל.",
+    "counts": "{{ready}}/{{nodes}} צמתים מוכנים | {{running}}/{{pods}} פודים פעילים",
+    "failing_one": "{{count}} כשל",
+    "failing_two": "{{count}} כשלים",
+    "failing_other": "{{count}} כשלים"
   }
 }

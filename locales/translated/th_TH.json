@@ -457,5 +457,13 @@
     "docsLink": "ดูเอกสาร",
     "hostNotFound": "ไม่พบโฮสต์",
     "loadingHost": "กำลังโหลดโฮสต์..."
+  },
+  "card": {
+    "title": "คลัสเตอร์ Kubernetes",
+    "loading": "กำลังโหลด...",
+    "refresh": "ตรวจสอบอีกครั้ง",
+    "empty": "ไม่มีโฮสต์ใดเปิดใช้งาน Kubernetes",
+    "counts": "โหนดพร้อมใช้งาน {{ready}}/{{nodes}} | พ็อดกำลังทำงาน {{running}}/{{pods}}",
+    "failing_other": "{{count}} ล้มเหลว"
   }
 }

@@ -457,5 +457,14 @@
     "docsLink": "Vis dokumentasjon",
     "hostNotFound": "Verten ble ikke funnet",
     "loadingHost": "Laster vert..."
+  },
+  "card": {
+    "title": "Kubernetes-kluster",
+    "loading": "Laster inn...",
+    "refresh": "Sjekk igjen",
+    "empty": "Ingen vertser har Kubernetes aktivert.",
+    "counts": "{{ready}}/{{nodes}} noder klare | {{running}}/{{pods}} pod kjører",
+    "failing_one": "{{count}} feilet",
+    "failing_other": "{{count}} feilet"
   }
 }

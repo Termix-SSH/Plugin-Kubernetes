@@ -457,5 +457,16 @@
     "docsLink": "Zobrazit dokumentaci",
     "hostNotFound": "Host nebyl nalezen",
     "loadingHost": "Načítání hosta..."
+  },
+  "card": {
+    "title": "Kubernetes clustery",
+    "loading": "Načítání...",
+    "refresh": "Zkontrolovat znovu",
+    "empty": "Žádný hostitel nemá povolený Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} uzlů připraveno | {{running}}/{{pods}} podů běží",
+    "failing_one": "{{count}} selhání",
+    "failing_few": "{{count}} selhání",
+    "failing_many": "{{count}} selhání",
+    "failing_other": "{{count}} selhání"
   }
 }

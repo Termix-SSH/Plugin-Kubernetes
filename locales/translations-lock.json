@@ -317,5 +317,11 @@
   "errors.remoteServerRequired": "e57ef69fdde8",
   "hosts.docsLink": "19abc6f6f7fa",
   "hosts.hostNotFound": "e860b25dcbcc",
-  "hosts.loadingHost": "569c2a383560"
+  "hosts.loadingHost": "569c2a383560",
+  "card.title": "bea3ffa9a247",
+  "card.loading": "b04ba49f8486",
+  "card.refresh": "e185048ce3c0",
+  "card.empty": "a7749b5bbbdc",
+  "card.counts": "5237d7607f95",
+  "card.failing": "8fb7438f5205"
 }

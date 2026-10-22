@@ -457,5 +457,16 @@
     "docsLink": "Просмотреть документацию",
     "hostNotFound": "Хост не найден",
     "loadingHost": "Загрузка хоста..."
+  },
+  "card": {
+    "title": "Кластеры Kubernetes",
+    "loading": "Загрузка...",
+    "refresh": "Проверить снова",
+    "empty": "На хостах не включен Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} узлов готово | {{running}}/{{pods}} подов запущено",
+    "failing_one": "{{count}} ошибка",
+    "failing_few": "{{count}} ошибки",
+    "failing_many": "{{count}} ошибок",
+    "failing_other": "{{count}} ошибок"
   }
 }

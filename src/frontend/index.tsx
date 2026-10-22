@@ -9,6 +9,7 @@ import type {
 import { KubernetesManager } from "./KubernetesManager";
 import KubernetesApp from "./KubernetesApp";
 import { kubernetesWidget } from "./KubernetesWidget";
+import { ClustersCard } from "./ClustersCard";
 import {
   KubernetesCompanion,
   useKubernetesCompanionDefaults,
@@ -42,6 +43,15 @@ export function activate(app: TermixApp): void {
   let canUse = true;
   void app.hasPermission("use").then((allowed) => {
     canUse = allowed;
+  });
+
+  app.registerDashboardCard({
+    id: "kubernetes-clusters",
+    titleKey: "card.title",
+    defaultPanel: "side",
+    defaultHeight: 200,
+    frame: "framed",
+    component: ClustersCard,
   });
 
   app.registerTab("kubernetes", KubernetesTab, {

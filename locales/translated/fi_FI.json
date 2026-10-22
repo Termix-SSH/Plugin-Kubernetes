@@ -457,5 +457,14 @@
     "docsLink": "Näytä dokumentaatio",
     "hostNotFound": "Isäntää ei löydy",
     "loadingHost": "Ladataan isäntää..."
+  },
+  "card": {
+    "title": "Kubernetes-klusterit",
+    "loading": "Ladataan...",
+    "refresh": "Tarkista uudelleen",
+    "empty": "Yhdenkään isäntälaitteen Kubernetes ei ole käytössä.",
+    "counts": "{{ready}}/{{nodes}} solmua valmiina | {{running}}/{{pods}} podia käynnissä",
+    "failing_one": "{{count}} epäonnistunut",
+    "failing_other": "{{count}} epäonnistunutta"
   }
 }

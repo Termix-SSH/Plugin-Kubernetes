@@ -457,5 +457,13 @@
     "docsLink": "查看文档",
     "hostNotFound": "未找到主机",
     "loadingHost": "正在加载主机..."
+  },
+  "card": {
+    "title": "Kubernetes 集群",
+    "loading": "加载中...",
+    "refresh": "重新检查",
+    "empty": "没有主机启用 Kubernetes。",
+    "counts": "{{ready}}/{{nodes}} 个节点就绪 | {{running}}/{{pods}} 个 Pod 运行中",
+    "failing_other": "{{count}} 个失败"
   }
 }

@@ -457,5 +457,14 @@
     "docsLink": "Προβολή τεκμηρίωσης",
     "hostNotFound": "Ο υπολογιστής δεν βρέθηκε",
     "loadingHost": "Φόρτωση υπολογιστή..."
+  },
+  "card": {
+    "title": "Συστήματα Kubernetes",
+    "loading": "Φόρτωση...",
+    "refresh": "Έλεγχος ξανά",
+    "empty": "Κανένας υπολογιστής δεν έχει ενεργοποιημένο το Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} κόμβοι έτοιμοι | {{running}}/{{pods}} pods σε λειτουργία",
+    "failing_one": "{{count}} αποτυχία",
+    "failing_other": "{{count}} αποτυχίες"
   }
 }

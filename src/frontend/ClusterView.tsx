@@ -20,6 +20,7 @@ import {
   Segmented,
   Select2,
   ViewToggle,
+  type GridSize,
   cn,
   useAdaptivePolling,
 } from "@termix-ssh/plugin-sdk/ui";
@@ -78,6 +79,7 @@ export function ClusterView({
   const kube = useKubernetesApi();
   const { values: prefs, set: setPref } = usePluginUiPreferences<{
     layout: "card" | "table";
+    columns: GridSize;
   }>();
 
   const [contexts, setContexts] = React.useState<string[]>([]);
@@ -105,6 +107,9 @@ export function ClusterView({
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>("all");
   const [layout, setLayout] = React.useState(prefs.layout ?? "table");
+  const [columns, setColumns] = React.useState<GridSize>(
+    prefs.columns ?? "auto",
+  );
   const [applyOpen, setApplyOpen] = React.useState(false);
 
   const isHelm = section === "helm";
@@ -385,6 +390,11 @@ export function ClusterView({
             setLayout(value);
             setPref("layout", value);
           }}
+          columns={columns}
+          onColumns={(next) => {
+            setColumns(next);
+            setPref("columns", next);
+          }}
         />
       </div>
     </>
@@ -466,6 +476,7 @@ export function ClusterView({
           <HelmList
             releases={filteredReleases}
             view={layout === "table" ? "list" : "grid"}
+            size={columns}
             showNamespace={!namespace}
             onOpen={setRelease}
           />
@@ -474,6 +485,7 @@ export function ClusterView({
             kind={kind}
             rows={filtered}
             view={layout === "table" ? "list" : "grid"}
+            size={columns}
             showNamespace={!namespace}
             usage={usage}
             compact={compact}

@@ -457,5 +457,16 @@
     "docsLink": "Odpri dokumentacijo",
     "hostNotFound": "Gostitelj ni najden",
     "loadingHost": "Nalaganje gostitelja..."
+  },
+  "card": {
+    "title": "Kubernetes klasterji",
+    "loading": "Nalaganje...",
+    "refresh": "Preveri znova",
+    "empty": "Noben gostitelj nima vklopljenega Kubernetesa.",
+    "counts": "{{ready}}/{{nodes}} vozlišč pripravljenih | {{running}}/{{pods}} podov v delovanju",
+    "failing_one": "{{count}} napaka",
+    "failing_two": "{{count}} napaki",
+    "failing_few": "{{count}} napake",
+    "failing_other": "{{count}} napak"
   }
 }

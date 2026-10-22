@@ -5,6 +5,7 @@ import {
   ListBadge,
   cn,
   type DataColumn,
+  type GridSize,
   type PanelViewMode,
 } from "@termix-ssh/plugin-sdk/ui";
 import {
@@ -41,6 +42,8 @@ interface ResourceListProps {
   kind: KindId;
   rows: ResourceSummary[];
   view: PanelViewMode;
+  /** Cards per row in grid view. */
+  size?: GridSize;
   /** Shows the namespace column, for an all namespaces list. */
   showNamespace: boolean;
   /** Pod or node usage by name (namespace/name for pods). */
@@ -62,6 +65,7 @@ export function ResourceList({
   kind,
   rows,
   view,
+  size,
   showNamespace,
   usage,
   compact = false,
@@ -200,6 +204,7 @@ export function ResourceList({
       density={compact ? "compact" : undefined}
       getKey={refKey}
       columns={{ base: 1, md: 2, xl: 3 }}
+      size={size}
       listColumns={columns}
       onRowClick={kind === "events" ? undefined : onOpen}
       empty={empty}

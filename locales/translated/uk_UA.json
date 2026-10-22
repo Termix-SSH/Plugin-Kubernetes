@@ -457,5 +457,16 @@
     "docsLink": "Переглянути документацію",
     "hostNotFound": "Хост не знайдено",
     "loadingHost": "Завантаження хоста..."
+  },
+  "card": {
+    "title": "Кластери Kubernetes",
+    "loading": "Завантаження...",
+    "refresh": "Перевірити ще раз",
+    "empty": "На жодному хості не увімкнено Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} вузлів готово | {{running}}/{{pods}} подів працює",
+    "failing_one": "{{count}} помилка",
+    "failing_few": "{{count}} помилки",
+    "failing_many": "{{count}} помилок",
+    "failing_other": "{{count}} помилок"
   }
 }

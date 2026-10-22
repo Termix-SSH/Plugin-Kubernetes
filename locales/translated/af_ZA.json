@@ -457,5 +457,14 @@
     "docsLink": "Bekyk dokumentasie",
     "hostNotFound": "Gasheer nie gevind nie",
     "loadingHost": "Laai gasheer..."
+  },
+  "card": {
+    "title": "Kubernetes-klusters",
+    "loading": "Laai tans...",
+    "refresh": "Kontroleer weer",
+    "empty": "Geen gasheer het Kubernetes geaktiveer nie.",
+    "counts": "{{ready}}/{{nodes}} knope gereed | {{running}}/{{pods}} pods loop",
+    "failing_one": "{{count}} misluk",
+    "failing_other": "{{count}} misluk"
   }
 }

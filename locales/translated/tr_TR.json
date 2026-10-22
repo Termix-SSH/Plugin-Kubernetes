@@ -457,5 +457,14 @@
     "docsLink": "Dokümanları görüntüle",
     "hostNotFound": "Ana bilgisayar bulunamadı",
     "loadingHost": "Ana bilgisayar yükleniyor..."
+  },
+  "card": {
+    "title": "Kubernetes kümeleri",
+    "loading": "Yükleniyor...",
+    "refresh": "Tekrar kontrol et",
+    "empty": "Hiçbir sunucuda Kubernetes etkin değil.",
+    "counts": "{{ready}}/{{nodes}} düğüm hazır | {{running}}/{{pods}} pod çalışıyor",
+    "failing_one": "{{count}} başarısız",
+    "failing_other": "{{count}} başarısız"
   }
 }

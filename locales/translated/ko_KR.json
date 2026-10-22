@@ -457,5 +457,13 @@
     "docsLink": "문서 보기",
     "hostNotFound": "호스트를 찾을 수 없습니다",
     "loadingHost": "호스트 로딩 중..."
+  },
+  "card": {
+    "title": "Kubernetes 클러스터",
+    "loading": "로딩 중...",
+    "refresh": "다시 확인",
+    "empty": "Kubernetes가 활성화된 호스트가 없습니다.",
+    "counts": "{{ready}}/{{nodes}} 노드 준비 완료 | {{running}}/{{pods}} 포드 실행 중",
+    "failing_other": "{{count}}개 실패"
   }
 }

@@ -1,7 +1,7 @@
 {
   "id": "kubernetes",
   "name": "Kubernetes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manage Kubernetes clusters from your hosts over SSH, with logs, metrics, YAML and a shell.",
   "author": {
     "name": "Termix"
@@ -22,7 +22,8 @@
     "CPU and memory from metrics-server",
     "Helm releases with history, values, rollback and uninstall",
     "Works with kubectl, k3s, MicroK8s and OpenShift",
-    "A pods panel beside any SSH terminal"
+    "A pods panel beside any SSH terminal",
+    "A dashboard card with ready nodes and failing pods on each cluster"
   ],
   "engine": {
     "termix": ">=26.10.3",
@@ -217,7 +218,14 @@
         "layout": "table"
       }
     },
-    "uses": ["homepage.widgets", "terminal.resolveTheme"]
+    "uses": ["homepage.widgets", "terminal.resolveTheme"],
+    "dashboardCards": [
+      {
+        "id": "kubernetes-clusters",
+        "titleKey": "card.title",
+        "icon": "ShipWheel"
+      }
+    ]
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]

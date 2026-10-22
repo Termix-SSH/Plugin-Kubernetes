@@ -457,5 +457,16 @@
     "docsLink": "Peržiūrėti dokumentaciją",
     "hostNotFound": "Hostas nerastas",
     "loadingHost": "Įkeliamas hostas..."
+  },
+  "card": {
+    "title": "Kubernetes klasteriai",
+    "loading": "Įkeliama...",
+    "refresh": "Patikrinti dar kartą",
+    "empty": "Nėra jokių serverių, kuriuose būtų įjungtas Kubernetes.",
+    "counts": "{{ready}}/{{nodes}} mazgų paruošta | {{running}}/{{pods}} podų veikia",
+    "failing_one": "{{count}} nevykstantis",
+    "failing_few": "{{count}} nevykstantys",
+    "failing_many": "{{count}} nevykstančių",
+    "failing_other": "{{count}} nevykstančių"
   }
 }

@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { screen } from "@testing-library/react";
 import {
   renderWithApp,
   type RenderedPluginApp,
@@ -54,5 +55,40 @@ describe(`${manifest.id} activate`, () => {
     expect(app.registered.dashboardCards()).toEqual([]);
     expect(app.registered.settingsComponents()).toEqual([]);
     expect(app.registered.actions()).toEqual([]);
+  });
+});
+
+describe("kubernetes clusters dashboard card", () => {
+  it("shows node and pod health per cluster", async () => {
+    rendered = await renderWithApp(plugin, {
+      manifest,
+      locales,
+      permissions: ["kubernetes.use"],
+      hosts: [{ id: "7", name: "k3s", ip: "10.0.0.7", port: 22 }],
+      api: {
+        get: vi.fn(async () => ({
+          data: [
+            {
+              hostId: 7,
+              nodesReady: 2,
+              nodesTotal: 2,
+              podsRunning: 9,
+              podsFailing: 1,
+              podsTotal: 10,
+              checkedAt: "",
+            },
+          ],
+        })),
+      } as never,
+    });
+    expect(rendered.registered.dashboardCards()).toEqual([
+      "kubernetes-clusters",
+    ]);
+    rendered.renderDashboardCard("kubernetes-clusters");
+    expect(await screen.findByText("k3s")).toBeTruthy();
+    expect(
+      screen.getByText("2/2 nodes ready | 9/10 pods running"),
+    ).toBeTruthy();
+    expect(screen.getByText("1 failing")).toBeTruthy();
   });
 });

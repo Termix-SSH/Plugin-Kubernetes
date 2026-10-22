@@ -457,5 +457,14 @@
     "docsLink": "Dokumentation anzeigen",
     "hostNotFound": "Host nicht gefunden",
     "loadingHost": "Host wird geladen..."
+  },
+  "card": {
+    "title": "Kubernetes-Cluster",
+    "loading": "Wird geladen...",
+    "refresh": "Erneut prüfen",
+    "empty": "Keine Hosts haben Kubernetes aktiviert.",
+    "counts": "{{ready}}/{{nodes}} Knoten bereit | {{running}}/{{pods}} Pods ausgeführt",
+    "failing_one": "{{count}} fehlgeschlagen",
+    "failing_other": "{{count}} fehlgeschlagen"
   }
 }

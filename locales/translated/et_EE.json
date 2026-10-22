@@ -457,5 +457,14 @@
     "docsLink": "Vaata dokumentatsiooni",
     "hostNotFound": "Hosti ei leitud",
     "loadingHost": "Hosti laadimine..."
+  },
+  "card": {
+    "title": "Kubernetes' klasterid",
+    "loading": "Laadimine...",
+    "refresh": "Kontrolli uuesti",
+    "empty": "Ühelgi perel ei ole Kubernetes'it sisse lülitatud.",
+    "counts": "{{ready}}/{{nodes}} sõlme valmis | {{running}}/{{pods}} podi töötab",
+    "failing_one": "{{count}} ebaõnnestunud",
+    "failing_other": "{{count}} ebaõnnestunud"
   }
 }

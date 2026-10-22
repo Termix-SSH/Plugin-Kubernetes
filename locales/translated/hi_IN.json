@@ -457,5 +457,14 @@
     "docsLink": "दस्तावेज़ देखें",
     "hostNotFound": "होस्ट नहीं मिला",
     "loadingHost": "होस्ट लोड हो रहा है..."
+  },
+  "card": {
+    "title": "Kubernetes क्लस्टर",
+    "loading": "लोड हो रहा है...",
+    "refresh": "फिर से जांचें",
+    "empty": "कोई होस्ट Kubernetes चालू नहीं कर रहा है।",
+    "counts": "{{ready}}/{{nodes}} नोड तैयार | {{running}}/{{pods}} पॉड चल रहे हैं",
+    "failing_one": "{{count}} विफल",
+    "failing_other": "{{count}} विफल"
   }
 }

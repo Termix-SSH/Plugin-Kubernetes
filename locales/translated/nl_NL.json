@@ -457,5 +457,14 @@
     "docsLink": "Documentatie bekijken",
     "hostNotFound": "Host niet gevonden",
     "loadingHost": "Host laden..."
+  },
+  "card": {
+    "title": "Kubernetes-clusters",
+    "loading": "Laden...",
+    "refresh": "Opnieuw controleren",
+    "empty": "Geen hosts hebben Kubernetes ingeschakeld.",
+    "counts": "{{ready}}/{{nodes}} nodes gereed | {{running}}/{{pods}} pods actief",
+    "failing_one": "{{count}} mislukt",
+    "failing_other": "{{count}} mislukt"
   }
 }

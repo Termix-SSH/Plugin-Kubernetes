@@ -139,6 +139,9 @@ export function registerServices(ctx: PluginContext, log: KubeLogger): void {
     if (!settings.enabled)
       throw new Error("Kubernetes is not enabled for this host");
     if (write && settings.readOnly) throw new Error("This host is read only");
+    if (write && !(await ctx.hosts.checkAccess(hostId, "edit")).hasAccess) {
+      throw new Error("You need edit access to this host");
+    }
     const target = targetOf(settings);
     return ctx.ssh.withConnection<string, Client>(
       host,

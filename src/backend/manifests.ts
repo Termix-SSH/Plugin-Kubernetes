@@ -191,7 +191,7 @@ export function registerManifests(
    *       403:
    *         description: The host is read only.
    */
-  router.post("/manifests/:sessionId/apply", handler("apply"));
+  router.post("/manifests/:sessionId/apply", kit.requireEdit, handler("apply"));
 
   /**
    * @openapi

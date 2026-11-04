@@ -8,6 +8,7 @@ import { registerMetrics } from "./metrics.js";
 import { registerHelm } from "./helm.js";
 import { registerManifests } from "./manifests.js";
 import { registerConsole } from "./console.js";
+import { registerOperations } from "./operations.js";
 import { registerServices } from "./services.js";
 import { registerSummary } from "./summary.js";
 
@@ -33,6 +34,7 @@ export async function activate(ctx: PluginContext) {
   registerSummary(router, ctx);
   registerConsole(ctx, log);
   registerServices(ctx, log);
+  registerOperations(ctx);
 
   ctx.log.info(
     "Kubernetes mounted at /plugin-api/kubernetes and /plugin-ws/kubernetes/console",

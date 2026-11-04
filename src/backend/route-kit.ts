@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import { targetOf } from "./host-settings.js";
 import { isContext, isNamespace, type KubeTarget } from "./kubectl.js";
@@ -90,6 +90,22 @@ export function createRouteKit({ ctx, sessions, log }: Deps) {
     return false;
   };
 
+  /** Route middleware: changing a cluster needs edit access to its host. */
+  const requireEdit = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    const session = sessionOf(req, res);
+    if (!session) return;
+    const access = await ctx.hosts.checkAccess(session.hostId, "edit");
+    if (!access.hasAccess) {
+      res.status(403).json({ error: "You need edit access to this host" });
+      return;
+    }
+    next();
+  };
+
   const audit = (
     req: Request,
     session: KubeSession,
@@ -130,6 +146,7 @@ export function createRouteKit({ ctx, sessions, log }: Deps) {
     targetFor,
     namespaceFor,
     writable,
+    requireEdit,
     audit,
     fail,
   };

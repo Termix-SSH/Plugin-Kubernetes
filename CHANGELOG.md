@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+
+- Pods and workloads can be listed, restarted, scaled and deleted from Automations, the CLI, the phone app and the command palette through Termix actions
+- Failing pods show as a status tile on the dashboard and host page
+
+### Changed
+
+- Changing a cluster now needs edit access to the host, not just connect
+- Needs Termix 26.11.1 or newer
+
 ## 1.0.1
 
 ### Added

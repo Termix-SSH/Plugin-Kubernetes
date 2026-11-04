@@ -466,5 +466,26 @@
     "counts": "{{ready}}/{{nodes}} nodes ready | {{running}}/{{pods}} pods running",
     "failing_one": "{{count}} failing",
     "failing_other": "{{count}} failing"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Failing pods"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "List pods",
+      "delete": "Delete pod",
+      "ready": "Ready",
+      "restarts": "Restarts"
+    },
+    "workloads": {
+      "title": "Workloads",
+      "list": "List workloads",
+      "restart": "Restart workload",
+      "scale": "Scale workload",
+      "replicas": "Replicas",
+      "kind": "Kind"
+    }
   }
 }

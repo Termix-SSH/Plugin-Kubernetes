@@ -341,6 +341,7 @@ export function registerHelm(
    */
   router.post(
     "/helm/:sessionId/:releaseNamespace/:release/rollback",
+    kit.requireEdit,
     async (req, res) => {
       const call = exec(req, res, true);
       if (!call) return;
@@ -402,6 +403,7 @@ export function registerHelm(
    */
   router.delete(
     "/helm/:sessionId/:releaseNamespace/:release",
+    kit.requireEdit,
     async (req, res) => {
       const call = exec(req, res, true);
       if (!call) return;

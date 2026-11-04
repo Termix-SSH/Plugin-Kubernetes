@@ -1,7 +1,7 @@
 {
   "id": "kubernetes",
   "name": "Kubernetes",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Manage Kubernetes clusters from your hosts over SSH, with logs, metrics, YAML and a shell.",
   "author": {
     "name": "Termix"
@@ -26,7 +26,7 @@
     "A dashboard card with ready nodes and failing pods on each cluster"
   ],
   "engine": {
-    "termix": ">=26.10.3",
+    "termix": ">=26.11.1-0",
     "api": "^1.9"
   },
   "capabilities": [
@@ -36,7 +36,8 @@
     "network:serve",
     "ui:surface",
     "events:core",
-    "users:impersonate"
+    "users:impersonate",
+    "operations:provide"
   ],
   "provides": [
     {
@@ -225,7 +226,186 @@
         "titleKey": "card.title",
         "icon": "ShipWheel"
       }
-    ]
+    ],
+    "operations": {
+      "actions": [
+        {
+          "id": "kubernetes.list-pods",
+          "titleKey": "operations.pods.list",
+          "scope": "host",
+          "risk": "read",
+          "permission": "use",
+          "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableKubernetes": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "kubernetes.list-workloads",
+          "titleKey": "operations.workloads.list",
+          "scope": "host",
+          "risk": "read",
+          "permission": "use",
+          "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableKubernetes": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "kubernetes.summary",
+          "titleKey": "operations.summary.title",
+          "scope": "host",
+          "risk": "read",
+          "permission": "use",
+          "hostAccess": "connect",
+          "when": {
+            "settings": {
+              "enableKubernetes": true
+            }
+          },
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        },
+        {
+          "id": "kubernetes.restart-workload",
+          "titleKey": "operations.workloads.restart",
+          "scope": "resource",
+          "resource": "kubernetes.workload",
+          "risk": "change",
+          "permission": "use",
+          "hostAccess": "edit",
+          "dryRun": "describe",
+          "when": {
+            "settings": {
+              "enableKubernetes": true
+            }
+          },
+          "icon": "RotateCw",
+          "surfaces": {
+            "assistant": true,
+            "mcp": true
+          }
+        },
+        {
+          "id": "kubernetes.scale-workload",
+          "titleKey": "operations.workloads.scale",
+          "scope": "resource",
+          "resource": "kubernetes.workload",
+          "risk": "change",
+          "permission": "use",
+          "hostAccess": "edit",
+          "dryRun": "describe",
+          "when": {
+            "settings": {
+              "enableKubernetes": true
+            }
+          },
+          "icon": "Scaling",
+          "idempotent": true,
+          "inputs": [
+            {
+              "key": "replicas",
+              "type": "number",
+              "labelKey": "operations.workloads.replicas",
+              "required": true,
+              "min": 0,
+              "max": 1000
+            }
+          ]
+        },
+        {
+          "id": "kubernetes.delete-pod",
+          "titleKey": "operations.pods.delete",
+          "scope": "resource",
+          "resource": "kubernetes.pod",
+          "risk": "destructive",
+          "permission": "use",
+          "hostAccess": "edit",
+          "dryRun": "describe",
+          "when": {
+            "settings": {
+              "enableKubernetes": true
+            }
+          },
+          "icon": "Trash2"
+        }
+      ],
+      "resources": [
+        {
+          "id": "kubernetes.pod",
+          "titleKey": "operations.pods.title",
+          "icon": "Box",
+          "list": "kubernetes.list-pods",
+          "key": "id",
+          "name": "name",
+          "status": "status",
+          "tab": "kubernetes",
+          "columns": [
+            {
+              "key": "namespace",
+              "titleKey": "operations.namespace"
+            },
+            {
+              "key": "ready",
+              "titleKey": "operations.pods.ready"
+            },
+            {
+              "key": "restarts",
+              "titleKey": "operations.pods.restarts"
+            }
+          ],
+          "filters": ["namespace", "status"]
+        },
+        {
+          "id": "kubernetes.workload",
+          "titleKey": "operations.workloads.title",
+          "icon": "Layers",
+          "list": "kubernetes.list-workloads",
+          "key": "id",
+          "name": "name",
+          "status": "status",
+          "tab": "kubernetes",
+          "columns": [
+            {
+              "key": "kind",
+              "titleKey": "operations.workloads.kind"
+            },
+            {
+              "key": "namespace",
+              "titleKey": "operations.namespace"
+            }
+          ],
+          "filters": ["kind", "namespace"]
+        }
+      ],
+      "signals": [
+        {
+          "id": "kubernetes.failing-pods",
+          "titleKey": "operations.summary.title",
+          "read": "kubernetes.summary",
+          "scope": "host",
+          "kind": "count",
+          "refreshSec": 60
+        }
+      ]
+    }
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]

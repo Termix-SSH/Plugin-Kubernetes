@@ -1256,29 +1256,39 @@ export function registerRoutes(router: Router, deps: Deps) {
    *       404:
    *         description: Not found.
    */
-  router.delete("/resources/:sessionId/:kind/:name", async (req, res) => {
-    const session = sessionOf(req, res);
-    if (!session) return;
-    if (!writable(session, res)) return;
-    const target = targetFor(req, res, session);
-    if (!target) return;
-    const object = objectOf(req, res);
-    if (!object) return;
-    const { kind, name, namespace, ns } = object;
-    const args = ["delete", KINDS[kind].resource, name, ...ns, "--wait=false"];
-    if (kind === "pods" && req.query.force === "true") {
-      args.push("--grace-period=0", "--force");
-    }
-    const details = { kind, name, namespace, context: target.context };
-    try {
-      const output = await run(session, target, args);
-      audit(req, session, "delete", details);
-      res.json({ success: true, output: output.trim() });
-    } catch (error) {
-      audit(req, session, "delete", details, error);
-      fail(res, session, error, `delete ${kind}`);
-    }
-  });
+  router.delete(
+    "/resources/:sessionId/:kind/:name",
+    kit.requireEdit,
+    async (req, res) => {
+      const session = sessionOf(req, res);
+      if (!session) return;
+      if (!writable(session, res)) return;
+      const target = targetFor(req, res, session);
+      if (!target) return;
+      const object = objectOf(req, res);
+      if (!object) return;
+      const { kind, name, namespace, ns } = object;
+      const args = [
+        "delete",
+        KINDS[kind].resource,
+        name,
+        ...ns,
+        "--wait=false",
+      ];
+      if (kind === "pods" && req.query.force === "true") {
+        args.push("--grace-period=0", "--force");
+      }
+      const details = { kind, name, namespace, context: target.context };
+      try {
+        const output = await run(session, target, args);
+        audit(req, session, "delete", details);
+        res.json({ success: true, output: output.trim() });
+      } catch (error) {
+        audit(req, session, "delete", details, error);
+        fail(res, session, error, `delete ${kind}`);
+      }
+    },
+  );
 
   /**
    * @openapi
@@ -1337,36 +1347,46 @@ export function registerRoutes(router: Router, deps: Deps) {
    *       403:
    *         description: The host is read only, or the cluster refused.
    */
-  router.post("/resources/:sessionId/:kind/:name/action", async (req, res) => {
-    const session = sessionOf(req, res);
-    if (!session) return;
-    if (!writable(session, res)) return;
-    const target = targetFor(req, res, session);
-    if (!target) return;
-    const object = objectOf(req, res);
-    if (!object) return;
-    const { kind, name, namespace } = object;
-    const body = (req.body ?? {}) as Record<string, unknown>;
-    const action = body.action as ResourceAction;
-    if (!ACTIONS.includes(action)) {
-      return res.status(400).json({ error: "Unknown action" });
-    }
-    const args = actionArgs(kind, name, namespace, action, body);
-    if (typeof args === "string") {
-      return res.status(400).json({ error: args });
-    }
-    const details = { kind, name, namespace, action, context: target.context };
-    try {
-      const output = await run(session, target, args, {
-        timeoutMs: action === "drain" ? 180_000 : undefined,
-      });
-      audit(req, session, action, details);
-      res.json({ success: true, output: output.trim() });
-    } catch (error) {
-      audit(req, session, action, details, error);
-      fail(res, session, error, `${action} ${kind}`);
-    }
-  });
+  router.post(
+    "/resources/:sessionId/:kind/:name/action",
+    kit.requireEdit,
+    async (req, res) => {
+      const session = sessionOf(req, res);
+      if (!session) return;
+      if (!writable(session, res)) return;
+      const target = targetFor(req, res, session);
+      if (!target) return;
+      const object = objectOf(req, res);
+      if (!object) return;
+      const { kind, name, namespace } = object;
+      const body = (req.body ?? {}) as Record<string, unknown>;
+      const action = body.action as ResourceAction;
+      if (!ACTIONS.includes(action)) {
+        return res.status(400).json({ error: "Unknown action" });
+      }
+      const args = actionArgs(kind, name, namespace, action, body);
+      if (typeof args === "string") {
+        return res.status(400).json({ error: args });
+      }
+      const details = {
+        kind,
+        name,
+        namespace,
+        action,
+        context: target.context,
+      };
+      try {
+        const output = await run(session, target, args, {
+          timeoutMs: action === "drain" ? 180_000 : undefined,
+        });
+        audit(req, session, action, details);
+        res.json({ success: true, output: output.trim() });
+      } catch (error) {
+        audit(req, session, action, details, error);
+        fail(res, session, error, `${action} ${kind}`);
+      }
+    },
+  );
 
   return kit;
 }

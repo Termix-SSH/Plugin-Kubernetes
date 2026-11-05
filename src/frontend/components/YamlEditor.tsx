@@ -119,8 +119,8 @@ export function YamlEditor({
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
         {dirty && (
           <span className="text-xs text-warning">{t("yaml.unsaved")}</span>
         )}
@@ -172,10 +172,10 @@ export function YamlEditor({
         onKeyDown={onKeyDown}
         spellCheck={false}
         aria-label={t("yaml.editor")}
-        className="min-h-48 flex-1 resize-none border border-border bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        className="min-h-48 flex-1 resize-none bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
       />
       {result && (
-        <div className="max-h-56 overflow-auto border border-border bg-card p-3 font-mono text-xs">
+        <div className="max-h-56 overflow-auto border-t border-border p-3 font-mono text-xs">
           {result.kind === "error" && (
             <pre className="whitespace-pre-wrap text-destructive">
               {result.message}

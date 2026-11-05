@@ -8,6 +8,7 @@ import {
   copyToClipboard,
   useAdaptivePolling,
   useConfirm,
+  LoadingState,
 } from "@termix-ssh/plugin-sdk/ui";
 import { useCluster } from "../cluster-context";
 import { getErrorMessage } from "../error-message";
@@ -173,12 +174,9 @@ export function HistoryTab({
   }
   const newest = rows[0]?.revision;
   return (
-    <div className="flex flex-col border border-border bg-card text-xs">
+    <div className="flex flex-col text-xs">
       {rows.map((row) => (
-        <div
-          key={row.revision}
-          className="border-b border-border/50 last:border-0"
-        >
+        <div key={row.revision} className="border-b border-border/50">
           <div className="flex items-center gap-3 px-3 py-2">
             <button
               type="button"
@@ -262,9 +260,9 @@ export function DataTab({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col">
       {isSecret && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 border-b border-border px-3 py-2">
           <p className="text-xs text-muted-foreground">
             {validation.canRevealSecrets
               ? t("data.secretHint")
@@ -284,13 +282,13 @@ export function DataTab({
           )}
         </div>
       )}
-      <div className="flex flex-col border border-border bg-card text-xs">
+      <div className="flex flex-col text-xs">
         {allKeys.map((key) => {
           const value = values?.[key];
           return (
             <div
               key={key}
-              className="flex flex-col gap-1 border-b border-border/50 px-3 py-2 last:border-0"
+              className="flex flex-col gap-1 border-b border-border/50 px-3 py-2"
             >
               <div className="flex items-center gap-2">
                 <span className="font-medium">{key}</span>
@@ -320,9 +318,5 @@ export function DataTab({
 
 export function Loading() {
   const { t } = useTranslation();
-  return (
-    <p className="py-6 text-center text-xs text-muted-foreground">
-      {t("detail.loading")}
-    </p>
-  );
+  return <LoadingState compact label={t("detail.loading")} />;
 }

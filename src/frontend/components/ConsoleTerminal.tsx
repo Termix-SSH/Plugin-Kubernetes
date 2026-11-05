@@ -533,8 +533,8 @@ function ConsoleTerminalInner({
   };
 
   return (
-    <div className="flex flex-col h-full gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-col h-full">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
         <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
           <span
             className={cn(
@@ -627,7 +627,7 @@ function ConsoleTerminalInner({
       </div>
 
       <div
-        className="relative flex-1 min-h-0 overflow-hidden border border-border pt-1"
+        className="relative flex-1 min-h-0 overflow-hidden pt-1"
         style={{ background: themeColors.background }}
       >
         <div

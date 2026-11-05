@@ -11,6 +11,7 @@
 
 - Changing a cluster now needs edit access to the host, not just connect
 - Needs Termix 26.11.1 or newer
+- Resources, Helm, details and pod metrics use the Termix tile look, with lines between sections instead of separate boxes
 
 ## 1.0.1
 

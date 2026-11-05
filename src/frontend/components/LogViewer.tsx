@@ -206,8 +206,8 @@ export function LogViewer({
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
         <PanelSearch
           value={logSearch}
           onChange={setLogSearch}
@@ -323,7 +323,7 @@ export function LogViewer({
         </div>
       </div>
 
-      <div className="flex-1 bg-background border border-border p-3 overflow-auto font-mono text-xs leading-relaxed scrollbar-thin min-h-0">
+      <div className="flex-1 bg-background p-3 overflow-auto font-mono text-xs leading-relaxed thin-scrollbar min-h-0">
         {filteredLogs.length > 0 ? (
           filteredLogs.map((line, i) => {
             const tsEnd = line.indexOf(" ", 1);

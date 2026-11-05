@@ -99,7 +99,8 @@
     "loading": "Loading...",
     "empty": "No {{kind}} here",
     "noMatches": "Nothing matches your filters",
-    "readOnly": "Read only"
+    "readOnly": "Read only",
+    "error": "Could not load this list"
   },
   "sections": {
     "workloads": "Workloads",

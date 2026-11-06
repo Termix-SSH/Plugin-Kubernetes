@@ -4,6 +4,8 @@
 
 ### Added
 
+- Cluster health tile on the host page and a Kubernetes entry in the host command palette
+- Optional alerts for nodes that are not ready and failing pods, set per host
 - Pods and workloads can be listed, restarted, scaled and deleted from Automations, the CLI, the phone app and the command palette through Termix actions
 - Failing pods show as a status tile on the dashboard and host page
 

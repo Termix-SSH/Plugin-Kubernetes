@@ -50,6 +50,10 @@
         "label": "Run with sudo",
         "description": "Run kubectl with sudo -n, for k3s and MicroK8s setups where only root can read the cluster config. The SSH user needs passwordless sudo."
       },
+      "alertProblems": {
+        "label": "Alert on cluster problems",
+        "description": "Send an alert when a node is not ready or a pod is failing."
+      },
       "readOnly": {
         "label": "Read only",
         "description": "Only look. Blocks scaling, restarts, deletes, YAML changes, Helm changes and pod shells for everyone on this host."
@@ -458,6 +462,13 @@
     "docsLink": "View docs",
     "hostNotFound": "Host not found",
     "loadingHost": "Loading host..."
+  },
+  "tile": {
+    "title": "Cluster",
+    "empty": "The cluster is not reachable from this host.",
+    "nodes": "Nodes ready",
+    "pods": "Pods running",
+    "failing": "Pods failing"
   },
   "card": {
     "title": "Kubernetes clusters",

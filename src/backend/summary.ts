@@ -77,6 +77,60 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
+/** Nodes and pods of one cluster, as the acting user over the pooled connection. */
+export async function readCluster(
+  ctx: PluginContext,
+  hostId: number,
+): Promise<{ nodes: ResourceSummary[]; pods: ResourceSummary[] }> {
+  const target = targetOf(await readKubeHostSettings(ctx, hostId));
+  const [nodes, pods] = await withTimeout(
+    ctx.ssh.withConnection<[string, string], Client>(
+      hostId,
+      { pool: POOL, purpose: "kubernetes", profile: "session" },
+      async (client) => [
+        await execOnClient(
+          client,
+          kubectl(target, ["get", "nodes", "-o", "json"]),
+        ),
+        await execOnClient(
+          client,
+          kubectl(target, ["get", "pods", "-A", "-o", "json"]),
+        ),
+      ],
+    ),
+    TIMEOUT_MS,
+  );
+  return {
+    nodes: parseResourceList("nodes", nodes),
+    pods: parseResourceList("pods", pods),
+  };
+}
+
+/** Nodes that are not Ready and pods in an error state. */
+export function clusterProblems(
+  nodes: ResourceSummary[],
+  pods: ResourceSummary[],
+) {
+  return [
+    ...nodes
+      .filter((node) => !node.status.startsWith("Ready"))
+      .map((node) => ({
+        key: `node:${node.name}`,
+        title: `Node ${node.name} is ${node.status}`,
+        body: `node ${node.name} is ${node.status}`,
+        severity: "critical" as const,
+      })),
+    ...pods
+      .filter((pod) => pod.tone === "error")
+      .map((pod) => ({
+        key: `pod:${pod.namespace ?? ""}/${pod.name}:${pod.status}`,
+        title: `Pod ${pod.name} is ${pod.status}`,
+        body: `pod ${pod.namespace ?? ""}/${pod.name} is ${pod.status}`,
+        severity: "warning" as const,
+      })),
+  ];
+}
+
 /**
  * GET /summary: node and pod health for every host the caller can reach with
  * Kubernetes on. Read only, run as the caller over the pooled connection, a
@@ -88,32 +142,8 @@ export function registerSummary(router: Router, ctx: PluginContext): void {
   const check = async (hostId: number): Promise<ClusterSummary> => {
     const checkedAt = new Date().toISOString();
     try {
-      const target = targetOf(await readKubeHostSettings(ctx, hostId));
-      const [nodes, pods] = await withTimeout(
-        ctx.ssh.withConnection<[string, string], Client>(
-          hostId,
-          { pool: POOL, purpose: "kubernetes", profile: "session" },
-          async (client) => [
-            await execOnClient(
-              client,
-              kubectl(target, ["get", "nodes", "-o", "json"]),
-            ),
-            await execOnClient(
-              client,
-              kubectl(target, ["get", "pods", "-A", "-o", "json"]),
-            ),
-          ],
-        ),
-        TIMEOUT_MS,
-      );
-      return {
-        hostId,
-        checkedAt,
-        ...summarizeCluster(
-          parseResourceList("nodes", nodes),
-          parseResourceList("pods", pods),
-        ),
-      };
+      const { nodes, pods } = await readCluster(ctx, hostId);
+      return { hostId, checkedAt, ...summarizeCluster(nodes, pods) };
     } catch (error) {
       return {
         hostId,
@@ -138,6 +168,10 @@ export function registerSummary(router: Router, ctx: PluginContext): void {
    *       - Kubernetes
    *     parameters:
    *       - in: query
+   *         name: hostId
+   *         schema:
+   *           type: integer
+   *       - in: query
    *         name: refresh
    *         schema:
    *           type: string
@@ -149,8 +183,10 @@ export function registerSummary(router: Router, ctx: PluginContext): void {
     try {
       const user = String(ctx.currentActor() ?? "");
       const refresh = req.query.refresh === "1";
+      const only = Number(req.query.hostId);
       const enabled: number[] = [];
       for (const host of await ctx.hosts.list()) {
+        if (Number.isInteger(only) && only > 0 && host.id !== only) continue;
         if ((await readKubeHostSettings(ctx, host.id)).enabled) {
           enabled.push(host.id);
         }

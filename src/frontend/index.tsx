@@ -1,5 +1,6 @@
 // The pod shell needs xterm's own stylesheet.
 import "@xterm/xterm/css/xterm.css";
+import type { ComponentType } from "react";
 import { ShipWheel } from "lucide-react";
 import type {
   StandaloneViewProps,
@@ -10,6 +11,7 @@ import { KubernetesManager } from "./KubernetesManager";
 import KubernetesApp from "./KubernetesApp";
 import { kubernetesWidget } from "./KubernetesWidget";
 import { ClustersCard } from "./ClustersCard";
+import { ClusterHostTile } from "./ClusterHostTile";
 import {
   KubernetesCompanion,
   useKubernetesCompanionDefaults,
@@ -98,6 +100,30 @@ export function activate(app: TermixApp): void {
     tabType: "kubernetes",
     copyUrlView: "kubernetes",
     when: (host) => canUse && !!host.enableSsh && kubernetesEnabled(host),
+  });
+
+  app.registerPaletteEntry({
+    id: "kubernetes.open",
+    titleKey: "nav.kubernetes",
+    icon: ShipWheel,
+    keywords: ["k8s", "kubectl", "pods", "helm", "cluster"],
+    scope: "host",
+    when: (host) => canUse && !!host?.enableSsh && kubernetesEnabled(host),
+    run: (shell, host) => {
+      if (host) shell.openTab(host, "kubernetes");
+    },
+  });
+
+  app.registerSlotContribution("host-page.tiles", {
+    actionId: "kubernetes.hostTile",
+    titleKey: "tile.title",
+    icon: ShipWheel,
+    kind: "component",
+    component: ClusterHostTile as unknown as ComponentType<
+      Record<string, unknown>
+    >,
+    when: (context?: { host?: unknown }) =>
+      canUse && (!context?.host || kubernetesEnabled(context.host as object)),
   });
 
   app.registerExtension("homepage.widgets", kubernetesWidget);

@@ -10,7 +10,8 @@ import { registerManifests } from "./manifests.js";
 import { registerConsole } from "./console.js";
 import { registerOperations } from "./operations.js";
 import { registerServices } from "./services.js";
-import { registerSummary } from "./summary.js";
+import { clusterProblems, readCluster, registerSummary } from "./summary.js";
+import { startHostAlerts } from "./host-alerts.js";
 
 export type {
   KubeEventsV1,
@@ -35,6 +36,16 @@ export async function activate(ctx: PluginContext) {
   registerConsole(ctx, log);
   registerServices(ctx, log);
   registerOperations(ctx);
+  startHostAlerts({
+    ctx,
+    setting: "alertProblems",
+    category: "kubernetes.cluster_problem",
+    tab: "kubernetes",
+    probe: async (hostId) => {
+      const { nodes, pods } = await readCluster(ctx, hostId);
+      return clusterProblems(nodes, pods);
+    },
+  });
 
   ctx.log.info(
     "Kubernetes mounted at /plugin-api/kubernetes and /plugin-ws/kubernetes/console",

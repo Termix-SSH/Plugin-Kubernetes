@@ -36,6 +36,8 @@
     "network:serve",
     "ui:surface",
     "events:core",
+    "kv:own",
+    "notify:send",
     "users:impersonate",
     "operations:provide"
   ],
@@ -140,6 +142,14 @@
             "type": "boolean",
             "labelKey": "settings.host.useSudo.label",
             "descriptionKey": "settings.host.useSudo.description",
+            "default": false,
+            "requires": "enableKubernetes"
+          },
+          {
+            "key": "alertProblems",
+            "type": "boolean",
+            "labelKey": "settings.host.alertProblems.label",
+            "descriptionKey": "settings.host.alertProblems.description",
             "default": false,
             "requires": "enableKubernetes"
           },

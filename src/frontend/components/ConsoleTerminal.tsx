@@ -13,6 +13,7 @@ import {
   resolveConnectionOrigin,
   useAppTheme as useTheme,
   useConnectionLog,
+  ToolbarBand,
 } from "@termix-ssh/plugin-sdk/ui";
 import type { KubeHost, ResourceSummary } from "../types";
 import { useConsoleLook, type ConsoleLook } from "./console-look";
@@ -534,7 +535,7 @@ function ConsoleTerminalInner({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
+      <ToolbarBand>
         <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
           <span
             className={cn(
@@ -624,7 +625,7 @@ function ConsoleTerminalInner({
             </Button>
           )}
         </div>
-      </div>
+      </ToolbarBand>
 
       <div
         className="relative flex-1 min-h-0 overflow-hidden pt-1"

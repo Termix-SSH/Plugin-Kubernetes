@@ -2,7 +2,7 @@ import React from "react";
 import { CheckCircle2, FileDiff, RotateCcw, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { Button, cn } from "@termix-ssh/plugin-sdk/ui";
+import { Button, cn, ToolbarBand } from "@termix-ssh/plugin-sdk/ui";
 import { useCluster } from "../cluster-context";
 import { getErrorMessage } from "../error-message";
 import { useKubernetesApi } from "../kubernetes-api";
@@ -120,7 +120,7 @@ export function YamlEditor({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
+      <ToolbarBand>
         {dirty && (
           <span className="text-xs text-warning">{t("yaml.unsaved")}</span>
         )}
@@ -165,7 +165,7 @@ export function YamlEditor({
             </Button>
           )}
         </div>
-      </div>
+      </ToolbarBand>
       <textarea
         value={text}
         onChange={(event) => setText(event.target.value)}

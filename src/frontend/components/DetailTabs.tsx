@@ -9,6 +9,7 @@ import {
   useAdaptivePolling,
   useConfirm,
   LoadingState,
+  ToolbarBand,
 } from "@termix-ssh/plugin-sdk/ui";
 import { useCluster } from "../cluster-context";
 import { getErrorMessage } from "../error-message";
@@ -262,7 +263,7 @@ export function DataTab({
   return (
     <div className="flex flex-col">
       {isSecret && (
-        <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+        <ToolbarBand>
           <p className="text-xs text-muted-foreground">
             {validation.canRevealSecrets
               ? t("data.secretHint")
@@ -280,7 +281,7 @@ export function DataTab({
               {revealed ? t("data.hide") : t("data.reveal")}
             </Button>
           )}
-        </div>
+        </ToolbarBand>
       )}
       <div className="flex flex-col text-xs">
         {allKeys.map((key) => {

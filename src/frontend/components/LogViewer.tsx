@@ -6,6 +6,7 @@ import {
   copyToClipboard,
   useAdaptivePolling,
   PanelSearch,
+  ToolbarBand,
 } from "@termix-ssh/plugin-sdk/ui";
 import type { LogQuery, ResourceRef } from "../types";
 import React from "react";
@@ -207,7 +208,7 @@ export function LogViewer({
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
+      <ToolbarBand>
         <PanelSearch
           value={logSearch}
           onChange={setLogSearch}
@@ -321,7 +322,7 @@ export function LogViewer({
             </Button>
           </div>
         </div>
-      </div>
+      </ToolbarBand>
 
       <div className="flex-1 bg-background p-3 overflow-auto font-mono text-xs leading-relaxed thin-scrollbar min-h-0">
         {filteredLogs.length > 0 ? (

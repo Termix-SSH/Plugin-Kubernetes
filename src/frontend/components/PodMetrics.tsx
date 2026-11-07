@@ -202,7 +202,7 @@ export function PodMetrics({ pod }: { pod: ResourceSummary }) {
   const limitsByName = new Map((pod.resources ?? []).map((r) => [r.name, r]));
 
   return (
-    <div className="min-h-0 overflow-auto thin-scrollbar">
+    <div className="min-h-0 flex-1 overflow-auto thin-scrollbar">
       <TileStack>
         <TileWall gridClassName="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <UsageCard

@@ -36,6 +36,9 @@ Read the [docs](https://docs.termix.site/plugins/kubernetes) to set it up and us
 - Helm releases with history, values, rollback and uninstall
 - Works with kubectl, k3s, MicroK8s and OpenShift
 - A pods panel beside any SSH terminal
+- List, restart, scale and delete pods and workloads through Termix actions
+- Failing pods and cluster health as status tiles
+- Optional alerts for nodes that are not ready and failing pods
 
 <br />
 

@@ -50,6 +50,10 @@
         "label": "Käivita sudo-ga",
         "description": "Käivita kubectl käsk sudo -n abil, mis sobib k3s ja MicroK8s seadistustele, kus ainult root kasutaja saab klatri konfiguratsiooni lugeda. SSH-kasutajal peab olema paroolita sudo õigus."
       },
+      "alertProblems": {
+        "label": "Teavita klustri probleemidest",
+        "description": "Saada teavitus, kui sõlm ei ole valmis või kui pod ebaõnnestub."
+      },
       "readOnly": {
         "label": "Ainult lugemiseks",
         "description": "Ainult vaatamine. Blokeerib kõigi selle hosti kasutajate jaoks skaaleerimise, taaskäivitused, kustutamised, YAML-i muudatused, Helm-i muudatused ja podide shellid."
@@ -99,7 +103,8 @@
     "loading": "Laadimine...",
     "empty": "Siin pole ühtegi {{kind}}",
     "noMatches": "Ükski ei vasta sinu filtritele",
-    "readOnly": "Ainult lugemiseks"
+    "readOnly": "Ainult lugemiseks",
+    "error": "Selle nimekirja laadimine ei õnnestunud"
   },
   "sections": {
     "workloads": "Koormused",
@@ -458,6 +463,13 @@
     "hostNotFound": "Hosti ei leitud",
     "loadingHost": "Hosti laadimine..."
   },
+  "tile": {
+    "title": "Kluster",
+    "empty": "Kluster ei ole selle hostist saadaval.",
+    "nodes": "Sõlmed valmis",
+    "pods": "Podid käimas",
+    "failing": "Podid ebaõnnestunud"
+  },
   "card": {
     "title": "Kubernetes' klasterid",
     "loading": "Laadimine...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} sõlme valmis | {{running}}/{{pods}} podi töötab",
     "failing_one": "{{count}} ebaõnnestunud",
     "failing_other": "{{count}} ebaõnnestunud"
+  },
+  "operations": {
+    "namespace": "Nimeruum",
+    "summary": {
+      "title": "Ebaõnnestunud podid"
+    },
+    "pods": {
+      "title": "Podid",
+      "list": "Loetle podid",
+      "delete": "Kustuta pod",
+      "ready": "Valmis",
+      "restarts": "Taaskäivitused"
+    },
+    "workloads": {
+      "title": "Töökoormused",
+      "list": "Loetle töökoormused",
+      "restart": "Taaskäivita töökoormus",
+      "scale": "Muuda töökoormuse skaalat",
+      "replicas": "Replikad",
+      "kind": "Liik"
+    }
   }
 }

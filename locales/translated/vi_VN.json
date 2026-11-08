@@ -50,6 +50,10 @@
         "label": "Chạy với sudo",
         "description": "Chạy kubectl với sudo -n, dành cho các cài đặt k3s và MicroK8s nơi chỉ root mới có thể đọc cấu hình cụm. Người dùng SSH cần có quyền sudo không mật khẩu."
       },
+      "alertProblems": {
+        "label": "Cảnh báo khi cụm gặp sự cố",
+        "description": "Gửi cảnh báo khi một nút chưa sẵn sàng hoặc một pod bị lỗi."
+      },
       "readOnly": {
         "label": "Chỉ đọc",
         "description": "Chỉ xem. Chặn việc mở rộng quy mô, khởi động lại, xóa, thay đổi YAML, thay đổi Helm và shell pod cho mọi người trên máy chủ này."
@@ -99,7 +103,8 @@
     "loading": "Đang tải...",
     "empty": "Không có {{kind}} ở đây",
     "noMatches": "Không có kết quả phù hợp với bộ lọc của bạn",
-    "readOnly": "Chỉ đọc"
+    "readOnly": "Chỉ đọc",
+    "error": "Không thể tải danh sách này"
   },
   "sections": {
     "workloads": "Tải trọng",
@@ -458,6 +463,13 @@
     "hostNotFound": "Không tìm thấy máy chủ",
     "loadingHost": "Đang tải máy chủ..."
   },
+  "tile": {
+    "title": "Cụm",
+    "empty": "Không thể kết nối đến cụm từ máy chủ này.",
+    "nodes": "Nút sẵn sàng",
+    "pods": "Pod đang chạy",
+    "failing": "Pod bị lỗi"
+  },
   "card": {
     "title": "Các cụm Kubernetes",
     "loading": "Đang tải...",
@@ -465,5 +477,26 @@
     "empty": "Không có host nào bật Kubernetes.",
     "counts": "{{ready}}/{{nodes}} nút sẵn sàng | {{running}}/{{pods}} pod đang chạy",
     "failing_other": "{{count}} lỗi"
+  },
+  "operations": {
+    "namespace": "Không gian tên",
+    "summary": {
+      "title": "Pod bị lỗi"
+    },
+    "pods": {
+      "title": "Pod",
+      "list": "Liệt kê pod",
+      "delete": "Xóa pod",
+      "ready": "Sẵn sàng",
+      "restarts": "Khởi động lại"
+    },
+    "workloads": {
+      "title": "Tải trọng",
+      "list": "Liệt kê tải trọng",
+      "restart": "Khởi động lại tải trọng",
+      "scale": "Mở rộng tải trọng",
+      "replicas": "Bản sao",
+      "kind": "Loại"
+    }
   }
 }

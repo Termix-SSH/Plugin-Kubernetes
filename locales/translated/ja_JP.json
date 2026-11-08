@@ -50,6 +50,10 @@
         "label": "sudo で実行",
         "description": "k3s や MicroK8s のように、ルートユーザーのみがクラスター設定を読み取れる環境向けに、kubectl を sudo -n で実行します。SSH ユーザーはパスワードなしで sudo 実行できる必要があります。"
       },
+      "alertProblems": {
+        "label": "クラスターの問題時にアラート",
+        "description": "ノードが準備完了でない場合、またはポッドが失敗している場合にアラートを送信します。"
+      },
       "readOnly": {
         "label": "読み取り専用",
         "description": "閲覧のみ許可します。このホスト上のすべてのユーザーに対して、スケーリング、再起動、削除、YAML の変更、Helm の変更、ポッドシェルをブロックします。"
@@ -99,7 +103,8 @@
     "loading": "読み込み中...",
     "empty": "{{kind}}がありません",
     "noMatches": "フィルターに一致するものはありません",
-    "readOnly": "読み取り専用"
+    "readOnly": "読み取り専用",
+    "error": "このリストを読み込めませんでした"
   },
   "sections": {
     "workloads": "ワークロード",
@@ -458,6 +463,13 @@
     "hostNotFound": "ホストが見つかりません",
     "loadingHost": "ホストを読み込んでいます..."
   },
+  "tile": {
+    "title": "クラスター",
+    "empty": "このホストからクラスターに到達できません。",
+    "nodes": "準備完了のノード",
+    "pods": "実行中のポッド",
+    "failing": "失敗したポッド"
+  },
   "card": {
     "title": "Kubernetes クラスター",
     "loading": "読み込み中...",
@@ -465,5 +477,26 @@
     "empty": "Kubernetes が有効になっているホストがありません。",
     "counts": "{{ready}}/{{nodes}} ノードが準備完了 | {{running}}/{{pods}} ポッドが実行中",
     "failing_other": "{{count}} 件失敗"
+  },
+  "operations": {
+    "namespace": "名前空間",
+    "summary": {
+      "title": "失敗したポッド"
+    },
+    "pods": {
+      "title": "ポッド",
+      "list": "ポッドの一覧",
+      "delete": "ポッドの削除",
+      "ready": "準備完了",
+      "restarts": "再起動"
+    },
+    "workloads": {
+      "title": "ワークロード",
+      "list": "ワークロードの一覧",
+      "restart": "ワークロードの再起動",
+      "scale": "ワークロードのスケール",
+      "replicas": "レプリカ",
+      "kind": "種類"
+    }
   }
 }

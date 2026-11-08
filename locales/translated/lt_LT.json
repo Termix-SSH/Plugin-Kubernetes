@@ -50,6 +50,10 @@
         "label": "Vykdyti su sudo",
         "description": "Vykdyti kubectl su sudo -n, skirta k3s ir MicroK8s konfigūracijoms, kuriose klasterio konfigūraciją gali skaityti tik root vartotojas. SSH vartotojui turi būti įgalintas slaptažodžio nereikalaujantis sudo."
       },
+      "alertProblems": {
+        "label": "Pranešti apie klasterio problemas",
+        "description": "Siųsti pranešimą, kai mazgas nėra paruoštas arba „pod“ nepavyksta."
+      },
       "readOnly": {
         "label": "Tik skaitymui",
         "description": "Tik peržiūra. Blokuoja mastelio keitimą, paleidimus iš naujo, šalinimą, YAML pakeitimus, Helm pakeitimus ir podų shell prieigą visiems šio hosto vartotojams."
@@ -99,7 +103,8 @@
     "loading": "Įkeliamas...",
     "empty": "Čia nėra {{kind}}",
     "noMatches": "Nieko neatitinka jūsų filtrų",
-    "readOnly": "Tik skaitymui"
+    "readOnly": "Tik skaitymui",
+    "error": "Nepavyko įkelti šio sąrašo"
   },
   "sections": {
     "workloads": "Darbo krovos",
@@ -458,6 +463,13 @@
     "hostNotFound": "Hostas nerastas",
     "loadingHost": "Įkeliamas hostas..."
   },
+  "tile": {
+    "title": "Klasteris",
+    "empty": "Šis klasteris nepasiekiamas iš šio kompiuterio.",
+    "nodes": "Paruošti mazgai",
+    "pods": "Veikiantys „pod“",
+    "failing": "Nepavykę „pod“"
+  },
   "card": {
     "title": "Kubernetes klasteriai",
     "loading": "Įkeliama...",
@@ -468,5 +480,26 @@
     "failing_few": "{{count}} nevykstantys",
     "failing_many": "{{count}} nevykstančių",
     "failing_other": "{{count}} nevykstančių"
+  },
+  "operations": {
+    "namespace": "Vardų erdvė",
+    "summary": {
+      "title": "Nepavykę „pod“"
+    },
+    "pods": {
+      "title": "„Pod“",
+      "list": "Rodyti „pod“ sąrašą",
+      "delete": "Ištrinti „pod“",
+      "ready": "Paruošta",
+      "restarts": "Paleidimai iš naujo"
+    },
+    "workloads": {
+      "title": "Darbo apkrovos",
+      "list": "Rodyti darbo apkrovų sąrašą",
+      "restart": "Paleisti darbo apkrovą iš naujo",
+      "scale": "Keisti darbo apkrovos mastą",
+      "replicas": "Kopijos",
+      "kind": "Rūšis"
+    }
   }
 }

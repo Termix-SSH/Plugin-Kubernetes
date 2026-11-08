@@ -50,6 +50,10 @@
         "label": "sudo ile çalıştır",
         "description": "Sadece kök kullanıcının küme yapılandırmasını okuyabildiği k3s ve MicroK8s yapılandırmaları için kubectl'ı sudo -n ile çalıştırın. SSH kullanıcısının şifresiz sudo'ya ihtiyacı vardır."
       },
+      "alertProblems": {
+        "label": "Küme sorunlarında uyarı ver",
+        "description": "Bir düğüm hazır değilse veya bir pod başarısız olursa uyarı gönder."
+      },
       "readOnly": {
         "label": "Salt okunur",
         "description": "Sadece bakın. Bu ana bilgisayardaki herkes için ölçeklendirmeyi, yeniden başlatmaları, silmeleri, YAML değişikliklerini, Helm değişikliklerini ve pod kabuklarını engeller."
@@ -99,7 +103,8 @@
     "loading": "Yükleniyor...",
     "empty": "Burada {{kind}} yok",
     "noMatches": "Filtrelerinize uyan hiçbir şey yok",
-    "readOnly": "Salt okunur"
+    "readOnly": "Salt okunur",
+    "error": "Bu liste yüklenemedi"
   },
   "sections": {
     "workloads": "İş Yükleri",
@@ -458,6 +463,13 @@
     "hostNotFound": "Ana bilgisayar bulunamadı",
     "loadingHost": "Ana bilgisayar yükleniyor..."
   },
+  "tile": {
+    "title": "Küme",
+    "empty": "Küme bu ana bilgisayardan erişilemiyor.",
+    "nodes": "Hazır düğümler",
+    "pods": "Çalışan podlar",
+    "failing": "Başarısız podlar"
+  },
   "card": {
     "title": "Kubernetes kümeleri",
     "loading": "Yükleniyor...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} düğüm hazır | {{running}}/{{pods}} pod çalışıyor",
     "failing_one": "{{count}} başarısız",
     "failing_other": "{{count}} başarısız"
+  },
+  "operations": {
+    "namespace": "Ad Alanı",
+    "summary": {
+      "title": "Başarısız podlar"
+    },
+    "pods": {
+      "title": "Podlar",
+      "list": "Podları listele",
+      "delete": "Podu sil",
+      "ready": "Hazır",
+      "restarts": "Yeniden başlatmalar"
+    },
+    "workloads": {
+      "title": "İş Yükleri",
+      "list": "İş yüklerini listele",
+      "restart": "İş yükünü yeniden başlat",
+      "scale": "İş yükünü ölçekle",
+      "replicas": "Kopyalar",
+      "kind": "Tür"
+    }
   }
 }

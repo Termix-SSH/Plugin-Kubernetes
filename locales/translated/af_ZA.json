@@ -50,6 +50,10 @@
         "label": "Voer uit met sudo",
         "description": "Voer kubectl uit met sudo -n, vir k3s- en MicroK8s-opstellings waar slegs root die klusterkonfigurasie kan lees. Die SSH-gebruiker moet wagwoordlose sudo hê."
       },
+      "alertProblems": {
+        "label": "Waarskuif oor klusterprobleme",
+        "description": "Stuur 'n waarskuwing wanneer 'n knoop nie gereed is nie of 'n pod misluk."
+      },
       "readOnly": {
         "label": "Slegs lees",
         "description": "Slegs kyk. Blokkeer skaalvergroting, herbeginne, verwyderings, YAML-veranderings, Helm-veranderings en pod-skille vir almal op hierdie gasheer."
@@ -99,7 +103,8 @@
     "loading": "Laai tans...",
     "empty": "Geen {{kind}} hier nie",
     "noMatches": "Niets pas by jou filters nie",
-    "readOnly": "Slegs lees"
+    "readOnly": "Slegs lees",
+    "error": "Kon nie hierdie lys laai nie"
   },
   "sections": {
     "workloads": "Werklaste",
@@ -458,6 +463,13 @@
     "hostNotFound": "Gasheer nie gevind nie",
     "loadingHost": "Laai gasheer..."
   },
+  "tile": {
+    "title": "Kluster",
+    "empty": "Die kluster is nie vanaf hierdie gasheer bereikbaar nie.",
+    "nodes": "Knope gereed",
+    "pods": "Pode loop",
+    "failing": "Pode misluk"
+  },
   "card": {
     "title": "Kubernetes-klusters",
     "loading": "Laai tans...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} knope gereed | {{running}}/{{pods}} pods loop",
     "failing_one": "{{count}} misluk",
     "failing_other": "{{count}} misluk"
+  },
+  "operations": {
+    "namespace": "Naamruimte",
+    "summary": {
+      "title": "Mislukkende pode"
+    },
+    "pods": {
+      "title": "Pode",
+      "list": "Lys pode",
+      "delete": "Vee pod uit",
+      "ready": "Gereed",
+      "restarts": "Herbeginne"
+    },
+    "workloads": {
+      "title": "Werksladinge",
+      "list": "Lys werksladinge",
+      "restart": "Herbegin werkslading",
+      "scale": "Skaal werkslading",
+      "replicas": "Replicas",
+      "kind": "Tipe"
+    }
   }
 }

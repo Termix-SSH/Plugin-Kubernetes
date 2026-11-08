@@ -50,6 +50,10 @@
         "label": "הפעל עם sudo",
         "description": "הפעל את kubectl עם sudo -n, להגדרות k3s ו-MicroK8s שבהן רק root יכול לקרוא את תצורת הצומת. משתמש ה-SSH צריך הרשאות sudo ללא סיסמה."
       },
+      "alertProblems": {
+        "label": "התראה על בעיות בקלאסטר",
+        "description": "שלח התראה כאשר צומת אינו מוכן או כאשר פוד נכשל."
+      },
       "readOnly": {
         "label": "קריאה בלבד",
         "description": "קריאה בלבד. חוסם הרחבה, הפעלה מחדש, מחיקה, שינויי YAML, שינויי Helm ו-Shell של פודים לכל המשתמשים במארח זה."
@@ -99,7 +103,8 @@
     "loading": "טוען...",
     "empty": "אין כאן {{kind}}",
     "noMatches": "אין תוצאות התואמות את המסננים שלך",
-    "readOnly": "קריאה בלבד"
+    "readOnly": "קריאה בלבד",
+    "error": "לא ניתן לטעון רשימה זו"
   },
   "sections": {
     "workloads": "עומסי עבודה",
@@ -458,6 +463,13 @@
     "hostNotFound": "המארח לא נמצא",
     "loadingHost": "טוען מארח..."
   },
+  "tile": {
+    "title": "קלאסטר",
+    "empty": "הקלאסטר אינו נגיש מארח זה.",
+    "nodes": "צמתים מוכנים",
+    "pods": "פודים פעילים",
+    "failing": "פודים נכשלים"
+  },
   "card": {
     "title": "צבאות Kubernetes",
     "loading": "טוען...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} כשל",
     "failing_two": "{{count}} כשלים",
     "failing_other": "{{count}} כשלים"
+  },
+  "operations": {
+    "namespace": "מרחב שמות",
+    "summary": {
+      "title": "פודים נכשלים"
+    },
+    "pods": {
+      "title": "פודים",
+      "list": "הצג רשימת פודים",
+      "delete": "מחק פוד",
+      "ready": "מוכן",
+      "restarts": "הפעלות מחדש"
+    },
+    "workloads": {
+      "title": "עומסי עבודה",
+      "list": "הצג רשימת עומסי עבודה",
+      "restart": "הפעל מחדש עומס עבודה",
+      "scale": "הגדל/הקטן עומס עבודה",
+      "replicas": "עותקים",
+      "kind": "סוג"
+    }
   }
 }

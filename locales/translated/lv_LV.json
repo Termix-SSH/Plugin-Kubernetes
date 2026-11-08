@@ -50,6 +50,10 @@
         "label": "Palaist ar sudo",
         "description": "Palaist kubectl ar sudo -n, piemēram, k3s un MicroK8s konfigurācijās, kur klastera konfigurāciju var lasīt tikai root lietotājs. SSH lietotājam ir jābūt iespējai izmantot sudo bez paroles."
       },
+      "alertProblems": {
+        "label": "Brīdinājums par klastera problēmām",
+        "description": "Nosūtīt brīdinājumu, ja mezgls nav gatavs vai pods neizdodas."
+      },
       "readOnly": {
         "label": "Tikai lasīšanai",
         "description": "Tikai skatīties. Bloķē mērogošanu, restartēšanu, dzēšanu, YAML izmaiņas, Helm izmaiņas un podu shell piekļuvi visiem šī hosta lietotājiem."
@@ -99,7 +103,8 @@
     "loading": "Ielādē...",
     "empty": "Šeit nav {{kind}}",
     "noMatches": "Nekas neatbilst jūsu filtru kritērijiem",
-    "readOnly": "Tikai lasīšanai"
+    "readOnly": "Tikai lasīšanai",
+    "error": "Neizdevās ielādēt šo sarakstu"
   },
   "sections": {
     "workloads": "Aplūkojumi",
@@ -458,6 +463,13 @@
     "hostNotFound": "Resursdators nav atrasts",
     "loadingHost": "Notiek resursdatora ielāde..."
   },
+  "tile": {
+    "title": "Klasteris",
+    "empty": "Klasteris no šī mezgla nav sasniedzams.",
+    "nodes": "Gatavi mezgli",
+    "pods": "Darbojošies podi",
+    "failing": "Neizdojušies podi"
+  },
   "card": {
     "title": "Kubernetes klasteri",
     "loading": "Ielādē...",
@@ -467,5 +479,26 @@
     "failing_zero": "0 neveiksmīgi",
     "failing_one": "{{count}} neveiksmīgs",
     "failing_other": "{{count}} neveiksmīgi"
+  },
+  "operations": {
+    "namespace": "Vārdtelpa",
+    "summary": {
+      "title": "Neizdojušies podi"
+    },
+    "pods": {
+      "title": "Podi",
+      "list": "Podu saraksts",
+      "delete": "Dzēst podu",
+      "ready": "Gatavs",
+      "restarts": "Pārlāpīšanas"
+    },
+    "workloads": {
+      "title": "Aplūkojumi",
+      "list": "Aplūkojumu saraksts",
+      "restart": "Pārlādēt aplūkojumu",
+      "scale": "Mērogot aplūkojumu",
+      "replicas": "Replikas",
+      "kind": "Veids"
+    }
   }
 }

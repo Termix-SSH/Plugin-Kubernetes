@@ -50,6 +50,10 @@
         "label": "Suorita sudo-käskyllä",
         "description": "Suorita kubectl sudo -n -käskyllä, k3s- ja MicroK8s-asetuksissa, joissa vain root voi lukea klusterin konfiguraatiota. SSH-käyttäjän on käytettävä salasanaa vaativatonta sudoa."
       },
+      "alertProblems": {
+        "label": "Ilmoita klusterin ongelmista",
+        "description": "Lähetä ilmoitus, kun solmu ei ole valmis tai pod epäonnistuu."
+      },
       "readOnly": {
         "label": "Vain luku",
         "description": "Vain katselu. Estää skaalaamisen, uudelleenkäynnistykset, poistot, YAML-muutokset, Helm-muutokset ja pod-kuoret kaikilta käyttäjiltä tässä isäntäpalvelimessa."
@@ -99,7 +103,8 @@
     "loading": "Ladataan...",
     "empty": "Täällä ei ole {{kind}}",
     "noMatches": "Mitään ei vastaa suodattimiisi",
-    "readOnly": "Vain luku"
+    "readOnly": "Vain luku",
+    "error": "Tätä listaa ei voitu ladata"
   },
   "sections": {
     "workloads": "Työkuormat",
@@ -458,6 +463,13 @@
     "hostNotFound": "Isäntää ei löydy",
     "loadingHost": "Ladataan isäntää..."
   },
+  "tile": {
+    "title": "Klusteri",
+    "empty": "Klusteriin ei voida yhdistää tästä isäntästä.",
+    "nodes": "Solmut valmiina",
+    "pods": "Podit käynnissä",
+    "failing": "Podit epäonnistuneet"
+  },
   "card": {
     "title": "Kubernetes-klusterit",
     "loading": "Ladataan...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} solmua valmiina | {{running}}/{{pods}} podia käynnissä",
     "failing_one": "{{count}} epäonnistunut",
     "failing_other": "{{count}} epäonnistunutta"
+  },
+  "operations": {
+    "namespace": "Nimetila",
+    "summary": {
+      "title": "Epäonnistuneet podit"
+    },
+    "pods": {
+      "title": "Podit",
+      "list": "Listaa podit",
+      "delete": "Poista pod",
+      "ready": "Valmis",
+      "restarts": "Uudelleenkäynnistykset"
+    },
+    "workloads": {
+      "title": "Työkuormat",
+      "list": "Listaa työkuormat",
+      "restart": "Käynnistä työkuorma uudelleen",
+      "scale": "Skaalaa työkuormaa",
+      "replicas": "Replikat",
+      "kind": "Tyyppi"
+    }
   }
 }

@@ -50,6 +50,10 @@
         "label": "Jalankan dengan sudo",
         "description": "Jalankan kubectl dengan sudo -n, untuk persediaan k3s dan MicroK8s di mana hanya root boleh membaca konfigurasi kluster. Pengguna SSH memerlukan sudo tanpa kata laluan."
       },
+      "alertProblems": {
+        "label": "Amaran masalah kluster",
+        "description": "Hantar amaran apabila nod tidak sedia atau pod gagal."
+      },
       "readOnly": {
         "label": "Baca sahaja",
         "description": "Hanya melihat. Menghalang penskalaan, mulakan semula, padam, perubahan YAML, perubahan Helm dan shell pod untuk semua orang pada hos ini."
@@ -99,7 +103,8 @@
     "loading": "Memuatkan...",
     "empty": "Tiada {{kind}} di sini",
     "noMatches": "Tiada sebarang padanan dengan penapis anda",
-    "readOnly": "Baca sahaja"
+    "readOnly": "Baca sahaja",
+    "error": "Tidak dapat memuat senarai ini"
   },
   "sections": {
     "workloads": "Beban Kerja",
@@ -458,6 +463,13 @@
     "hostNotFound": "Hos tidak dijumpai",
     "loadingHost": "Memuatkan hos..."
   },
+  "tile": {
+    "title": "Kluster",
+    "empty": "Kluster tidak boleh dicapai dari hos ini.",
+    "nodes": "Nod sedia",
+    "pods": "Pod berjalan",
+    "failing": "Pod gagal"
+  },
   "card": {
     "title": "Kluster Kubernetes",
     "loading": "Memuatkan...",
@@ -465,5 +477,26 @@
     "empty": "Tiada hos yang mengaktifkan Kubernetes.",
     "counts": "{{ready}}/{{nodes}} nod sedia | {{running}}/{{pods}} pod berjalan",
     "failing_other": "{{count}} gagal"
+  },
+  "operations": {
+    "namespace": "Ruang nama",
+    "summary": {
+      "title": "Pod gagal"
+    },
+    "pods": {
+      "title": "Pod",
+      "list": "Senaraikan pod",
+      "delete": "Padam pod",
+      "ready": "Sedia",
+      "restarts": "Mula semula"
+    },
+    "workloads": {
+      "title": "Beban kerja",
+      "list": "Senaraikan beban kerja",
+      "restart": "Mula semula beban kerja",
+      "scale": "Skala beban kerja",
+      "replicas": "Replika",
+      "kind": "Jenis"
+    }
   }
 }

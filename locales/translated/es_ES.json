@@ -50,6 +50,10 @@
         "label": "Ejecutar con sudo",
         "description": "Ejecutar kubectl con sudo -n, para configuraciones de k3s y MicroK8s donde solo root puede leer la configuración del clúster. El usuario de SSH necesita sudo sin contraseña."
       },
+      "alertProblems": {
+        "label": "Alertar sobre problemas del clúster",
+        "description": "Enviar una alerta cuando un nodo no esté listo o un pod falle."
+      },
       "readOnly": {
         "label": "Solo lectura",
         "description": "Solo ver. Bloquea escalado, reinicios, eliminaciones, cambios en YAML, cambios en Helm y shells de pods para todos en este host."
@@ -99,7 +103,8 @@
     "loading": "Cargando...",
     "empty": "No hay {{kind}} aquí",
     "noMatches": "Nada coincide con tus filtros",
-    "readOnly": "Solo lectura"
+    "readOnly": "Solo lectura",
+    "error": "No se ha podido cargar esta lista"
   },
   "sections": {
     "workloads": "Cargas de trabajo",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host no encontrado",
     "loadingHost": "Cargando host..."
   },
+  "tile": {
+    "title": "Clúster",
+    "empty": "El clúster no es accesible desde este host.",
+    "nodes": "Nodos listos",
+    "pods": "Pods en ejecución",
+    "failing": "Pods fallidos"
+  },
   "card": {
     "title": "Clústeres de Kubernetes",
     "loading": "Cargando...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} con fallos",
     "failing_many": "{{count}} con fallos",
     "failing_other": "{{count}} con fallos"
+  },
+  "operations": {
+    "namespace": "Espacio de nombres",
+    "summary": {
+      "title": "Pods fallidos"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Listar pods",
+      "delete": "Eliminar pod",
+      "ready": "Listo",
+      "restarts": "Reinicios"
+    },
+    "workloads": {
+      "title": "Cargas de trabajo",
+      "list": "Listar cargas de trabajo",
+      "restart": "Reiniciar carga de trabajo",
+      "scale": "Escalar carga de trabajo",
+      "replicas": "Réplicas",
+      "kind": "Tipo"
+    }
   }
 }

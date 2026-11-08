@@ -50,6 +50,10 @@
         "label": "Pokreni s sudo",
         "description": "Pokreni kubectl s sudo -n, za k3s i MicroK8s postavke gdje samo root može čitati konfiguraciju klastera. SSH korisnik mora imati sudo bez lozinke."
       },
+      "alertProblems": {
+        "label": "Upozori na probleme u klasteru",
+        "description": "Pošalji upozorenje kada čvor nije spreman ili kada pod ne uspijeva."
+      },
       "readOnly": {
         "label": "Samo za čitanje",
         "description": "Samo gledanje. Blokira skaliranje, ponovne pokretanje, brisanje, promjene u YAML-u, promjene u Helm-u i pod shell-ove za sve korisnike na ovom hostu."
@@ -99,7 +103,8 @@
     "loading": "Učitavanje...",
     "empty": "Ovdje nema {{kind}}",
     "noMatches": "Ništa ne odgovara vašim filterima",
-    "readOnly": "Samo za čitanje"
+    "readOnly": "Samo za čitanje",
+    "error": "Nije moguće učitati ovaj popis"
   },
   "sections": {
     "workloads": "Opterećenja",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host nije pronađen",
     "loadingHost": "Učitavanje hosta..."
   },
+  "tile": {
+    "title": "Klaster",
+    "empty": "Klaster nije dostupan s ovog hosta.",
+    "nodes": "Čvorovi spremni",
+    "pods": "Podovi u radu",
+    "failing": "Podovi s greškama"
+  },
   "card": {
     "title": "Kubernetes klasteri",
     "loading": "Učitavanje...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} neuspjeh",
     "failing_few": "{{count}} neuspjeha",
     "failing_other": "{{count}} neuspjeha"
+  },
+  "operations": {
+    "namespace": "Imenski prostor",
+    "summary": {
+      "title": "Podovi s greškama"
+    },
+    "pods": {
+      "title": "Podovi",
+      "list": "Popis podova",
+      "delete": "Izbriši pod",
+      "ready": "Spreman",
+      "restarts": "Ponovna pokretanja"
+    },
+    "workloads": {
+      "title": "Opterećenja",
+      "list": "Popis opterećenja",
+      "restart": "Ponovno pokreni opterećenje",
+      "scale": "Skaliraj opterećenje",
+      "replicas": "Replike",
+      "kind": "Vrsta"
+    }
   }
 }

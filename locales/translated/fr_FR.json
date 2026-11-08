@@ -50,6 +50,10 @@
         "label": "Exécuter avec sudo",
         "description": "Exécute kubectl avec sudo -n, pour les configurations k3s et MicroK8s où seul root peut lire la configuration du cluster. L'utilisateur SSH doit avoir un sudo sans mot de passe."
       },
+      "alertProblems": {
+        "label": "Alerter en cas de problème dans le cluster",
+        "description": "Envoyer une alerte lorsqu'un nœud n'est pas prêt ou qu'un pod échoue."
+      },
       "readOnly": {
         "label": "Lecture seule",
         "description": "Lecture seule. Bloque le scaling, les redémarrages, les suppressions, les modifications YAML, les modifications Helm et les shells de pods pour tous les utilisateurs sur cet hôte."
@@ -99,7 +103,8 @@
     "loading": "Chargement...",
     "empty": "Aucun {{kind}} ici",
     "noMatches": "Aucun résultat ne correspond à vos filtres",
-    "readOnly": "Lecture seule"
+    "readOnly": "Lecture seule",
+    "error": "Impossible de charger cette liste"
   },
   "sections": {
     "workloads": "Workloads",
@@ -458,6 +463,13 @@
     "hostNotFound": "Hôte introuvable",
     "loadingHost": "Chargement de l'hôte..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Le cluster n'est pas accessible depuis cet hôte.",
+    "nodes": "Nœuds prêts",
+    "pods": "Pods en cours d'exécution",
+    "failing": "Pods en échec"
+  },
   "card": {
     "title": "Clusters Kubernetes",
     "loading": "Chargement...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} en échec",
     "failing_many": "{{count}} en échec",
     "failing_other": "{{count}} en échec"
+  },
+  "operations": {
+    "namespace": "Espace de noms",
+    "summary": {
+      "title": "Pods en échec"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Lister les pods",
+      "delete": "Supprimer le pod",
+      "ready": "Prêt",
+      "restarts": "Redémarrages"
+    },
+    "workloads": {
+      "title": "Workloads",
+      "list": "Lister les workloads",
+      "restart": "Redémarrer le workload",
+      "scale": "Mettre à l'échelle le workload",
+      "replicas": "Répliques",
+      "kind": "Type"
+    }
   }
 }

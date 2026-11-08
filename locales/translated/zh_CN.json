@@ -50,6 +50,10 @@
         "label": "使用 sudo 运行",
         "description": "使用 sudo -n 运行 kubectl，适用于只有 root 用户才能读取集群配置的 k3s 和 MicroK8s 环境。SSH 用户需要配置无密码 sudo。"
       },
+      "alertProblems": {
+        "label": "集群异常时发送告警",
+        "description": "当节点未就绪或 Pod 失败时发送告警。"
+      },
       "readOnly": {
         "label": "只读",
         "description": "仅查看。禁止在此主机上执行扩缩容、重启、删除、YAML 修改、Helm 修改以及进入 Pod 终端等操作。"
@@ -99,7 +103,8 @@
     "loading": "加载中...",
     "empty": "这里没有 {{kind}}",
     "noMatches": "没有匹配筛选条件的结果",
-    "readOnly": "只读"
+    "readOnly": "只读",
+    "error": "无法加载此列表"
   },
   "sections": {
     "workloads": "工作负载",
@@ -458,6 +463,13 @@
     "hostNotFound": "未找到主机",
     "loadingHost": "正在加载主机..."
   },
+  "tile": {
+    "title": "集群",
+    "empty": "此主机无法访问集群。",
+    "nodes": "就绪节点",
+    "pods": "运行中 Pod",
+    "failing": "失败 Pod"
+  },
   "card": {
     "title": "Kubernetes 集群",
     "loading": "加载中...",
@@ -465,5 +477,26 @@
     "empty": "没有主机启用 Kubernetes。",
     "counts": "{{ready}}/{{nodes}} 个节点就绪 | {{running}}/{{pods}} 个 Pod 运行中",
     "failing_other": "{{count}} 个失败"
+  },
+  "operations": {
+    "namespace": "命名空间",
+    "summary": {
+      "title": "失败 Pod"
+    },
+    "pods": {
+      "title": "Pod",
+      "list": "列出 Pod",
+      "delete": "删除 Pod",
+      "ready": "就绪",
+      "restarts": "重启次数"
+    },
+    "workloads": {
+      "title": "工作负载",
+      "list": "列出工作负载",
+      "restart": "重启工作负载",
+      "scale": "扩缩工作负载",
+      "replicas": "副本数",
+      "kind": "类型"
+    }
   }
 }

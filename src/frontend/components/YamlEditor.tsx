@@ -2,7 +2,7 @@ import React from "react";
 import { CheckCircle2, FileDiff, RotateCcw, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { Button, cn } from "@termix-ssh/plugin-sdk/ui";
+import { Button, cn, ToolbarBand } from "@termix-ssh/plugin-sdk/ui";
 import { useCluster } from "../cluster-context";
 import { getErrorMessage } from "../error-message";
 import { useKubernetesApi } from "../kubernetes-api";
@@ -119,8 +119,8 @@ export function YamlEditor({
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <ToolbarBand>
         {dirty && (
           <span className="text-xs text-warning">{t("yaml.unsaved")}</span>
         )}
@@ -165,17 +165,17 @@ export function YamlEditor({
             </Button>
           )}
         </div>
-      </div>
+      </ToolbarBand>
       <textarea
         value={text}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={onKeyDown}
         spellCheck={false}
         aria-label={t("yaml.editor")}
-        className="min-h-48 flex-1 resize-none border border-border bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        className="min-h-48 flex-1 resize-none bg-background p-3 font-mono text-xs leading-relaxed outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
       />
       {result && (
-        <div className="max-h-56 overflow-auto border border-border bg-card p-3 font-mono text-xs">
+        <div className="max-h-56 overflow-auto border-t border-border p-3 font-mono text-xs">
           {result.kind === "error" && (
             <pre className="whitespace-pre-wrap text-destructive">
               {result.message}

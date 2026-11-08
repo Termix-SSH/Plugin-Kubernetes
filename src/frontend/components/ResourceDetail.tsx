@@ -7,6 +7,7 @@ import {
   PanelShell,
   TabStrip,
   useAdaptivePolling,
+  InfoGrid,
 } from "@termix-ssh/plugin-sdk/ui";
 import { useCluster } from "../cluster-context";
 import { getErrorMessage } from "../error-message";
@@ -105,7 +106,6 @@ export function ResourceDetail({
         />
       }
       scroll={false}
-      className="p-2.5 gap-2"
     >
       <div className="flex min-h-0 flex-1 flex-col">
         {error && !detail ? (
@@ -166,21 +166,15 @@ function Overview({ detail }: { detail: ResourceDetailData }) {
     .map(([key, value]) => [t(`columns.${key}`), String(value)]);
   const labels = Object.entries(summary.labels ?? {});
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto">
+    <div className="flex min-h-0 flex-1 flex-col overflow-auto">
       {facts.length > 0 && (
-        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 border border-border bg-card p-3 text-xs">
-          {facts.map(([label, value]) => (
-            <React.Fragment key={label}>
-              <dt className="text-muted-foreground">{label}</dt>
-              <dd className="truncate" title={value}>
-                {value}
-              </dd>
-            </React.Fragment>
-          ))}
-        </dl>
+        <InfoGrid
+          className="border-b border-border px-3 py-2.5"
+          items={facts.map(([label, value]) => ({ label, value }))}
+        />
       )}
       {labels.length > 0 && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 border-b border-border px-3 py-2">
           {labels.map(([key, value]) => (
             <span
               key={key}
@@ -191,7 +185,7 @@ function Overview({ detail }: { detail: ResourceDetailData }) {
           ))}
         </div>
       )}
-      <pre className="min-h-40 flex-1 overflow-auto border border-border bg-background p-3 font-mono text-[11px] leading-relaxed whitespace-pre">
+      <pre className="min-h-40 flex-1 overflow-auto bg-background p-3 font-mono text-[11px] leading-relaxed whitespace-pre">
         {detail.describe || t("detail.noDescribe")}
       </pre>
     </div>

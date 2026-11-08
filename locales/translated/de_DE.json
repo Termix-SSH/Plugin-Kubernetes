@@ -50,6 +50,10 @@
         "label": "Mit sudo ausführen",
         "description": "Führt kubectl mit sudo -n aus, für k3s- und MicroK8s-Installationen, bei denen nur root die Cluster-Konfiguration lesen kann. Der SSH-Benutzer benötigt ein passwortloses sudo."
       },
+      "alertProblems": {
+        "label": "Benachrichtigung bei Clusterproblemen",
+        "description": "Sende eine Benachrichtigung, wenn ein Knoten nicht bereit ist oder ein Pod fehlschlägt."
+      },
       "readOnly": {
         "label": "Schreibgeschützt",
         "description": "Nur lesen. Blockiert Skalierung, Neustarts, Löschungen, YAML-Änderungen, Helm-Änderungen und Pod-Shells für alle auf diesem Host."
@@ -99,7 +103,8 @@
     "loading": "Wird geladen...",
     "empty": "Keine {{kind}} hier",
     "noMatches": "Nichts entspricht Ihren Filtern",
-    "readOnly": "Schreibgeschützt"
+    "readOnly": "Schreibgeschützt",
+    "error": "Diese Liste konnte nicht geladen werden"
   },
   "sections": {
     "workloads": "Workloads",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host nicht gefunden",
     "loadingHost": "Host wird geladen..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Der Cluster ist von diesem Host aus nicht erreichbar.",
+    "nodes": "Bereite Knoten",
+    "pods": "Aktive Pods",
+    "failing": "Fehlerhafte Pods"
+  },
   "card": {
     "title": "Kubernetes-Cluster",
     "loading": "Wird geladen...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} Knoten bereit | {{running}}/{{pods}} Pods ausgeführt",
     "failing_one": "{{count}} fehlgeschlagen",
     "failing_other": "{{count}} fehlgeschlagen"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Fehlerhafte Pods"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Pods auflisten",
+      "delete": "Pod löschen",
+      "ready": "Bereit",
+      "restarts": "Neustarts"
+    },
+    "workloads": {
+      "title": "Workloads",
+      "list": "Workloads auflisten",
+      "restart": "Workload neu starten",
+      "scale": "Workload skalieren",
+      "replicas": "Replikate",
+      "kind": "Typ"
+    }
   }
 }

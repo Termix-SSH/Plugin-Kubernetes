@@ -50,6 +50,10 @@
         "label": "Uitvoeren met sudo",
         "description": "Voer kubectl uit met sudo -n, voor k3s- en MicroK8s-installaties waarbij alleen root de clusterconfiguratie kan lezen. De SSH-gebruiker moet sudo zonder wachtwoord kunnen gebruiken."
       },
+      "alertProblems": {
+        "label": "Waarschuwing bij clusterproblemen",
+        "description": "Stuur een waarschuwing wanneer een node niet klaar is of een pod faalt."
+      },
       "readOnly": {
         "label": "Alleen-lezen",
         "description": "Alleen bekijken. Blokkeert schalen, herstarts, verwijderingen, YAML-wijzigingen, Helm-wijzigingen en pod-shells voor iedereen op deze host."
@@ -99,7 +103,8 @@
     "loading": "Laden...",
     "empty": "Geen {{kind}} hier",
     "noMatches": "Niets komt overeen met je filters",
-    "readOnly": "Alleen-lezen"
+    "readOnly": "Alleen-lezen",
+    "error": "Deze lijst kon niet worden geladen"
   },
   "sections": {
     "workloads": "Workloads",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host niet gevonden",
     "loadingHost": "Host laden..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Het cluster is vanaf deze host niet bereikbaar.",
+    "nodes": "Nodes klaar",
+    "pods": "Pods actief",
+    "failing": "Pods faalt"
+  },
   "card": {
     "title": "Kubernetes-clusters",
     "loading": "Laden...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} nodes gereed | {{running}}/{{pods}} pods actief",
     "failing_one": "{{count}} mislukt",
     "failing_other": "{{count}} mislukt"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Faalende pods"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Pods tonen",
+      "delete": "Pod verwijderen",
+      "ready": "Klaar",
+      "restarts": "Herstarts"
+    },
+    "workloads": {
+      "title": "Workloads",
+      "list": "Workloads tonen",
+      "restart": "Workload herstarten",
+      "scale": "Workload schalen",
+      "replicas": "Replicas",
+      "kind": "Type"
+    }
   }
 }

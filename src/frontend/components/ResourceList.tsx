@@ -245,8 +245,8 @@ function ResourceCard({
     <div
       onClick={kind === "events" ? undefined : onOpen}
       className={cn(
-        "flex h-full flex-col gap-2 border border-border bg-card p-3 text-xs transition-colors",
-        kind !== "events" && "cursor-pointer hover:border-accent-brand/40",
+        "flex h-full flex-col gap-2 p-3 text-xs transition-colors",
+        kind !== "events" && "cursor-pointer hover:bg-muted/30",
       )}
     >
       <div className="flex items-start gap-2">

@@ -50,6 +50,10 @@
         "label": "Esegui con sudo",
         "description": "Esegui kubectl con sudo -n, per configurazioni k3s e MicroK8s in cui solo root può leggere la configurazione del cluster. L'utente SSH deve avere sudo senza password."
       },
+      "alertProblems": {
+        "label": "Avvisa in caso di problemi nel cluster",
+        "description": "Invia un avviso quando un nodo non è pronto o un pod fallisce."
+      },
       "readOnly": {
         "label": "Sola lettura",
         "description": "Solo visualizzazione. Blocca scaling, riavvii, eliminazioni, modifiche YAML, modifiche Helm e shell dei pod per tutti gli utenti su questo host."
@@ -99,7 +103,8 @@
     "loading": "Caricamento...",
     "empty": "Nessun {{kind}} qui",
     "noMatches": "Nessun risultato corrisponde ai filtri",
-    "readOnly": "Sola lettura"
+    "readOnly": "Sola lettura",
+    "error": "Impossibile caricare questa lista"
   },
   "sections": {
     "workloads": "Carichi di lavoro",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host non trovato",
     "loadingHost": "Caricamento host..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Il cluster non è raggiungibile da questo host.",
+    "nodes": "Nodi pronti",
+    "pods": "Pod in esecuzione",
+    "failing": "Pod in errore"
+  },
   "card": {
     "title": "Cluster Kubernetes",
     "loading": "Caricamento...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} in errore",
     "failing_many": "{{count}} in errore",
     "failing_other": "{{count}} in errore"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Pod in errore"
+    },
+    "pods": {
+      "title": "Pod",
+      "list": "Elenca pod",
+      "delete": "Elimina pod",
+      "ready": "Pronto",
+      "restarts": "Riavvii"
+    },
+    "workloads": {
+      "title": "Carichi di lavoro",
+      "list": "Elenca carichi di lavoro",
+      "restart": "Riavvia carico di lavoro",
+      "scale": "Scala carico di lavoro",
+      "replicas": "Repliche",
+      "kind": "Tipo"
+    }
   }
 }

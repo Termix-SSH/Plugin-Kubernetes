@@ -50,6 +50,10 @@
         "label": "Executar amb sudo",
         "description": "Executa kubectl amb sudo -n, per a configuracions de k3s i MicroK8s on només root pot llegir la configuració del clúster. L'usuari SSH necessita sudo sense contrasenya."
       },
+      "alertProblems": {
+        "label": "Notifica problemes del clúster",
+        "description": "Envia una notificació quan un node no estigui llest o un pod falli."
+      },
       "readOnly": {
         "label": "Només lectura",
         "description": "Només mirar. Bloqueja l'escalat, els reinicis, les esborrades, els canvis de YAML, els canvis de Helm i les consoles dels pods per a tothom en aquest host."
@@ -99,7 +103,8 @@
     "loading": "S'està carregant...",
     "empty": "No hi ha cap {{kind}} aquí",
     "noMatches": "Res no coincideix amb els vostres filtres",
-    "readOnly": "Només lectura"
+    "readOnly": "Només lectura",
+    "error": "No s'ha pogut carregar aquesta llista"
   },
   "sections": {
     "workloads": "Càrregues de treball",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host no trobat",
     "loadingHost": "Carregant host..."
   },
+  "tile": {
+    "title": "Clúster",
+    "empty": "El clúster no és accessible des d'aquest amfitrió.",
+    "nodes": "Nodes llestos",
+    "pods": "Pods en execució",
+    "failing": "Pods en fallada"
+  },
   "card": {
     "title": "Clusters de Kubernetes",
     "loading": "S'està carregant...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} fallit",
     "failing_many": "{{count}} fallits",
     "failing_other": "{{count}} fallits"
+  },
+  "operations": {
+    "namespace": "Espai de noms",
+    "summary": {
+      "title": "Pods en fallada"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Llista de pods",
+      "delete": "Suprimeix el pod",
+      "ready": "Llest",
+      "restarts": "Reinicis"
+    },
+    "workloads": {
+      "title": "Càrregues de treball",
+      "list": "Llista de càrregues de treball",
+      "restart": "Reinicia la càrrega de treball",
+      "scale": "Escala la càrrega de treball",
+      "replicas": "Replicats",
+      "kind": "Tipus"
+    }
   }
 }

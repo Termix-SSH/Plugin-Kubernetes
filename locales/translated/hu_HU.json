@@ -50,6 +50,10 @@
         "label": "Futtatás sudo-val",
         "description": "A kubectl futtatása sudo -n kapcsolóval, k3s és MicroK8s telepítésekhez, ahol csak a root olvashatja a klaszter konfigurációját. Az SSH-felhasználónak jelszómentes sudo hozzáféréssel kell rendelkeznie."
       },
+      "alertProblems": {
+        "label": "Riasztás klaszterproblémáknál",
+        "description": "Riasztás küldése, ha egy csomópont nem áll rendelkezésre, vagy egy pod sikertelen."
+      },
       "readOnly": {
         "label": "Csak olvasható",
         "description": "Csak megtekintés. Letiltja a skálázást, újraindítást, törlést, YAML-módosításokat, Helm-módosításokat és a pod shell használatát minden felhasználó számára ezen a hoszton."
@@ -99,7 +103,8 @@
     "loading": "Betöltés...",
     "empty": "Nincs itt {{kind}}",
     "noMatches": "Nincs találat a szűrők alapján",
-    "readOnly": "Csak olvasható"
+    "readOnly": "Csak olvasható",
+    "error": "Nem sikerült betölteni ezt a listát"
   },
   "sections": {
     "workloads": "Munkaterhek",
@@ -458,6 +463,13 @@
     "hostNotFound": "A gép nem található",
     "loadingHost": "Gép betöltése..."
   },
+  "tile": {
+    "title": "Klaszter",
+    "empty": "A klaszter nem érhető el ebből a gazdagépből.",
+    "nodes": "Kész csomópontok",
+    "pods": "Futó podok",
+    "failing": "Sikertelen podok"
+  },
   "card": {
     "title": "Kubernetes klaszterek",
     "loading": "Betöltés...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} csomópont kész | {{running}}/{{pods}} pod fut",
     "failing_one": "{{count}} hiba",
     "failing_other": "{{count}} hiba"
+  },
+  "operations": {
+    "namespace": "Névtér",
+    "summary": {
+      "title": "Sikertelen podok"
+    },
+    "pods": {
+      "title": "Podok",
+      "list": "Podok listázása",
+      "delete": "Pod törlése",
+      "ready": "Kész",
+      "restarts": "Újraindítások"
+    },
+    "workloads": {
+      "title": "Munkaterhek",
+      "list": "Munkaterhek listázása",
+      "restart": "Munkaterhelés újraindítása",
+      "scale": "Munkaterhelés méretezése",
+      "replicas": "Replikák",
+      "kind": "Típus"
+    }
   }
 }

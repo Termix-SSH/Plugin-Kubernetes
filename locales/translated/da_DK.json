@@ -50,6 +50,10 @@
         "label": "Kør med sudo",
         "description": "Kør kubectl med sudo -n, til k3s- og MicroK8s-opstillinger, hvor kun root kan læse klusterkonfigurationen. SSH-brugeren skal have adgang til sudo uden adgangskode."
       },
+      "alertProblems": {
+        "label": "Advar ved problemer i klusteret",
+        "description": "Send en advarsel, når en node ikke er klar, eller en pod fejler."
+      },
       "readOnly": {
         "label": "Skrivebeskyttet",
         "description": "Kun læse. Blokerer skalering, genstart, sletning, YAML-ændringer, Helm-ændringer og pod-shells for alle på denne vært."
@@ -99,7 +103,8 @@
     "loading": "Indlæser...",
     "empty": "Ingen {{kind}} her",
     "noMatches": "Intet matcher dine filtre",
-    "readOnly": "Skrivebeskyttet"
+    "readOnly": "Skrivebeskyttet",
+    "error": "Kunne ikke indlæse denne liste"
   },
   "sections": {
     "workloads": "Arbeidsbyrder",
@@ -458,6 +463,13 @@
     "hostNotFound": "Vært ikke fundet",
     "loadingHost": "Indlæser vært..."
   },
+  "tile": {
+    "title": "Kluster",
+    "empty": "Klusteret er ikke tilgængeligt fra denne vært.",
+    "nodes": "Klare noder",
+    "pods": "Kørende pods",
+    "failing": "Fejlende pods"
+  },
   "card": {
     "title": "Kubernetes-kluster",
     "loading": "Indlæser...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} noder klar | {{running}}/{{pods}} pods kører",
     "failing_one": "{{count}} fejl",
     "failing_other": "{{count}} fejl"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Fejlende pods"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Liste over pods",
+      "delete": "Slet pod",
+      "ready": "Klar",
+      "restarts": "Genstarte"
+    },
+    "workloads": {
+      "title": "Arbeudsbelastninger",
+      "list": "Liste over arbeudsbelastninger",
+      "restart": "Genstart arbeudsbelastning",
+      "scale": "Skaler arbeudsbelastning",
+      "replicas": "Replikater",
+      "kind": "Type"
+    }
   }
 }

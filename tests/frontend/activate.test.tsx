@@ -92,3 +92,41 @@ describe("kubernetes clusters dashboard card", () => {
     expect(screen.getByText("1 failing")).toBeTruthy();
   });
 });
+
+describe("host page tile", () => {
+  it("registers the tile", async () => {
+    rendered = await renderWithApp(plugin, { manifest, locales });
+    expect(rendered.registered.slot("host-page.tiles")).toHaveLength(1);
+  });
+
+  it("shows node and pod health for the host", async () => {
+    const get = vi.fn(async () => ({
+      data: [
+        {
+          hostId: 7,
+          nodesReady: 2,
+          nodesTotal: 3,
+          podsRunning: 9,
+          podsFailing: 2,
+          podsTotal: 12,
+          checkedAt: "",
+        },
+      ],
+    }));
+    rendered = await renderWithApp(plugin, {
+      manifest,
+      locales,
+      permissions: ["kubernetes.use"],
+      api: { get } as never,
+    });
+    await new Promise((done) => setTimeout(done, 0));
+    rendered.renderSlot("host-page.tiles", {
+      hostId: 7,
+      isVisible: true,
+      host: { pluginSettings: { kubernetes: { enableKubernetes: true } } },
+    });
+    expect(await screen.findByText("Pods failing")).toBeTruthy();
+    expect(screen.getByText("2/3")).toBeTruthy();
+    expect(get).toHaveBeenCalledWith("/summary", { params: { hostId: 7 } });
+  });
+});

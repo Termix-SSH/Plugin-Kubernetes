@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  ExternalLink,
-  FilePlus2,
-  Inbox,
-  Lock,
-  RefreshCw,
-  ShipWheel,
-} from "lucide-react";
+import { AlertTriangle, FilePlus2, Inbox, Lock, ShipWheel } from "lucide-react";
 import {
   usePluginUiPreferences,
   useTranslation,
@@ -23,6 +16,9 @@ import {
   type GridSize,
   cn,
   useAdaptivePolling,
+  LoadingState,
+  NoticePanel,
+  RefreshButton,
 } from "@termix-ssh/plugin-sdk/ui";
 import { ClusterProvider, type ClusterValue } from "./cluster-context";
 import { ApplyView } from "./components/ApplyView";
@@ -434,44 +430,26 @@ export function ClusterView({
                 <FilePlus2 className="size-4" />
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
+            <RefreshButton
               onClick={() => void loadList()}
-              disabled={loading}
-              title={t("kube.refresh")}
-              aria-label={t("kube.refresh")}
-              className="text-accent-brand"
-            >
-              <RefreshCw className={cn("size-4", loading && "animate-spin")} />
-            </Button>
-            {!compact && (
-              <a
-                href={docsUrl()}
-                target="_blank"
-                rel="noreferrer"
-                className="flex size-8 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                title={t("hosts.docsLink")}
-              >
-                <ExternalLink className="size-4" />
-              </a>
-            )}
+              loading={loading}
+              label={t("kube.refresh")}
+            />
           </>
         }
         toolbar={toolbar}
-        className="p-2.5 gap-2"
+        docs={compact ? undefined : docsUrl()}
       >
         {!loaded ? (
-          <div className="flex flex-col items-center justify-center py-20 opacity-40">
-            <RefreshCw className="mb-4 size-8 animate-spin" />
-            <span className="text-sm font-semibold">
-              {t("cluster.loading")}
-            </span>
-          </div>
+          <LoadingState label={t("cluster.loading")} />
         ) : error ? (
-          <div className="border border-destructive/40 bg-destructive/5 p-3 text-xs text-destructive">
+          <NoticePanel
+            tone="destructive"
+            icon={AlertTriangle}
+            title={t("cluster.error")}
+          >
             {error}
-          </div>
+          </NoticePanel>
         ) : isHelm ? (
           <HelmList
             releases={filteredReleases}

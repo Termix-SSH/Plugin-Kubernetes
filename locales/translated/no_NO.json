@@ -50,6 +50,10 @@
         "label": "Kjør med sudo",
         "description": "Kjør kubectl med sudo -n, for k3s- og MicroK8s-installasjoner der bare root kan lese klusterkonfigurasjonen. SSH-brukeren må ha passordløs sudo."
       },
+      "alertProblems": {
+        "label": "Varsel ved klusterproblemer",
+        "description": "Send et varsel når en node ikke er klar eller en pod feiler."
+      },
       "readOnly": {
         "label": "Skrivebeskyttet",
         "description": "Kun lesing. Blokkerer skalering, omstarter, sletting, YAML-endringer, Helm-endringer og pod-shell for alle på denne verten."
@@ -99,7 +103,8 @@
     "loading": "Laster inn...",
     "empty": "Ingen {{kind}} her",
     "noMatches": "Ingenting matcher filtrene dine",
-    "readOnly": "Skrivebeskyttet"
+    "readOnly": "Skrivebeskyttet",
+    "error": "Kunne ikke laste denne listen"
   },
   "sections": {
     "workloads": "Arbeidsbelastninger",
@@ -458,6 +463,13 @@
     "hostNotFound": "Verten ble ikke funnet",
     "loadingHost": "Laster vert..."
   },
+  "tile": {
+    "title": "Kluster",
+    "empty": "Klusteret er ikke tilgjengelig fra denne verten.",
+    "nodes": "Noder klare",
+    "pods": "Pods kjører",
+    "failing": "Pods feiler"
+  },
   "card": {
     "title": "Kubernetes-kluster",
     "loading": "Laster inn...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} noder klare | {{running}}/{{pods}} pod kjører",
     "failing_one": "{{count}} feilet",
     "failing_other": "{{count}} feilet"
+  },
+  "operations": {
+    "namespace": "Navnerom",
+    "summary": {
+      "title": "Pods som feiler"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Liste over pods",
+      "delete": "Slett pod",
+      "ready": "Klar",
+      "restarts": "Omstarter"
+    },
+    "workloads": {
+      "title": "Arbeidsbelastninger",
+      "list": "Liste over arbeidsbelastninger",
+      "restart": "Start arbeidsbelastning på nytt",
+      "scale": "Skaler arbeidsbelastning",
+      "replicas": "Replikaer",
+      "kind": "Type"
+    }
   }
 }

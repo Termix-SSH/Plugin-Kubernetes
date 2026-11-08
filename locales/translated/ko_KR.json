@@ -50,6 +50,10 @@
         "label": "sudo로 실행",
         "description": "k3s 및 MicroK8s와 같이 루트만 클러스터 구성을 읽을 수 있는 환경에서 sudo -n과 함께 kubectl을 실행합니다. SSH 사용자는 비밀번호 없는 sudo 권한이 필요합니다."
       },
+      "alertProblems": {
+        "label": "클러스터 문제 알림",
+        "description": "노드가 준비되지 있거나 파드가 실패할 때 알림을 보냅니다."
+      },
       "readOnly": {
         "label": "읽기 전용",
         "description": "조회만 가능합니다. 이 호스트의 모든 사용자에게 스케일링, 재시작, 삭제, YAML 변경, Helm 변경 및 포드 셸을 차단합니다."
@@ -99,7 +103,8 @@
     "loading": "로딩 중...",
     "empty": "{{kind}}이(가) 없습니다",
     "noMatches": "필터와 일치하는 항목이 없습니다",
-    "readOnly": "읽기 전용"
+    "readOnly": "읽기 전용",
+    "error": "목록을 로드할 수 없습니다"
   },
   "sections": {
     "workloads": "워크로드",
@@ -458,6 +463,13 @@
     "hostNotFound": "호스트를 찾을 수 없습니다",
     "loadingHost": "호스트 로딩 중..."
   },
+  "tile": {
+    "title": "클러스터",
+    "empty": "이 호스트에서 클러스터에 연결할 수 없습니다.",
+    "nodes": "준비된 노드",
+    "pods": "실행 중인 파드",
+    "failing": "실패한 파드"
+  },
   "card": {
     "title": "Kubernetes 클러스터",
     "loading": "로딩 중...",
@@ -465,5 +477,26 @@
     "empty": "Kubernetes가 활성화된 호스트가 없습니다.",
     "counts": "{{ready}}/{{nodes}} 노드 준비 완료 | {{running}}/{{pods}} 포드 실행 중",
     "failing_other": "{{count}}개 실패"
+  },
+  "operations": {
+    "namespace": "네임스페이스",
+    "summary": {
+      "title": "실패한 파드"
+    },
+    "pods": {
+      "title": "파드",
+      "list": "파드 목록",
+      "delete": "파드 삭제",
+      "ready": "준비됨",
+      "restarts": "재시작 횟수"
+    },
+    "workloads": {
+      "title": "워크로드",
+      "list": "워크로드 목록",
+      "restart": "워크로드 재시작",
+      "scale": "워크로드 크기 조정",
+      "replicas": "레플리카",
+      "kind": "종류"
+    }
   }
 }

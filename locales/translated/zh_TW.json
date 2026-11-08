@@ -50,6 +50,10 @@
         "label": "使用 sudo 執行",
         "description": "使用 sudo -n 執行 kubectl，適用於僅限 root 使用者讀取叢集設定的 k3s 與 MicroK8s 環境。SSH 使用者需具備免密碼 sudo 權限。"
       },
+      "alertProblems": {
+        "label": "叢集問題警示",
+        "description": "當節點未就緒或 Pod 失敗時發送警示。"
+      },
       "readOnly": {
         "label": "唯讀",
         "description": "僅供檢視。將對該主機上的所有使用者封鎖縮放、重新啟動、刪除、YAML 變更、Helm 變更以及 Pod Shell 功能。"
@@ -99,7 +103,8 @@
     "loading": "載入中...",
     "empty": "這裡沒有 {{kind}}",
     "noMatches": "沒有任何項目符合您的篩選條件",
-    "readOnly": "唯讀"
+    "readOnly": "唯讀",
+    "error": "無法載入此清單"
   },
   "sections": {
     "workloads": "工作負載",
@@ -458,6 +463,13 @@
     "hostNotFound": "找不到主機",
     "loadingHost": "正在載入主機..."
   },
+  "tile": {
+    "title": "叢集",
+    "empty": "此主機無法連線至叢集。",
+    "nodes": "就緒節點",
+    "pods": "執行中 Pod",
+    "failing": "失敗 Pod"
+  },
   "card": {
     "title": "Kubernetes 叢集",
     "loading": "載入中...",
@@ -465,5 +477,26 @@
     "empty": "沒有主機啟用 Kubernetes。",
     "counts": "{{ready}}/{{nodes}} 個節點就緒 | {{running}}/{{pods}} 個 Pod 正在執行",
     "failing_other": "{{count}} 個失敗"
+  },
+  "operations": {
+    "namespace": "命名空間",
+    "summary": {
+      "title": "失敗 Pod"
+    },
+    "pods": {
+      "title": "Pod",
+      "list": "列出 Pod",
+      "delete": "刪除 Pod",
+      "ready": "就緒",
+      "restarts": "重新啟動次數"
+    },
+    "workloads": {
+      "title": "工作負載",
+      "list": "列出工作負載",
+      "restart": "重新啟動工作負載",
+      "scale": "調整工作負載規模",
+      "replicas": "副本",
+      "kind": "類型"
+    }
   }
 }

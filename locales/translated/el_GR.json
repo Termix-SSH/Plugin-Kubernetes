@@ -50,6 +50,10 @@
         "label": "Εκτέλεση με sudo",
         "description": "Εκτέλεση του kubectl με sudo -n, για ρυθμίσεις k3s και MicroK8s όπου μόνο ο root μπορεί να διαβάσει τη διαμόρφωση του cluster. Ο χρήστης SSH χρειάζεται passwordless sudo."
       },
+      "alertProblems": {
+        "label": "Ειδοποίηση για προβλήματα στο cluster",
+        "description": "Αποστολή ειδοποίησης όταν ένας κόμβος δεν είναι έτοιμος ή ένα pod αποτυγχάνει."
+      },
       "readOnly": {
         "label": "Μόνο για ανάγνωση",
         "description": "Μόνο για προβολή. Αποτρέπει το scaling, τις επανεκκινήσεις, τις διαγραφές, τις αλλαγές YAML, τις αλλαγές Helm και τα pod shells για όλους σε αυτόν τον host."
@@ -99,7 +103,8 @@
     "loading": "Φόρτωση...",
     "empty": "Δεν υπάρχει {{kind}} εδώ",
     "noMatches": "Τίποτα δεν ταιριάζει με τα φίλτρα σας",
-    "readOnly": "Μόνο για ανάγνωση"
+    "readOnly": "Μόνο για ανάγνωση",
+    "error": "Αδυναμία φόρτωσης αυτής της λίστας"
   },
   "sections": {
     "workloads": "Workloads",
@@ -458,6 +463,13 @@
     "hostNotFound": "Ο υπολογιστής δεν βρέθηκε",
     "loadingHost": "Φόρτωση υπολογιστή..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Το cluster δεν είναι προσβάσιμο από αυτόν τον host.",
+    "nodes": "Έτοιμοι κόμβοι",
+    "pods": "Ενεργά pods",
+    "failing": "Αποτυγχάνοντα pods"
+  },
   "card": {
     "title": "Συστήματα Kubernetes",
     "loading": "Φόρτωση...",
@@ -466,5 +478,26 @@
     "counts": "{{ready}}/{{nodes}} κόμβοι έτοιμοι | {{running}}/{{pods}} pods σε λειτουργία",
     "failing_one": "{{count}} αποτυχία",
     "failing_other": "{{count}} αποτυχίες"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Αποτυγχάνοντα pods"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Εμφάνιση λίστας pods",
+      "delete": "Διαγραφή pod",
+      "ready": "Έτοιμο",
+      "restarts": "Επανεκκινήσεις"
+    },
+    "workloads": {
+      "title": "Workloads",
+      "list": "Εμφάνιση λίστας workloads",
+      "restart": "Επανεκκίνηση workload",
+      "scale": "Κλιμάκωση workload",
+      "replicas": "Αντίγραφα",
+      "kind": "Τύπος"
+    }
   }
 }

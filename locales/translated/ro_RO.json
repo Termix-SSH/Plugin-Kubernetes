@@ -50,6 +50,10 @@
         "label": "Execută cu sudo",
         "description": "Execută kubectl cu sudo -n, pentru configurațiile k3s și MicroK8s în care doar root poate citi configurația clusterului. Utilizatorul SSH trebuie să aibă sudo fără parolă."
       },
+      "alertProblems": {
+        "label": "Alertează la probleme de cluster",
+        "description": "Trimite o alertă când un nod nu este gata sau un pod eșuează."
+      },
       "readOnly": {
         "label": "Doar citire",
         "description": "Doar vizualizare. Blochează scalarea, restarturile, ștergerile, modificările YAML, modificările Helm și shell-urile pod-urilor pentru toți utilizatorii de pe acest host."
@@ -99,7 +103,8 @@
     "loading": "Se încarcă...",
     "empty": "Niciun {{kind}} aici",
     "noMatches": "Nimic nu se potrivește cu filtrele dvs.",
-    "readOnly": "Doar citire"
+    "readOnly": "Doar citire",
+    "error": "Nu s-a putut încărca această listă"
   },
   "sections": {
     "workloads": "Sarcini de lucru",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host-ul nu a fost găsit",
     "loadingHost": "Se încarcă host-ul..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Clusterul nu este accesibil de pe acest gazdă.",
+    "nodes": "Noduri gata",
+    "pods": "Poduri în execuție",
+    "failing": "Poduri eșuate"
+  },
   "card": {
     "title": "Clustere Kubernetes",
     "loading": "Se încarcă...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} eșuat",
     "failing_few": "{{count}} eșuate",
     "failing_other": "{{count}} eșuate"
+  },
+  "operations": {
+    "namespace": "Spațiu de nume",
+    "summary": {
+      "title": "Poduri eșuate"
+    },
+    "pods": {
+      "title": "Poduri",
+      "list": "Listează poduri",
+      "delete": "Șterge pod",
+      "ready": "Gata",
+      "restarts": "Restarte"
+    },
+    "workloads": {
+      "title": "Sarcini de lucru",
+      "list": "Listează sarcini de lucru",
+      "restart": "Restartează sarcina de lucru",
+      "scale": "Scalează sarcina de lucru",
+      "replicas": "Replici",
+      "kind": "Tip"
+    }
   }
 }

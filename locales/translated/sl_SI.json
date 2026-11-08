@@ -50,6 +50,10 @@
         "label": "Zaženi z sudo",
         "description": "Zaženi kubectl z sudo -n, za nastavitve k3s in MicroK8s, kjer lahko samo root bere konfiguracijo klasterja. SSH uporabnik mora imeti sudo brez gesla."
       },
+      "alertProblems": {
+        "label": "Opozorilo ob težavah v klasterju",
+        "description": "Pošlji opozorilo, ko vozlišče ni pripravljeno ali ko se kontejner (pod) ne uspešno izvaja."
+      },
       "readOnly": {
         "label": "Samo za branje",
         "description": "Samo ogled. Blokira skaliranje, ponovne zagoni, brisanja, spremembe YAML, spremembe Helm in lupine podov za vse uporabnike na tem gostitelju."
@@ -99,7 +103,8 @@
     "loading": "Nalaganje...",
     "empty": "Tukaj ni {{kind}}",
     "noMatches": "Nič ne ustreza vašim filtrom",
-    "readOnly": "Samo za branje"
+    "readOnly": "Samo za branje",
+    "error": "Tega seznama ni bilo mogoče naložiti"
   },
   "sections": {
     "workloads": "Obremenitve",
@@ -458,6 +463,13 @@
     "hostNotFound": "Gostitelj ni najden",
     "loadingHost": "Nalaganje gostitelja..."
   },
+  "tile": {
+    "title": "Klaster",
+    "empty": "Klaster ni dosegljiv iz tega gostitelja.",
+    "nodes": "Pripravljena vozlišča",
+    "pods": "Zažeti kontejnerji (pods)",
+    "failing": "Neuspešni kontejnerji (pods)"
+  },
   "card": {
     "title": "Kubernetes klasterji",
     "loading": "Nalaganje...",
@@ -468,5 +480,26 @@
     "failing_two": "{{count}} napaki",
     "failing_few": "{{count}} napake",
     "failing_other": "{{count}} napak"
+  },
+  "operations": {
+    "namespace": "Imenski prostor",
+    "summary": {
+      "title": "Neuspešni kontejnerji (pods)"
+    },
+    "pods": {
+      "title": "Kontejnerji (Pods)",
+      "list": "Seznam kontejnerjev (pods)",
+      "delete": "Izbriši kontejner (pod)",
+      "ready": "Pripravljeno",
+      "restarts": "Ponovni zagoni"
+    },
+    "workloads": {
+      "title": "Obremenitve (Workloads)",
+      "list": "Seznam obremenitev",
+      "restart": "Ponovni zagon obremenitve",
+      "scale": "Sprememba velikosti obremenitve",
+      "replicas": "Replike",
+      "kind": "Vrsta"
+    }
   }
 }

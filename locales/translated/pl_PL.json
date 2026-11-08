@@ -50,6 +50,10 @@
         "label": "Uruchom z sudo",
         "description": "Uruchamia kubectl z opcją sudo -n, przydatne w konfiguracjach k3s i MicroK8s, gdzie tylko użytkownik root może odczytać konfigurację klastra. Użytkownik SSH musi mieć skonfigurowane sudo bez hasła."
       },
+      "alertProblems": {
+        "label": "Powiadamiaj o problemach w klastrze",
+        "description": "Wyślij powiadomienie, gdy węzeł nie jest gotowy lub pod zawodzi."
+      },
       "readOnly": {
         "label": "Tylko do odczytu",
         "description": "Tylko podgląd. Blokuje skalowanie, restarty, usuwanie, zmiany w YAML, zmiany Helm i powłoki podów dla wszystkich użytkowników tego hosta."
@@ -99,7 +103,8 @@
     "loading": "Ładowanie...",
     "empty": "Brak {{kind}}",
     "noMatches": "Nic nie pasuje do Twoich filtrów",
-    "readOnly": "Tylko do odczytu"
+    "readOnly": "Tylko do odczytu",
+    "error": "Nie udało się załadować tej listy"
   },
   "sections": {
     "workloads": "Obciążenia",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host nie został znaleziony",
     "loadingHost": "Ładowanie hosta..."
   },
+  "tile": {
+    "title": "Klaster",
+    "empty": "Klaster nie jest osiągalny z tego hosta.",
+    "nodes": "Węzły gotowe",
+    "pods": "Pody uruchomione",
+    "failing": "Pody zawiodły"
+  },
   "card": {
     "title": "Klusty Kubernetes",
     "loading": "Ładowanie...",
@@ -468,5 +480,26 @@
     "failing_few": "{{count}} nieudanych",
     "failing_many": "{{count}} nieudanych",
     "failing_other": "{{count}} nieudanych"
+  },
+  "operations": {
+    "namespace": "Przestrzeń nazw",
+    "summary": {
+      "title": "Pody zawiodły"
+    },
+    "pods": {
+      "title": "Pody",
+      "list": "Wyświetl listę podów",
+      "delete": "Usuń pod",
+      "ready": "Gotowy",
+      "restarts": "Restarty"
+    },
+    "workloads": {
+      "title": "Obciążenia",
+      "list": "Wyświetl listę obciążeń",
+      "restart": "Uruchom ponownie obciążenie",
+      "scale": "Skaluj obciążenie",
+      "replicas": "Repliki",
+      "kind": "Typ"
+    }
   }
 }

@@ -50,6 +50,10 @@
         "label": "Jalankan dengan sudo",
         "description": "Jalankan kubectl dengan sudo -n, untuk pengaturan k3s dan MicroK8s di mana hanya root yang dapat membaca konfigurasi cluster. Pengguna SSH memerlukan sudo tanpa kata sandi."
       },
+      "alertProblems": {
+        "label": "Peringatan pada masalah kluster",
+        "description": "Kirim peringatan ketika node tidak siap atau pod gagal."
+      },
       "readOnly": {
         "label": "Hanya baca",
         "description": "Hanya melihat. Mencegah penskalaan, restart, penghapusan, perubahan YAML, perubahan Helm, dan shell pod untuk semua orang di host ini."
@@ -99,7 +103,8 @@
     "loading": "Memuat...",
     "empty": "Tidak ada {{kind}} di sini",
     "noMatches": "Tidak ada yang cocok dengan filter Anda",
-    "readOnly": "Hanya baca"
+    "readOnly": "Hanya baca",
+    "error": "Tidak dapat memuat daftar ini"
   },
   "sections": {
     "workloads": "Beban Kerja",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host tidak ditemukan",
     "loadingHost": "Memuat host..."
   },
+  "tile": {
+    "title": "Kluster",
+    "empty": "Kluster tidak dapat dijangkau dari host ini.",
+    "nodes": "Node siap",
+    "pods": "Pod berjalan",
+    "failing": "Pod gagal"
+  },
   "card": {
     "title": "Cluster Kubernetes",
     "loading": "Memuat...",
@@ -465,5 +477,26 @@
     "empty": "Tidak ada host yang mengaktifkan Kubernetes.",
     "counts": "{{ready}}/{{nodes}} node siap | {{running}}/{{pods}} pod berjalan",
     "failing_other": "{{count}} gagal"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Pod gagal"
+    },
+    "pods": {
+      "title": "Pod",
+      "list": "Daftar pod",
+      "delete": "Hapus pod",
+      "ready": "Siap",
+      "restarts": "Restart"
+    },
+    "workloads": {
+      "title": "Workload",
+      "list": "Daftar workload",
+      "restart": "Restart workload",
+      "scale": "Skala workload",
+      "replicas": "Replika",
+      "kind": "Jenis"
+    }
   }
 }

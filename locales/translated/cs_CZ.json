@@ -50,6 +50,10 @@
         "label": "Spustit s sudo",
         "description": "Spustí kubectl s příznakem sudo -n, pro konfigurace k3s a MicroK8s, kde může konfigurační soubor clusteru číst pouze root. SSH uživatel musí mít nastavené sudo bez hesla."
       },
+      "alertProblems": {
+        "label": "Upozornit na problémy v clusteru",
+        "description": "Odeslat upozornění, když není uzel připraven nebo když selhává pod."
+      },
       "readOnly": {
         "label": "Pouze pro čtení",
         "description": "Pouze prohlížení. Zablokuje škálování, restarty, mazání, změny YAML, změny Helm a přístup do shellu podů pro všechny uživatele na tomto hostiteli."
@@ -99,7 +103,8 @@
     "loading": "Načítání...",
     "empty": "Zde nejsou žádné {{kind}}",
     "noMatches": "Nic neodpovídá vašim filtrům",
-    "readOnly": "Pouze pro čtení"
+    "readOnly": "Pouze pro čtení",
+    "error": "Tento seznam se nepodařilo načíst"
   },
   "sections": {
     "workloads": "Zatížení",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host nebyl nalezen",
     "loadingHost": "Načítání hosta..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "Cluster není z tohoto hostitele dosažitelný.",
+    "nodes": "Připravené uzly",
+    "pods": "Běžící pody",
+    "failing": "Selhávající pody"
+  },
   "card": {
     "title": "Kubernetes clustery",
     "loading": "Načítání...",
@@ -468,5 +480,26 @@
     "failing_few": "{{count}} selhání",
     "failing_many": "{{count}} selhání",
     "failing_other": "{{count}} selhání"
+  },
+  "operations": {
+    "namespace": "Prostor jmen",
+    "summary": {
+      "title": "Selhávající pody"
+    },
+    "pods": {
+      "title": "Pody",
+      "list": "Seznam podů",
+      "delete": "Smazat pod",
+      "ready": "Připraveno",
+      "restarts": "Restarty"
+    },
+    "workloads": {
+      "title": "Zatížení",
+      "list": "Seznam zatížení",
+      "restart": "Restartovat zatížení",
+      "scale": "Škálovat zatížení",
+      "replicas": "Repliky",
+      "kind": "Typ"
+    }
   }
 }

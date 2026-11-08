@@ -50,6 +50,10 @@
         "label": "Executar com sudo",
         "description": "Executa o kubectl com sudo -n, para configurações do k3s e MicroK8s onde apenas o root pode ler a configuração do cluster. O usuário SSH precisa ter sudo sem senha."
       },
+      "alertProblems": {
+        "label": "Alertar sobre problemas no cluster",
+        "description": "Enviar um alerta quando um nó não estiver pronto ou um pod estiver com falha."
+      },
       "readOnly": {
         "label": "Somente leitura",
         "description": "Apenas visualização. Bloqueia dimensionamento, reinícios, exclusões, alterações em YAML, alterações no Helm e shells de pods para todos neste host."
@@ -99,7 +103,8 @@
     "loading": "Carregando...",
     "empty": "Nenhum {{kind}} aqui",
     "noMatches": "Nada corresponde aos seus filtros",
-    "readOnly": "Somente leitura"
+    "readOnly": "Somente leitura",
+    "error": "Não foi possível carregar esta lista"
   },
   "sections": {
     "workloads": "Cargas de trabalho",
@@ -458,6 +463,13 @@
     "hostNotFound": "Host não encontrado",
     "loadingHost": "Carregando host..."
   },
+  "tile": {
+    "title": "Cluster",
+    "empty": "O cluster não está acessível a partir deste host.",
+    "nodes": "Nós prontos",
+    "pods": "Pods em execução",
+    "failing": "Pods com falha"
+  },
   "card": {
     "title": "Clusters Kubernetes",
     "loading": "Carregando...",
@@ -467,5 +479,26 @@
     "failing_one": "{{count}} com falha",
     "failing_many": "{{count}} com falha",
     "failing_other": "{{count}} com falha"
+  },
+  "operations": {
+    "namespace": "Namespace",
+    "summary": {
+      "title": "Pods com falha"
+    },
+    "pods": {
+      "title": "Pods",
+      "list": "Listar pods",
+      "delete": "Excluir pod",
+      "ready": "Pronto",
+      "restarts": "Reinícios"
+    },
+    "workloads": {
+      "title": "Cargas de trabalho",
+      "list": "Listar cargas de trabalho",
+      "restart": "Reiniciar carga de trabalho",
+      "scale": "Escalar carga de trabalho",
+      "replicas": "Réplicas",
+      "kind": "Tipo"
+    }
   }
 }

@@ -50,6 +50,10 @@
         "label": "Spustiť s sudo",
         "description": "Spúšťa kubectl s príkazom sudo -n, pre konfigurácie k3s a MicroK8s, kde môže konfiguračný súbor klastra čítať iba root. SSH používateľ musí mať sudo bez hesla."
       },
+      "alertProblems": {
+        "label": "Upozornenie na problémy v klstri",
+        "description": "Poslať upozornenie, keď uzol nie je pripravený alebo kontajner zlyháva."
+      },
       "readOnly": {
         "label": "Iba na čítanie",
         "description": "Len na prehliadanie. Zablokuje škálovanie, reštarty, mazanie, zmeny v YAML, zmeny Helm a prístup do shellu podov pre všetkých používateľov na tomto hostiteľovi."
@@ -99,7 +103,8 @@
     "loading": "Načítava sa...",
     "empty": "Tu nie sú žiadne {{kind}}",
     "noMatches": "Nič nevyhovuje vašim filtram",
-    "readOnly": "Iba na čítanie"
+    "readOnly": "Iba na čítanie",
+    "error": "Tento zoznam sa nepodarilo načítať"
   },
   "sections": {
     "workloads": "Pracovné záťaže",
@@ -458,6 +463,13 @@
     "hostNotFound": "Hostiteľ sa nenašiel",
     "loadingHost": "Načítava sa hostiteľ..."
   },
+  "tile": {
+    "title": "Klaster",
+    "empty": "Klaster nie je z tohto hostiteľa dostupný.",
+    "nodes": "Pripravené uzly",
+    "pods": "Bežiace kontajnery",
+    "failing": "Zlyhané kontajnery"
+  },
   "card": {
     "title": "Kubernetes clustre",
     "loading": "Načítava sa...",
@@ -468,5 +480,26 @@
     "failing_few": "{{count}} zlyhania",
     "failing_many": "{{count}} zlyhaní",
     "failing_other": "{{count}} zlyhaní"
+  },
+  "operations": {
+    "namespace": "Menový priestor",
+    "summary": {
+      "title": "Zlyhané kontajnery"
+    },
+    "pods": {
+      "title": "Kontajnery",
+      "list": "Zoznam kontajnerov",
+      "delete": "Odstrániť kontajner",
+      "ready": "Pripravené",
+      "restarts": "Reštarty"
+    },
+    "workloads": {
+      "title": "Pracovné záťaže",
+      "list": "Zoznam pracovných záťaží",
+      "restart": "Reštartovať pracovnú záťaž",
+      "scale": "Škálovať pracovnú záťaž",
+      "replicas": "Repliky",
+      "kind": "Typ"
+    }
   }
 }

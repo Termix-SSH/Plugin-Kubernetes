@@ -1,0 +1,168 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Termix-SSH/Termix/main/scripts/authz/authz.schema.json",
+  "seed": [],
+  "routes": {
+    "GET /plugin-api/kubernetes/contexts/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/helm/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "DELETE /plugin-api/kubernetes/helm/:sessionId/:releaseNamespace/:release": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "destructive": true,
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/helm/:sessionId/:releaseNamespace/:release/history": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/helm/:sessionId/:releaseNamespace/:release/manifest": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/helm/:sessionId/:releaseNamespace/:release/rollback": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "destructive": true,
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/helm/:sessionId/:releaseNamespace/:release/values": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/manifests/:sessionId/apply": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data",
+      "destructive": true
+    },
+    "POST /plugin-api/kubernetes/manifests/:sessionId/diff": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/manifests/:sessionId/validate": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/metrics/:sessionId/nodes": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/metrics/:sessionId/pods": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/metrics/:sessionId/pods/:name": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/namespaces/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "DELETE /plugin-api/kubernetes/resources/:sessionId/:kind/:name": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "destructive": true,
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind/:name": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/resources/:sessionId/:kind/:name/action": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind/:name/events": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind/:name/history": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind/:name/logs": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind/:name/pods": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/resources/:sessionId/:kind/:name/yaml": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/secrets/:sessionId/:name/reveal": {
+      "access": "user",
+      "permission": ["kubernetes.use", "kubernetes.secrets"],
+      "note": "Keyed by a live session looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/ssh/connect": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    },
+    "POST /plugin-api/kubernetes/ssh/connect-browser-sign-in": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    },
+    "POST /plugin-api/kubernetes/ssh/connect-totp": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    },
+    "POST /plugin-api/kubernetes/ssh/disconnect": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "destructive": true
+    },
+    "POST /plugin-api/kubernetes/ssh/keepalive": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    },
+    "GET /plugin-api/kubernetes/ssh/status": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    },
+    "GET /plugin-api/kubernetes/summary": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    },
+    "GET /plugin-api/kubernetes/validate/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "WS /plugin-ws/kubernetes/console": {
+      "access": "user",
+      "permission": "kubernetes.use"
+    }
+  }
+}

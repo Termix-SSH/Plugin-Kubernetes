@@ -175,7 +175,7 @@ export async function startConnect(
   const { sessionId, userId, host, settings, logs } = input;
   const hostId = host.id;
   const authType = (host.authType as string) || "none";
-  const credentialless = !ctx.ssh.requiresSecret(authType);
+  const credentialless = !(await ctx.ssh.requiresSecret(authType));
 
   const pending = new PendingConnect(userId, hostId);
   sessions.setPending(sessionId, pending);

@@ -125,6 +125,7 @@ export async function startServer(
   const client = options.client ?? kubeClient();
   let router: Router | null = null;
   const mock = createMockCtx({
+    sandbox: true,
     pluginId: manifest.id,
     manifest,
     capabilities: manifest.capabilities,

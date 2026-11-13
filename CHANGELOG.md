@@ -2,6 +2,10 @@
 
 ## 1.1.1
 
+### Changed
+
+- Runs in its own process on Termix 26.11.2 and later, with no access to the server beyond what Termix allows it
+
 ### Fixed
 
 - Opening a console on a shared host you have no login for says so, instead of saying the host is not on the sync server (needs Termix 26.11.2)

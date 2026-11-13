@@ -47,6 +47,7 @@ async function activated(
   settings: Record<string, unknown> = {},
 ): Promise<MockPluginContext> {
   const mock = createMockCtx({
+    sandbox: true,
     pluginId: manifest.id,
     manifest,
     capabilities: manifest.capabilities,

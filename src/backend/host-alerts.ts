@@ -103,6 +103,7 @@ export function startHostAlerts(options: HostAlertsOptions): {
   };
 
   ctx.schedule.every(options.intervalMs ?? DEFAULT_INTERVAL_MS, tick, {
+    id: "host-alerts",
     jitterMs: 5_000,
   });
   return { tick };

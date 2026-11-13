@@ -282,14 +282,18 @@ export function registerServices(ctx: PluginContext, log: KubeLogger): void {
     }
   };
 
-  ctx.schedule.every(TICK_MS, async () => {
-    const now = Date.now();
-    for (const watch of [...watches.values()]) {
-      if (now - watch.lastPolledAt < POLL_INTERVAL_MS) continue;
-      watch.lastPolledAt = now;
-      await pollOne(watch);
-    }
-  });
+  ctx.schedule.every(
+    TICK_MS,
+    async () => {
+      const now = Date.now();
+      for (const watch of [...watches.values()]) {
+        if (now - watch.lastPolledAt < POLL_INTERVAL_MS) continue;
+        watch.lastPolledAt = now;
+        await pollOne(watch);
+      }
+    },
+    { id: "watch" },
+  );
 
   ctx.events.on("host.updated", (payload) => {
     const { hostId } = payload as { hostId?: number };

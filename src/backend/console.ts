@@ -18,6 +18,7 @@ import {
 import {
   HOST_ADDRESS_MISMATCH_MESSAGE,
   HOST_NOT_ON_THIS_SERVER_MESSAGE,
+  HOST_LOGIN_REQUIRED_MESSAGE,
   asObject,
   asString,
   getErrorMessage,
@@ -147,7 +148,17 @@ export function registerConsole(ctx: PluginContext, log: KubeLogger): void {
       try {
         // syncId names the host on both sides of a sync pair; the numeric
         // id only names it in the database the client is displaying.
-        const host = await ctx.ssh.resolveHost(hostId, { syncId });
+        // allowMissingLogin is newer than the SDK types; older cores ignore it.
+        const host = await ctx.ssh.resolveHost(hostId, {
+          syncId,
+          allowMissingLogin: true,
+        } as { syncId?: string | null });
+        if (
+          (host as { loginRequired?: boolean } | null)?.loginRequired === true
+        ) {
+          send({ type: "error", message: HOST_LOGIN_REQUIRED_MESSAGE });
+          return;
+        }
         if (!host) {
           send({
             type: "error",

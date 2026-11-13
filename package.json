@@ -1,7 +1,7 @@
 {
   "name": "@termix-plugin/kubernetes",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "build": "termix-plugin build",

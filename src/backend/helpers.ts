@@ -142,6 +142,10 @@ export const HOST_ADDRESS_MISMATCH_MESSAGE =
   "The host ids on this device and on the sync server have drifted apart. " +
   'Set the connection origin to "This device" for this host, or re-run a full sync, then try again.';
 
+export const HOST_LOGIN_REQUIRED_MESSAGE =
+  "You have no login for this shared host, so the connection was refused. " +
+  'Ask its owner to turn on "Share SSH Authentication" for it, or set your own personal login for it.';
+
 export const HOST_NOT_ON_THIS_SERVER_MESSAGE =
   "This host does not exist on the sync server, so the connection was refused. " +
   'Run a sync so the server knows about it, or set the connection origin to "This device" for this host.';

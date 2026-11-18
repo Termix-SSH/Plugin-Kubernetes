@@ -264,6 +264,7 @@ describe("HelmList", () => {
     const grid = container.querySelector<HTMLElement>(
       "[style*='grid-template-columns']",
     );
-    expect(grid?.style.gridTemplateColumns).toContain("/ 3");
+    // jsdom 31 folds the calc, so "/ 3" reads as "33.33...%"
+    expect(grid?.style.gridTemplateColumns).toMatch(/\/ 3|33\.33/);
   });
 });

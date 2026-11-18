@@ -23,6 +23,7 @@ import {
   type ConnectionLogLine,
   type KubeLogger,
 } from "./helpers.js";
+import { hostKeyRefusalText, isHostKeyRefusal } from "./host-key-refusal.js";
 
 /** What one HTTP request answers with. */
 export interface ConnectStep {
@@ -124,14 +125,8 @@ function classifyConnectError(
     logs.push(
       connectionLog("error", "tcp", `TCP connection failed: ${message}`),
     );
-  } else if (message.includes("verification failed")) {
-    logs.push(
-      connectionLog(
-        "error",
-        "handshake",
-        "SSH host key has changed. For security, please open a Terminal connection to this host first to verify and accept the new key fingerprint.",
-      ),
-    );
+  } else if (isHostKeyRefusal(message)) {
+    logs.push(connectionLog("error", "handshake", hostKeyRefusalText(message)));
     return { hostKeyChanged: true, authFailed: false };
   } else if (
     message.includes("handshake") ||
@@ -175,7 +170,7 @@ export async function startConnect(
   const { sessionId, userId, host, settings, logs } = input;
   const hostId = host.id;
   const authType = (host.authType as string) || "none";
-  const credentialless = !ctx.ssh.requiresSecret(authType);
+  const credentialless = !(await ctx.ssh.requiresSecret(authType));
 
   const pending = new PendingConnect(userId, hostId);
   sessions.setPending(sessionId, pending);

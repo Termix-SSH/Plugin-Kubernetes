@@ -1,4 +1,5 @@
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
+import { keepAwake } from "./keep-awake.js";
 
 export interface HostProblem {
   /** Stable per problem, so a repeat is not sent twice. */
@@ -40,6 +41,7 @@ export function startHostAlerts(options: HostAlertsOptions): {
     if (values[setting] === true) {
       const actor = ctx.currentActor();
       if (actor) await ctx.kv.set(`${PREFIX}${hostId}`, actor);
+      keepAwake(ctx, "host-alerts", true);
     } else {
       await ctx.kv.delete(`${PREFIX}${hostId}`);
       known.delete(hostId);
@@ -82,8 +84,12 @@ export function startHostAlerts(options: HostAlertsOptions): {
     if (busy) return;
     busy = true;
     try {
-      for (const key of await ctx.kv.list()) {
-        if (!key.startsWith(PREFIX)) continue;
+      const keys = (await ctx.kv.list()).filter((key) =>
+        key.startsWith(PREFIX),
+      );
+      // No host has alerts on: nothing keeps the process running.
+      keepAwake(ctx, "host-alerts", keys.length > 0);
+      for (const key of keys) {
         const hostId = Number(key.slice(PREFIX.length));
         const owner = await ctx.kv.get(key);
         if (!Number.isInteger(hostId) || typeof owner !== "string") continue;
@@ -102,7 +108,9 @@ export function startHostAlerts(options: HostAlertsOptions): {
     }
   };
 
+  keepAwake(ctx, "host-alerts", true);
   ctx.schedule.every(options.intervalMs ?? DEFAULT_INTERVAL_MS, tick, {
+    id: "host-alerts",
     jitterMs: 5_000,
   });
   return { tick };

@@ -183,3 +183,39 @@ export interface ResourceRef {
   name: string;
   namespace?: string;
 }
+
+export interface CrdSummary {
+  name: string;
+  group: string;
+  kind: string;
+  plural: string;
+  namespaced: boolean;
+  versions: string[];
+}
+
+export interface CustomRow {
+  name: string;
+  namespace: string | null;
+  status: string;
+  tone: Tone;
+  created: string;
+}
+
+export type ForwardKind = "pods" | "services" | "deployments";
+
+export interface ForwardSpec {
+  kind: ForwardKind;
+  name: string;
+  namespace: string;
+  localPort: number;
+  remotePort: number;
+  address: "127.0.0.1" | "0.0.0.0";
+}
+
+export interface ForwardRow extends ForwardSpec {
+  id: string;
+  running: boolean;
+  context?: string;
+  created: string;
+  lastLine: string;
+}

@@ -111,7 +111,9 @@
     "network": "Ağ",
     "config": "Yapılandırma",
     "cluster": "Küme",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Özel",
+    "forwards": "Port yönlendirmeleri"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "{{name}} kaldırılsın mı?",
     "uninstallText": "Helm, bu sürümün tüm kaynaklarını siler.",
     "uninstalled": "{{name}} kaldırıldı"
+  },
+  "custom": {
+    "type": "Özel kaynak türü",
+    "loadingTypes": "Özel kaynak türleri yükleniyor...",
+    "noTypes": "Bu küme için özel kaynak tanımı yok",
+    "clusterScoped": "Küme genelinde, bir isim uzayı içinde değil",
+    "yaml": "YAML'i görüntüle ve düzenle"
+  },
+  "forwards": {
+    "action": "Port yönlendirme",
+    "new": "Yeni port yönlendirmesi",
+    "titleFor": "{{name}} için port yönlendirmesi",
+    "kind": "Yönlendirilecek hedef",
+    "remotePort": "Kümedeki port",
+    "localPort": "Ana makinedeki port",
+    "localPortHint": "kubectl, ana makinede bu portu dinler. 1024 altındaki portlar root yetkisi gerektirir.",
+    "address": "Dinleme adresi",
+    "addressLocal": "Sadece ana makine (127.0.0.1)",
+    "addressAll": "Tüm ağ arayüzleri (0.0.0.0)",
+    "addressAllHint": "Ana makineye erişebilen herkes bu porta erişebilir. Bir güvenlik duvarı kullanın veya yerel tutun ve bir tünel ile erişin.",
+    "start": "Başlat",
+    "started": "{{address}} üzerinde yönlendiriliyor",
+    "hint": "Yönlendirmeler ana makinede arka planda çalışır ve Termix'i kapattıktan sonra, durdurana veya pod yok olana kadar devam eder.",
+    "ports": "Ana makineden kümeye",
+    "running": "Çalışıyor",
+    "stopped": "Durduruldu",
+    "stop": "Durdur",
+    "stopTitle": "{{name}} için port yönlendirmesi durdurulsun mu?",
+    "copy": "Adresi kopyala",
+    "copied": "Adres kopyalandı",
+    "loading": "Port yönlendirmeleri yükleniyor...",
+    "empty": "Port yönlendirmesi yok. Bir pod, servis veya dağıtımdan başlatın."
   },
   "logs": {
     "container": "Konteyner",

@@ -111,7 +111,9 @@
     "network": "네트워크",
     "config": "설정",
     "cluster": "클러스터",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "사용자 정의",
+    "forwards": "포트 포워딩"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "{{name}}을(를) 제거하시겠습니까?",
     "uninstallText": "Helm은 이 릴리스의 모든 리소스를 삭제합니다.",
     "uninstalled": "{{name}}을(를) 제거했습니다"
+  },
+  "custom": {
+    "type": "사용자 정의 리소스 유형",
+    "loadingTypes": "사용자 정의 리소스 유형을 로드하는 중...",
+    "noTypes": "이 클러스터에는 사용자 정의 리소스 정의가 없습니다",
+    "clusterScoped": "네임스페이스가 아닌 클러스터 전체 범위",
+    "yaml": "YAML 보기 및 편집"
+  },
+  "forwards": {
+    "action": "포트 포워딩",
+    "new": "새 포트 포워딩",
+    "titleFor": "{{name}}(으)로 포트 포워딩",
+    "kind": "포워딩 대상",
+    "remotePort": "클러스터 내 포트",
+    "localPort": "호스트의 포트",
+    "localPortHint": "kubectl은 호스트의 이 포트에서 수신 대기합니다. 1024 미만의 포트는 root 권한이 필요합니다.",
+    "address": "수신 대기 주소",
+    "addressLocal": "호스트 자체만 (127.0.0.1)",
+    "addressAll": "모든 네트워크 인터페이스 (0.0.0.0)",
+    "addressAllHint": "호스트에 접근할 수 있는 누구나 이 포트에 접근할 수 있습니다. 방화벽을 사용하거나 로컬로 유지한 후 터널을 통해 접근하세요.",
+    "start": "시작",
+    "started": "{{address}}에서 포워딩 중",
+    "hint": "포워딩은 호스트에서 백그라운드로 실행되며, Termix를 닫은 후에도 중지하거나 포드가 사라질 때까지 계속 실행됩니다.",
+    "ports": "호스트에서 클러스터로",
+    "running": "실행 중",
+    "stopped": "중지됨",
+    "stop": "중지",
+    "stopTitle": "{{name}}(으)로의 포트 포워딩을 중지하시겠습니까?",
+    "copy": "주소 복사",
+    "copied": "주소가 복사되었습니다",
+    "loading": "포트 포워딩을 로드하는 중...",
+    "empty": "포트 포워딩이 없습니다. 포드, 서비스 또는 배포에서 하나를 시작하세요."
   },
   "logs": {
     "container": "컨테이너",

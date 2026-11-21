@@ -163,6 +163,43 @@
     "WS /plugin-ws/kubernetes/console": {
       "access": "user",
       "permission": "kubernetes.use"
+    },
+    "GET /plugin-api/kubernetes/crds/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/custom/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/custom/:sessionId/yaml": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "DELETE /plugin-api/kubernetes/custom/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "destructive": true,
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/kubernetes/forwards/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/kubernetes/forwards/:sessionId": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "DELETE /plugin-api/kubernetes/forwards/:sessionId/:id": {
+      "access": "user",
+      "permission": "kubernetes.use",
+      "destructive": true,
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
     }
   }
 }

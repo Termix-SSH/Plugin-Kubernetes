@@ -111,7 +111,9 @@
     "network": "Réseau",
     "config": "Configuration",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Personnalisé",
+    "forwards": "Redirections de ports"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Désinstaller {{name}} ?",
     "uninstallText": "Helm supprime toutes les ressources de cette release.",
     "uninstalled": "{{name}} désinstallé"
+  },
+  "custom": {
+    "type": "Type de ressource personnalisé",
+    "loadingTypes": "Chargement des types de ressources personnalisés...",
+    "noTypes": "Ce cluster ne contient aucune définition de ressource personnalisée",
+    "clusterScoped": "Au niveau du cluster, pas dans un espace de noms",
+    "yaml": "Afficher et modifier le YAML"
+  },
+  "forwards": {
+    "action": "Redirection de port",
+    "new": "Nouvelle redirection de port",
+    "titleFor": "Redirection de port vers {{name}}",
+    "kind": "Rediriger vers",
+    "remotePort": "Port dans le cluster",
+    "localPort": "Port sur l'hôte",
+    "localPortHint": "kubectl écoute sur ce port sur l'hôte. Les ports inférieurs à 1024 nécessitent les droits root.",
+    "address": "Écouter sur",
+    "addressLocal": "Uniquement l'hôte lui-même (127.0.0.1)",
+    "addressAll": "Toutes les interfaces réseau (0.0.0.0)",
+    "addressAllHint": "Toute personne pouvant accéder à l'hôte peut accéder à ce port. Utilisez un pare-feu ou gardez-le local et accédez-y via un tunnel.",
+    "start": "Démarrer",
+    "started": "Redirection active sur {{address}}",
+    "hint": "Les redirections s'exécutent en arrière-plan sur l'hôte et continuent de fonctionner après la fermeture de Termix, jusqu'à ce que vous les arrêtiez ou que le pod disparaisse.",
+    "ports": "Hôte vers cluster",
+    "running": "En cours",
+    "stopped": "Arrêté",
+    "stop": "Arrêter",
+    "stopTitle": "Arrêter la redirection de port vers {{name}} ?",
+    "copy": "Copier l'adresse",
+    "copied": "Adresse copiée",
+    "loading": "Chargement des redirections de ports...",
+    "empty": "Aucune redirection de port. En démarrez une depuis un pod, un service ou un déploiement."
   },
   "logs": {
     "container": "Conteneur",

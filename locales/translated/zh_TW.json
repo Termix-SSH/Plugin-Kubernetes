@@ -111,7 +111,9 @@
     "network": "網路",
     "config": "設定",
     "cluster": "叢集",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "自訂",
+    "forwards": "埠轉發"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "確定要解除安裝 {{name}} 嗎？",
     "uninstallText": "Helm 會刪除此版本的所有資源。",
     "uninstalled": "已解除安裝 {{name}}"
+  },
+  "custom": {
+    "type": "自訂資源類型",
+    "loadingTypes": "正在載入自訂資源類型...",
+    "noTypes": "此叢集沒有自訂資源定義",
+    "clusterScoped": "叢集範圍，不在命名空間中",
+    "yaml": "查看並編輯 YAML"
+  },
+  "forwards": {
+    "action": "埠轉發",
+    "new": "新增埠轉發",
+    "titleFor": "轉發至 {{name}}",
+    "kind": "轉發至",
+    "remotePort": "叢集中的埠",
+    "localPort": "主機上的埠",
+    "localPortHint": "kubectl 會在此主機埠上監聽。1024 以下的埠需要 root 權限。",
+    "address": "監聽位址",
+    "addressLocal": "僅限主機本身 (127.0.0.1)",
+    "addressAll": "所有網路介面 (0.0.0.0)",
+    "addressAllHint": "任何能存取主機的人都能存取此埠。請使用防火牆，或將其設為本地並透過隧道存取。",
+    "start": "啟動",
+    "started": "正在 {{address}} 上轉發",
+    "hint": "轉發會在主機背景執行，即使關閉 Termix 也會繼續運行，直到您停止它們或 Pod 消失為止。",
+    "ports": "主機至叢集",
+    "running": "執行中",
+    "stopped": "已停止",
+    "stop": "停止",
+    "stopTitle": "要停止轉發至 {{name}} 嗎？",
+    "copy": "複製位址",
+    "copied": "位址已複製",
+    "loading": "正在載入埠轉發...",
+    "empty": "沒有埠轉發。請從 Pod、服務或部署啟動一個。"
   },
   "logs": {
     "container": "容器",

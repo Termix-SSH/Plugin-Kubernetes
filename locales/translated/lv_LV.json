@@ -111,7 +111,9 @@
     "network": "Tīkls",
     "config": "Konfigurācija",
     "cluster": "Klusters",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Pielāgots",
+    "forwards": "Portu pāradresēšana"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Atinstalēt {{name}}?",
     "uninstallText": "Helm dzēsīs šīs izlaišanas resursus.",
     "uninstalled": "{{name}} atinstalēts"
+  },
+  "custom": {
+    "type": "Pielāgotā resursa tips",
+    "loadingTypes": "Notiek pielāgoto resursu tipu ielāde...",
+    "noTypes": "Šajā klasterī nav pielāgotu resursu definīciju",
+    "clusterScoped": "Visā klasterī, nevis telpā",
+    "yaml": "Apskatīt un rediģēt YAML"
+  },
+  "forwards": {
+    "action": "Porta pāradresēšana",
+    "new": "Jauna porta pāradresēšana",
+    "titleFor": "Porta pāradresēšana uz {{name}}",
+    "kind": "Pāradresēt uz",
+    "remotePort": "Ports klasterī",
+    "localPort": "Ports uzņēmējā",
+    "localPortHint": "kubectl klausās šajā portā uzņēmējā. Portiem zem 1024 nepieciešamas root tiesības.",
+    "address": "Klausīties uz",
+    "addressLocal": "Tikai pats uzņēmējs (127.0.0.1)",
+    "addressAll": "Visas tīkla saskarnes (0.0.0.0)",
+    "addressAllHint": "Jebkurš, kas var sasniegt uzņēmēju, var sasniegt šo portu. Izmantojiet ugunsmūri vai atstājiet to lokālu un pieslēdzieties caur tuneli.",
+    "start": "Sākt",
+    "started": "Notiek pāradresēšana uz {{address}}",
+    "hint": "Pāradresēšanas darbojas fona režīmā uzņēmējā un turpina darboties pēc Termix aizvēršanas, līdz tās tiek apturētas vai pods pazūd.",
+    "ports": "No uzņēmēja uz klasteri",
+    "running": "Darbojas",
+    "stopped": "Apturēts",
+    "stop": "Apturēt",
+    "stopTitle": "Apturēt porta pāradresēšanu uz {{name}}?",
+    "copy": "Kopēt adresi",
+    "copied": "Adrese nokopēta",
+    "loading": "Notiek portu pāradresēšanas ielāde...",
+    "empty": "Nav portu pāradresēšanas. Sāciet vienu no poda, pakalpojuma vai izvietojuma."
   },
   "logs": {
     "container": "Konteiners",

@@ -111,7 +111,9 @@
     "network": "Omrežje",
     "config": "Nastavitve",
     "cluster": "Klaster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Po meri",
+    "forwards": "Preusmerjanje vrat"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Odstraniti {{name}}?",
     "uninstallText": "Helm izbriše vse vire te izdaje.",
     "uninstalled": "{{name}} odstranjen"
+  },
+  "custom": {
+    "type": "Viri po meri",
+    "loadingTypes": "Nalaganje virov po meri...",
+    "noTypes": "Ta cluster nima definicij virov po meri",
+    "clusterScoped": "Velja za cel cluster, ni v imenskem prostoru",
+    "yaml": "Pregled in urejanje YAML"
+  },
+  "forwards": {
+    "action": "Preusmerjanje vrat",
+    "new": "Novo preusmerjanje vrat",
+    "titleFor": "Preusmerjanje vrat na {{name}}",
+    "kind": "Preusmeri na",
+    "remotePort": "Vrata v clusterju",
+    "localPort": "Vrata na gostitelju",
+    "localPortHint": "kubectl posluša na tem vratu na gostitelju. Vrata pod 1024 zahtevajo root.",
+    "address": "Poslušaj na",
+    "addressLocal": "Samo gostitelj (127.0.0.1)",
+    "addressAll": "Vse omrežne vmesnike (0.0.0.0)",
+    "addressAllHint": "Kdor lahko doseže gostitelja, lahko doseže to vrata. Uporabite požarni zid ali pa ohranite lokalno in dostopajte prek tunela.",
+    "start": "Zaženi",
+    "started": "Preusmerjanje na {{address}}",
+    "hint": "Preusmerjanja se izvajajo v ozadju na gostitelju in se nadaljujejo tudi po zapiranju Termixa, dokler jih ne ustavite ali dokler se kontejner ne odstrani.",
+    "ports": "Gostitelj do clusterja",
+    "running": "V teku",
+    "stopped": "Ustavljeno",
+    "stop": "Ustavi",
+    "stopTitle": "Ustaviti preusmerjanje vrat na {{name}}?",
+    "copy": "Kopiraj naslov",
+    "copied": "Naslov kopiran",
+    "loading": "Nalaganje preusmeritev vrat...",
+    "empty": "Ni preusmeritev vrat. Zaženite eno iz kontejnerja, storitve ali razporeditve."
   },
   "logs": {
     "container": "Posodelek",

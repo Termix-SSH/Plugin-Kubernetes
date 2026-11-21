@@ -5,6 +5,10 @@ import {
 } from "@termix-ssh/plugin-sdk/frontend";
 import type { ConnectionStage } from "@termix-ssh/plugin-sdk/ui";
 import type {
+  CrdSummary,
+  CustomRow,
+  ForwardRow,
+  ForwardSpec,
   HelmRelease,
   HelmRevision,
   KindId,
@@ -299,6 +303,66 @@ function createKubernetesApi(api: PluginApiClient) {
           `/secrets/${sessionId}/${encodeURIComponent(ref.name)}/reveal`,
           params(objectScope(context, ref)),
         ),
+      ),
+
+    crds: (sessionId: string, context?: string) =>
+      call<CrdSummary[]>("list custom resource types", () =>
+        api.get(`/crds/${sessionId}`, { params: params({ context }) }),
+      ),
+
+    customList: (sessionId: string, crd: CrdSummary, scope: Scope) =>
+      call<CustomRow[]>("list custom resources", () =>
+        api.get(`/custom/${sessionId}`, {
+          params: params(scope, {
+            crd: crd.name,
+            ...(crd.namespaced ? {} : { namespaced: false }),
+          }),
+        }),
+      ),
+
+    customYaml: (
+      sessionId: string,
+      crd: string,
+      row: { name: string; namespace: string | null },
+      context?: string,
+    ) =>
+      call<{ yaml: string }>("load the YAML", () =>
+        api.get(`/custom/${sessionId}/yaml`, {
+          params: params(
+            { context, namespace: row.namespace ?? undefined },
+            { crd, name: row.name },
+          ),
+        }),
+      ),
+
+    customDelete: (
+      sessionId: string,
+      crd: string,
+      row: { name: string; namespace: string | null },
+      context?: string,
+    ) =>
+      call<{ success: boolean }>("delete the resource", () =>
+        api.delete(`/custom/${sessionId}`, {
+          params: params(
+            { context, namespace: row.namespace ?? undefined },
+            { crd, name: row.name },
+          ),
+        }),
+      ),
+
+    forwards: (sessionId: string) =>
+      call<ForwardRow[]>("list port forwards", () =>
+        api.get(`/forwards/${sessionId}`),
+      ),
+
+    startForward: (sessionId: string, spec: ForwardSpec, context?: string) =>
+      call<{ success: boolean; id: string }>("start the port forward", () =>
+        api.post(`/forwards/${sessionId}`, { ...spec, ...params({ context }) }),
+      ),
+
+    stopForward: (sessionId: string, id: string) =>
+      call<{ success: boolean }>("stop the port forward", () =>
+        api.delete(`/forwards/${sessionId}/${id}`),
       ),
 
     helmReleases: (sessionId: string, scope: Scope) =>

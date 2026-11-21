@@ -111,7 +111,9 @@
     "network": "רשת",
     "config": "הגדרות",
     "cluster": "קלאסטר",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "מותאם אישית",
+    "forwards": "הפניות יציאות"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "להסיר את ההתקנה של {{name}}?",
     "uninstallText": "Helm ימחק כל משאב של שחרור זה.",
     "uninstalled": "הוסרה ההתקנה של {{name}}"
+  },
+  "custom": {
+    "type": "סוג משאב מותאם אישית",
+    "loadingTypes": "טוען סוגי משאבים מותאמים אישית...",
+    "noTypes": "ללא הגדרות משאבים מותאמים אישית ב-Cluster הזה",
+    "clusterScoped": "בתחום ה-Cluster כולו, לא ב-Namespace",
+    "yaml": "צפייה ועריכת YAML"
+  },
+  "forwards": {
+    "action": "הפניית יציאה",
+    "new": "הפניית יציאה חדשה",
+    "titleFor": "הפניית יציאה ל-{{name}}",
+    "kind": "הפניה אל",
+    "remotePort": "יציאה ב-Cluster",
+    "localPort": "יציאה במארח",
+    "localPortHint": "kubectl מקשיב ביציאה זו במארח. יציאות מתחת ל-1024 דורשות הרשאות root.",
+    "address": "הקשבה ב-",
+    "addressLocal": "רק המארח עצמו (127.0.0.1)",
+    "addressAll": "כל ממשק הרשת (0.0.0.0)",
+    "addressAllHint": "כל מי שיכול להגיע למארח יוכל להגיע ליציאה זו. השתמש בחומת אש או השאר מקומי והגש באמצעות מנהרה.",
+    "start": "התחל",
+    "started": "מפנה ב-{{address}}",
+    "hint": "הפניות רצות ברקע במארח וממשיכות לפעול לאחר סגירת Termix, עד שתעצור אותן או שה-Pod יוסר.",
+    "ports": "ממארח ל-Cluster",
+    "running": "פעיל",
+    "stopped": "עצור",
+    "stop": "עצור",
+    "stopTitle": "לעצור את הפניית היציאה ל-{{name}}?",
+    "copy": "העתק כתובת",
+    "copied": "הכתובת הועתקה",
+    "loading": "טוען הפניות יציאות...",
+    "empty": "אין הפניות יציאות. התחל אחת מ-Pod, שירות או Deployment."
   },
   "logs": {
     "container": "מיכל",

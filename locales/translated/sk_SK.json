@@ -111,7 +111,9 @@
     "network": "Sieť",
     "config": "Konfigurácia",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Vlastné",
+    "forwards": "Presmerovania portov"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Odinštalovať {{name}}?",
     "uninstallText": "Helm odstráni všetky zdroje tohto release.",
     "uninstalled": "Odinštalované {{name}}"
+  },
+  "custom": {
+    "type": "Typ vlastného zdroja",
+    "loadingTypes": "Načítavajú sa typy vlastných zdrojov...",
+    "noTypes": "Tento cluster nemá definície vlastných zdrojov",
+    "clusterScoped": "Celoclustrové, nie v mennom priestore",
+    "yaml": "Zobraziť a upraviť YAML"
+  },
+  "forwards": {
+    "action": "Presmerovanie portu",
+    "new": "Nové presmerovanie portu",
+    "titleFor": "Presmerovanie portu na {{name}}",
+    "kind": "Presmerovať na",
+    "remotePort": "Port v clustri",
+    "localPort": "Port na hostiteľovi",
+    "localPortHint": "kubectl počúva na tomto porte na hostiteľovi. Porty pod 1024 vyžadujú práva root.",
+    "address": "Počúvať na",
+    "addressLocal": "Len samotný hostiteľ (127.0.0.1)",
+    "addressAll": "Všetky sieťové rozhrania (0.0.0.0)",
+    "addressAllHint": "Každý, kto má prístup k hostiteľovi, má prístup k tomuto portu. Použite firewall alebo ho nechajte lokálny a prístup k nemu získajte cez tunel.",
+    "start": "Spustiť",
+    "started": "Presmerovanie na {{address}}",
+    "hint": "Presmerovania bežia na pozadí na hostiteľovi a pokračujú v behu aj po zatvorení Termixu, kým ich nezastavíte alebo kým sa kontajner neodstráni.",
+    "ports": "Hostiteľ do clustra",
+    "running": "Beží",
+    "stopped": "Zastavené",
+    "stop": "Zastaviť",
+    "stopTitle": "Zastaviť presmerovanie portu na {{name}}?",
+    "copy": "Kopírovať adresu",
+    "copied": "Adresa skopírovaná",
+    "loading": "Načítavajú sa presmerovania portov...",
+    "empty": "Žiadne presmerovania portov. Spustite jedno z kontajnera, služby alebo nasadenia."
   },
   "logs": {
     "container": "Kontajner",

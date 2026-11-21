@@ -111,7 +111,9 @@
     "network": "Xarxa",
     "config": "Configuració",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Personalitzat",
+    "forwards": "Reenviaments de port"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Vols desinstal·lar {{name}}?",
     "uninstallText": "Helm elimina tots els recursos d'aquest allistament.",
     "uninstalled": "S'ha desinstal·lat {{name}}"
+  },
+  "custom": {
+    "type": "Tipus de recurs personalitzat",
+    "loadingTypes": "S'estan carregant els tipus de recurs personalitzats...",
+    "noTypes": "Aquest clúster no té definicions de recursos personalitzats",
+    "clusterScoped": "Abast global del clúster, no dins d'un espai de noms",
+    "yaml": "Visualitza i edita el YAML"
+  },
+  "forwards": {
+    "action": "Reenviament de port",
+    "new": "Nou reenviament de port",
+    "titleFor": "Reenviament de port a {{name}}",
+    "kind": "Reenviar a",
+    "remotePort": "Port al clúster",
+    "localPort": "Port a l'amfitrió",
+    "localPortHint": "kubectl escolta en aquest port a l'amfitrió. Els ports per sota de 1024 requereixen permisos de root.",
+    "address": "Escolta a",
+    "addressLocal": "Només l'amfitrió mateix (127.0.0.1)",
+    "addressAll": "Totes les interfícies de xarxa (0.0.0.0)",
+    "addressAllHint": "Qualsevol persona que pugui accedir a l'amfitrió pot accedir a aquest port. Utilitza un tallafocs o mantén-lo local i hi accedeix mitjançant un túnel.",
+    "start": "Inicia",
+    "started": "S'està reenviant a {{address}}",
+    "hint": "Els reenviaments s'executen en segon pla a l'amfitrió i continuen funcionant després de tancar Termix, fins que els aturis o el pod desaparegui.",
+    "ports": "Amfitrió al clúster",
+    "running": "S'està executant",
+    "stopped": "Aturat",
+    "stop": "Atura",
+    "stopTitle": "Vols aturar el reenviament de port a {{name}}?",
+    "copy": "Copia l'adreça",
+    "copied": "Adreça copiada",
+    "loading": "S'estan carregant els reenviaments de port...",
+    "empty": "No hi ha reenviaments de port. Inicia'n un des d'un pod, servei o desplegament."
   },
   "logs": {
     "container": "Contenidor",

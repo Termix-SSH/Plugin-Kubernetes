@@ -111,7 +111,9 @@
     "network": "Netzwerk",
     "config": "Konfiguration",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Benutzerdefiniert",
+    "forwards": "Port-Weiterleitungen"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "{{name}} deinstallieren?",
     "uninstallText": "Helm löscht alle Ressourcen dieses Releases.",
     "uninstalled": "{{name}} deinstalliert"
+  },
+  "custom": {
+    "type": "Benutzerdefinierter Ressourcentyp",
+    "loadingTypes": "Benutzerdefinierte Ressourcentypen werden geladen...",
+    "noTypes": "Dieser Cluster hat keine benutzerdefinierten Ressourcendefinitionen",
+    "clusterScoped": "Clusterweit, nicht in einem Namespace",
+    "yaml": "YAML anzeigen und bearbeiten"
+  },
+  "forwards": {
+    "action": "Port-Weiterleitung",
+    "new": "Neue Port-Weiterleitung",
+    "titleFor": "Port-Weiterleitung zu {{name}}",
+    "kind": "Weiterleiten zu",
+    "remotePort": "Port im Cluster",
+    "localPort": "Port auf dem Host",
+    "localPortHint": "kubectl hört auf diesem Port auf dem Host. Ports unter 1024 benötigen Root-Rechte.",
+    "address": "Hören auf",
+    "addressLocal": "Nur der Host selbst (127.0.0.1)",
+    "addressAll": "Jede Netzwerkschnittstelle (0.0.0.0)",
+    "addressAllHint": "Jeder, der den Host erreichen kann, kann auch diesen Port erreichen. Verwenden Sie eine Firewall oder halten Sie es lokal und greifen Sie über einen Tunnel darauf zu.",
+    "start": "Starten",
+    "started": "Weiterleitung auf {{address}}",
+    "hint": "Weiterleitungen laufen im Hintergrund auf dem Host und bleiben aktiv, auch wenn Sie Termix schließen, bis Sie sie stoppen oder der Pod verschwindet.",
+    "ports": "Host zu Cluster",
+    "running": "Läuft",
+    "stopped": "Gestoppt",
+    "stop": "Stoppen",
+    "stopTitle": "Port-Weiterleitung zu {{name}} stoppen?",
+    "copy": "Adresse kopieren",
+    "copied": "Adresse kopiert",
+    "loading": "Port-Weiterleitungen werden geladen...",
+    "empty": "Keine Port-Weiterleitungen. Starten Sie eine von einem Pod, Service oder Deployment."
   },
   "logs": {
     "container": "Container",

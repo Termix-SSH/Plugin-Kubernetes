@@ -111,7 +111,9 @@
     "network": "Netværk",
     "config": "Konfiguration",
     "cluster": "Kluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Tilpasset",
+    "forwards": "Portvideregivelser"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Afinstaller {{name}}?",
     "uninstallText": "Helm sletter alle ressourcer for denne release.",
     "uninstalled": "Afinstallerede {{name}}"
+  },
+  "custom": {
+    "type": "Tilpasset ressource type",
+    "loadingTypes": "Indlæser tilpassede ressource typer...",
+    "noTypes": "Denne cluster har ingen tilpassede ressource definitioner",
+    "clusterScoped": "Cluster-omfattende, ikke i et namespace",
+    "yaml": "Vis og rediger YAML"
+  },
+  "forwards": {
+    "action": "Portvideregivelse",
+    "new": "Ny portvideregivelse",
+    "titleFor": "Portvideregivelse til {{name}}",
+    "kind": "Videregiv til",
+    "remotePort": "Port i clusteren",
+    "localPort": "Port på værten",
+    "localPortHint": "kubectl lytter på denne port på værten. Porte under 1024 kræver root-adgang.",
+    "address": "Lyt på",
+    "addressLocal": "Kun værten selv (127.0.0.1)",
+    "addressAll": "Alle netværksgrænseflader (0.0.0.0)",
+    "addressAllHint": "Alle, der kan nå værten, kan nå denne port. Brug en firewall, eller behold den lokal og nå den via en tunnel.",
+    "start": "Start",
+    "started": "Videregiver på {{address}}",
+    "hint": "Videregivelser kører i baggrunden på værten og fortsætter med at køre, efter du lukker Termix, indtil du stopper dem eller poden forsvinder.",
+    "ports": "Vært til cluster",
+    "running": "Kører",
+    "stopped": "Stoppet",
+    "stop": "Stop",
+    "stopTitle": "Stop portvideregivelsen til {{name}}?",
+    "copy": "Kopiér adresse",
+    "copied": "Adresse kopieret",
+    "loading": "Indlæser portvideregivelser...",
+    "empty": "Ingen portvideregivelser. Start en fra en pod, service eller deployment."
   },
   "logs": {
     "container": "Container",

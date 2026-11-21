@@ -111,7 +111,9 @@
     "network": "Võrk",
     "config": "Seaded",
     "cluster": "Klaster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Kohandatud",
+    "forwards": "Pordi edasiühendused"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Kas eemaldada {{name}}?",
     "uninstallText": "Helm kustutab selle väljaande kõik ressursid.",
     "uninstalled": "Eemaldati {{name}}"
+  },
+  "custom": {
+    "type": "Kohandatud ressursi tüüp",
+    "loadingTypes": "Kohandatud ressursitüüpide laadimine...",
+    "noTypes": "Selles klustris pole kohandatud ressurside definitsioone",
+    "clusterScoped": "Kogu klustri ulatuses, mitte nimeruumis",
+    "yaml": "YAML vaatamine ja muutmine"
+  },
+  "forwards": {
+    "action": "Pordi edasiühendus",
+    "new": "Uus pordi edasiühendus",
+    "titleFor": "Pordi edasiühendus aadressile {{name}}",
+    "kind": "Edasiühendus sihtkohta",
+    "remotePort": "Port klustris",
+    "localPort": "Port peremasinale",
+    "localPortHint": "kubectl kuulab sellel peremasinale kuuluvatel portidel. Portidele alla 1024 on vaja root-õigusi.",
+    "address": "Kuula aadressil",
+    "addressLocal": "Ainult peremasin ise (127.0.0.1)",
+    "addressAll": "Kõik võrgukaardid (0.0.0.0)",
+    "addressAllHint": "Igaüks, kes suudab peremasinale ligi pääseda, saab ligi sellele pordile. Kasuta tulemüüri või hoidke see kohalikuks ja pääsege ligi tunneli kaudu.",
+    "start": "Käivita",
+    "started": "Edasiühendus aadressil {{address}}",
+    "hint": "Edasiühendused töötavad taustal peremasinale ja jätkavad tööd pärast Termixi sulgemist, kuni need peatate või pod kaob.",
+    "ports": "Peremasinast klustri poole",
+    "running": "Töötamas",
+    "stopped": "Peatatud",
+    "stop": "Peata",
+    "stopTitle": "Kas peatada pordi edasiühendus aadressile {{name}}?",
+    "copy": "Kopeeri aadress",
+    "copied": "Aadress kopeeritud",
+    "loading": "Pordi edasiühenduste laadimine...",
+    "empty": "Pordi edasiühendusi pole. Käivitage üks podist, teenusest või paigutusest."
   },
   "logs": {
     "container": "Konteiner",

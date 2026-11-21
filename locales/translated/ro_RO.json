@@ -111,7 +111,9 @@
     "network": "Rețea",
     "config": "Config",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Personalizat",
+    "forwards": "Redirecționări de port"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Uninstall {{name}}?",
     "uninstallText": "Helm deletes every resource of this release.",
     "uninstalled": "Uninstalled {{name}}"
+  },
+  "custom": {
+    "type": "Tip de resursă personalizat",
+    "loadingTypes": "Se încarcă tipurile de resurse personalizate...",
+    "noTypes": "Acest cluster nu are definiții de resurse personalizate",
+    "clusterScoped": "La nivel de cluster, nu într-un namespace",
+    "yaml": "Vizualizare și editare YAML"
+  },
+  "forwards": {
+    "action": "Redirecționare de port",
+    "new": "Redirecționare de port nouă",
+    "titleFor": "Redirecționare de port către {{name}}",
+    "kind": "Redirecționare către",
+    "remotePort": "Port în cluster",
+    "localPort": "Port pe gazdă",
+    "localPortHint": "kubectl ascultă pe acest port pe gazdă. Porturile sub 1024 necesită drepturi de root.",
+    "address": "Ascultă pe",
+    "addressLocal": "Doar gazda însăși (127.0.0.1)",
+    "addressAll": "Toate interfețele de rețea (0.0.0.0)",
+    "addressAllHint": "Oricine poate ajunge la gazdă poate accesa acest port. Folosește un firewall sau păstrează-l local și accesează-l printr-un tunel.",
+    "start": "Pornește",
+    "started": "Redirecționare activă pe {{address}}",
+    "hint": "Redirecționările rulează în fundal pe gazdă și continuă să ruleze după ce închizi Termix, până le oprești sau până podul dispare.",
+    "ports": "De la gazdă la cluster",
+    "running": "Active",
+    "stopped": "Oprite",
+    "stop": "Oprește",
+    "stopTitle": "Oprești redirecționarea de port către {{name}}?",
+    "copy": "Copiază adresa",
+    "copied": "Adresa a fost copiată",
+    "loading": "Se încarcă redirecționările de port...",
+    "empty": "Nicio redirecționare de port. Pornește una dintr-un pod, serviciu sau deployment."
   },
   "logs": {
     "container": "Container",

@@ -111,7 +111,9 @@
     "network": "Rete",
     "config": "Config",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Personalizzato",
+    "forwards": "Inoltro porte"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Disinstallare {{name}}?",
     "uninstallText": "Helm elimina tutte le risorse di questa release.",
     "uninstalled": "Disinstallato {{name}}"
+  },
+  "custom": {
+    "type": "Tipo di risorsa personalizzata",
+    "loadingTypes": "Caricamento tipi di risorse personalizzate...",
+    "noTypes": "Questo cluster non ha definizioni di risorse personalizzate",
+    "clusterScoped": "A livello di cluster, non in un namespace",
+    "yaml": "Visualizza e modifica YAML"
+  },
+  "forwards": {
+    "action": "Inoltro porta",
+    "new": "Nuovo inoltro porta",
+    "titleFor": "Inoltro porta verso {{name}}",
+    "kind": "Inoltra a",
+    "remotePort": "Porta nel cluster",
+    "localPort": "Porta sull'host",
+    "localPortHint": "kubectl ascolta su questa porta sull'host. Le porte inferiori a 1024 richiedono i privilegi di root.",
+    "address": "Ascolta su",
+    "addressLocal": "Solo l'host stesso (127.0.0.1)",
+    "addressAll": "Tutte le interfacce di rete (0.0.0.0)",
+    "addressAllHint": "Chiunque possa raggiungere l'host può accedere a questa porta. Usa un firewall o mantienila locale e accedici tramite un tunnel.",
+    "start": "Avvia",
+    "started": "Inoltro attivo su {{address}}",
+    "hint": "Gli inoltri vengono eseguiti in background sull'host e continuano a funzionare anche dopo la chiusura di Termix, finché non li arresti o il pod venga rimosso.",
+    "ports": "Da host a cluster",
+    "running": "In esecuzione",
+    "stopped": "Arrestato",
+    "stop": "Arresta",
+    "stopTitle": "Arrestare l'inoltro porta verso {{name}}?",
+    "copy": "Copia indirizzo",
+    "copied": "Indirizzo copiato",
+    "loading": "Caricamento inoltri porte...",
+    "empty": "Nessun inoltro porta. Avviane uno da un pod, servizio o deployment."
   },
   "logs": {
     "container": "Contenitore",

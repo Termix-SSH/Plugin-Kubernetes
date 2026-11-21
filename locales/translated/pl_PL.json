@@ -111,7 +111,9 @@
     "network": "Sieć",
     "config": "Konfiguracja",
     "cluster": "Klaster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Własne",
+    "forwards": "Przekierowania portów"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Odinstalować {{name}}?",
     "uninstallText": "Helm usunie wszystkie zasoby tej wersji.",
     "uninstalled": "Odinstalowano {{name}}"
+  },
+  "custom": {
+    "type": "Własny typ zasobu",
+    "loadingTypes": "Ładowanie własnych typów zasobów...",
+    "noTypes": "Ten klaster nie zawiera definicji własnych zasobów",
+    "clusterScoped": "Obejmuje cały klaster, nie jest w przestrzeni nazw",
+    "yaml": "Wyświetl i edytuj YAML"
+  },
+  "forwards": {
+    "action": "Przekierowanie portu",
+    "new": "Nowe przekierowanie portu",
+    "titleFor": "Przekierowanie portu do {{name}}",
+    "kind": "Przekieruj do",
+    "remotePort": "Port w klastrze",
+    "localPort": "Port na hoście",
+    "localPortHint": "kubectl nasłuchuje na tym porcie na hoście. Porty poniżej 1024 wymagają uprawnień roota.",
+    "address": "Nasłuchuj na",
+    "addressLocal": "Tylko sam host (127.0.0.1)",
+    "addressAll": "Każdy interfejs sieciowy (0.0.0.0)",
+    "addressAllHint": "Każdy, kto może dotrzeć do hosta, może dotrzeć do tego portu. Użyj zapory sieciowej lub utrzymaj go lokalnie i łącz się przez tunel.",
+    "start": "Uruchom",
+    "started": "Przekierowanie na {{address}}",
+    "hint": "Przekierowania działają w tle na hoście i kontynuują działanie po zamknięciu Termix, dopóki ich nie zatrzymasz lub kontener nie zniknie.",
+    "ports": "Host do klastra",
+    "running": "Uruchomione",
+    "stopped": "Zatrzymane",
+    "stop": "Zatrzymaj",
+    "stopTitle": "Zatrzymać przekierowanie portu do {{name}}?",
+    "copy": "Kopiuj adres",
+    "copied": "Adres skopiowany",
+    "loading": "Ładowanie przekierowań portów...",
+    "empty": "Brak przekierowań portów. Uruchom jedno z kontenera, usługi lub wdrożenia."
   },
   "logs": {
     "container": "Kontener",

@@ -111,7 +111,9 @@
     "network": "Hálózat",
     "config": "Konfiguráció",
     "cluster": "Klaszter",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Egyedi",
+    "forwards": "Port átirányítások"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Eltávolítja a(z) {{name}} elemet?",
     "uninstallText": "A Helm törli a kiadás összes erőforrását.",
     "uninstalled": "A(z) {{name}} eltávolítva"
+  },
+  "custom": {
+    "type": "Egyedi erőforrás típus",
+    "loadingTypes": "Egyedi erőforrás típusok betöltése...",
+    "noTypes": "Ez a klaszter nem tartalmaz egyedi erőforrás definíciókat",
+    "clusterScoped": "Klaszter szintű, nem névtérben",
+    "yaml": "YAML megtekintése és szerkesztése"
+  },
+  "forwards": {
+    "action": "Port átirányítás",
+    "new": "Új port átirányítás",
+    "titleFor": "Port átirányítás ide: {{name}}",
+    "kind": "Átirányítás ide",
+    "remotePort": "Port a klaszterben",
+    "localPort": "Port a hoszon",
+    "localPortHint": "A kubectl ezen a porton figyel a hoszon. A 1024 alatti portok root jogosultságot igényelnek.",
+    "address": "Figyelés ezen",
+    "addressLocal": "Csak a hosz maga (127.0.0.1)",
+    "addressAll": "Minden hálózati interfész (0.0.0.0)",
+    "addressAllHint": "Bárki, aki elérheti a hosztot, elérheti ezt a portot is. Használj tűzfalat, vagy tartsd lokálisnak, és érj el hozzá alagúttal.",
+    "start": "Indítás",
+    "started": "Átirányítás fut a(z) {{address}} címen",
+    "hint": "Az átirányítások a háttérben futnak a hoszon, és a Termix bezárása után is tovább futnak, amíg meg nem állítod őket, vagy a pod eltűnik.",
+    "ports": "Hosztól klaszterig",
+    "running": "Fut",
+    "stopped": "Leállítva",
+    "stop": "Leállítás",
+    "stopTitle": "Megállítod a port átirányítást ide: {{name}}?",
+    "copy": "Cím másolása",
+    "copied": "Cím másolva",
+    "loading": "Port átirányítások betöltése...",
+    "empty": "Nincsenek port átirányítások. Indíts egyet egy podból, szolgáltatásból vagy telepítésből."
   },
   "logs": {
     "container": "Konténer",

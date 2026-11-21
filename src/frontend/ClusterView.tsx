@@ -23,6 +23,8 @@ import {
 import { ClusterProvider, type ClusterValue } from "./cluster-context";
 import { ApplyView } from "./components/ApplyView";
 import { HelmDetail, HelmList } from "./components/HelmView";
+import { CustomResources } from "./components/CustomResources";
+import { PortForwards } from "./components/PortForwards";
 import { ResourceDetail } from "./components/ResourceDetail";
 import { ResourceList, usageKey } from "./components/ResourceList";
 import { docsUrl } from "./docs";
@@ -109,8 +111,10 @@ export function ClusterView({
   const [applyOpen, setApplyOpen] = React.useState(false);
 
   const isHelm = section === "helm";
+  // These two load their own lists.
+  const ownList = section === "custom" || section === "forwards";
   const scope = { context, namespace: namespace || undefined };
-  const listKey = `${context ?? ""}|${namespace}|${isHelm ? "helm" : kind}`;
+  const listKey = `${context ?? ""}|${namespace}|${isHelm || ownList ? section : kind}`;
   const listKeyRef = React.useRef(listKey);
   listKeyRef.current = listKey;
 
@@ -144,6 +148,10 @@ export function ClusterView({
 
   const loadList = React.useCallback(async () => {
     const key = listKeyRef.current;
+    if (ownList) {
+      setLoaded(true);
+      return false;
+    }
     setLoading(true);
     try {
       if (isHelm) {
@@ -168,7 +176,7 @@ export function ClusterView({
     }
     // scope is rebuilt each render from context and namespace.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kube, sessionId, kind, isHelm, context, namespace]);
+  }, [kube, sessionId, kind, isHelm, ownList, context, namespace]);
 
   const detailOpen = !!selected || !!release;
 
@@ -196,7 +204,7 @@ export function ClusterView({
       return true;
     },
     { minIntervalMs: 15_000, maxIntervalMs: 60_000, stablePollsPerStep: 2 },
-    !!usageKind && metricsOn && !detailOpen && !isHelm && !compact,
+    !!usageKind && metricsOn && !detailOpen && !isHelm && !ownList && !compact,
   );
 
   const open = React.useCallback((ref: ResourceRef, tab?: DetailTab) => {
@@ -278,7 +286,8 @@ export function ClusterView({
   }
 
   const sectionKinds = SECTIONS.find((s) => s.id === section)?.kinds ?? [];
-  const namespaceMatters = isHelm || isNamespaced(kind);
+  const namespaceMatters =
+    isHelm || section === "custom" || (!ownList && isNamespaced(kind));
 
   const namespacePicker = (
     <Select2
@@ -369,7 +378,7 @@ export function ClusterView({
         onChange={setSearch}
         placeholder={t("toolbar.search")}
       />
-      {!isHelm && kind !== "events" && (
+      {!isHelm && !ownList && kind !== "events" && (
         <Segmented
           value={statusFilter}
           onChange={(next) => setStatusFilter(next as StatusFilter)}
@@ -378,7 +387,9 @@ export function ClusterView({
           )}
         />
       )}
-      <div className="ml-auto flex items-center gap-2">
+      <div
+        className={cn("ml-auto flex items-center gap-2", ownList && "hidden")}
+      >
         <ViewToggle
           view={layout === "table" ? "list" : "grid"}
           onView={(next) => {
@@ -450,6 +461,14 @@ export function ClusterView({
           >
             {error}
           </NoticePanel>
+        ) : section === "custom" ? (
+          <CustomResources
+            namespace={namespace}
+            search={search}
+            showNamespace={!namespace}
+          />
+        ) : section === "forwards" ? (
+          <PortForwards search={search} />
         ) : isHelm ? (
           <HelmList
             releases={filteredReleases}

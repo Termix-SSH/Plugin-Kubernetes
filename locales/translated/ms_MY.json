@@ -111,7 +111,9 @@
     "network": "Rangkaian",
     "config": "Konfigurasi",
     "cluster": "Kluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Tersuai",
+    "forwards": "Pengehalaan port"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Mahu nyahpasang {{name}}?",
     "uninstallText": "Helm akan memadamkan setiap sumber pelepasan ini.",
     "uninstalled": "Telah dinyahpasang {{name}}"
+  },
+  "custom": {
+    "type": "Jenis sumber tersuai",
+    "loadingTypes": "Memuatkan jenis sumber tersuai...",
+    "noTypes": "Kluster ini tidak mempunyai definisi sumber tersuai",
+    "clusterScoped": "Seluruh kluster, bukan dalam ruang nama",
+    "yaml": "Lihat dan sunting YAML"
+  },
+  "forwards": {
+    "action": "Pengehalaan port",
+    "new": "Pengehalaan port baharu",
+    "titleFor": "Pengehalaan port ke {{name}}",
+    "kind": "Halakan ke",
+    "remotePort": "Port dalam kluster",
+    "localPort": "Port pada hos",
+    "localPortHint": "kubectl mendengar pada port ini di hos. Port di bawah 1024 memerlukan root.",
+    "address": "Dengar pada",
+    "addressLocal": "Hanya hos itu sendiri (127.0.0.1)",
+    "addressAll": "Setiap antara muka rangkaian (0.0.0.0)",
+    "addressAllHint": "Sesiapa sahaja yang boleh mencapai hos boleh mencapai port ini. Gunakan tembok api atau kekalkan ia tempatan dan capai ia dengan terowong.",
+    "start": "Mula",
+    "started": "Menghalakan pada {{address}}",
+    "hint": "Pengehalaan berjalan di latar belakang pada hos dan terus berjalan selepas anda menutup Termix, sehingga anda menghentikannya atau pod hilang.",
+    "ports": "Hos ke kluster",
+    "running": "Berjalan",
+    "stopped": "Berhenti",
+    "stop": "Hentikan",
+    "stopTitle": "Hentikan pengehalaan port ke {{name}}?",
+    "copy": "Salin alamat",
+    "copied": "Alamat disalin",
+    "loading": "Memuatkan pengehalaan port...",
+    "empty": "Tiada pengehalaan port. Mula satu dari pod, perkhidmatan atau pelarasan."
   },
   "logs": {
     "container": "Kontena",

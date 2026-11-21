@@ -1,6 +1,13 @@
 import type { KindId, ResourceAction, Tone } from "./types";
 
-export type SectionId = "workloads" | "network" | "config" | "cluster" | "helm";
+export type SectionId =
+  | "workloads"
+  | "network"
+  | "config"
+  | "cluster"
+  | "helm"
+  | "custom"
+  | "forwards";
 
 export const SECTIONS: { id: SectionId; kinds: KindId[] }[] = [
   {
@@ -19,6 +26,8 @@ export const SECTIONS: { id: SectionId; kinds: KindId[] }[] = [
   { id: "config", kinds: ["configmaps", "secrets", "pvcs"] },
   { id: "cluster", kinds: ["nodes", "namespaces", "pvs", "events"] },
   { id: "helm", kinds: [] },
+  { id: "custom", kinds: [] },
+  { id: "forwards", kinds: [] },
 ];
 
 export const CLUSTER_KINDS: KindId[] = ["nodes", "namespaces", "pvs"];

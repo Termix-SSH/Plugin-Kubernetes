@@ -7,6 +7,7 @@ import { registerLogs } from "./logs.js";
 import { registerMetrics } from "./metrics.js";
 import { registerHelm } from "./helm.js";
 import { registerManifests } from "./manifests.js";
+import { registerCustom } from "./custom.js";
 import { registerConsole } from "./console.js";
 import { registerOperations } from "./operations.js";
 import { registerServices } from "./services.js";
@@ -32,6 +33,7 @@ export async function activate(ctx: PluginContext) {
   registerMetrics(router, deps, kit);
   registerHelm(router, deps, kit);
   registerManifests(router, deps, kit);
+  registerCustom(router, deps, kit);
   registerSummary(router, ctx);
   registerConsole(ctx, log);
   registerServices(ctx, log);

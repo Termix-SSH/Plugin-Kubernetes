@@ -111,7 +111,9 @@
     "network": "Mạng",
     "config": "Cấu hình",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Tùy chỉnh",
+    "forwards": "Chuyển tiếp cổng"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Gỡ cài đặt {{name}}?",
     "uninstallText": "Helm xóa mọi tài nguyên của bản phát hành này.",
     "uninstalled": "Đã gỡ cài đặt {{name}}"
+  },
+  "custom": {
+    "type": "Loại tài nguyên tùy chỉnh",
+    "loadingTypes": "Đang tải các loại tài nguyên tùy chỉnh...",
+    "noTypes": "Cluster này không có định nghĩa tài nguyên tùy chỉnh nào",
+    "clusterScoped": "Phạm vi toàn cluster, không nằm trong namespace",
+    "yaml": "Xem và chỉnh sửa YAML"
+  },
+  "forwards": {
+    "action": "Chuyển tiếp cổng",
+    "new": "Chuyển tiếp cổng mới",
+    "titleFor": "Chuyển tiếp cổng đến {{name}}",
+    "kind": "Chuyển tiếp đến",
+    "remotePort": "Cổng trong cluster",
+    "localPort": "Cổng trên host",
+    "localPortHint": "kubectl lắng nghe trên cổng này trên host. Các cổng dưới 1024 cần quyền root.",
+    "address": "Lắng nghe trên",
+    "addressLocal": "Chỉ chính host (127.0.0.1)",
+    "addressAll": "Mọi giao diện mạng (0.0.0.0)",
+    "addressAllHint": "Bất kỳ ai có thể truy cập host đều có thể truy cập cổng này. Hãy dùng tường lửa hoặc giữ nó ở chế độ local và truy cập qua tunnel.",
+    "start": "Bắt đầu",
+    "started": "Đang chuyển tiếp trên {{address}}",
+    "hint": "Các quy tắc chuyển tiếp chạy ở nền trên host và tiếp tục chạy sau khi bạn đóng Termix, cho đến khi bạn dừng chúng hoặc pod bị xóa.",
+    "ports": "Từ host đến cluster",
+    "running": "Đang chạy",
+    "stopped": "Đã dừng",
+    "stop": "Dừng",
+    "stopTitle": "Dừng chuyển tiếp cổng đến {{name}}?",
+    "copy": "Sao chép địa chỉ",
+    "copied": "Đã sao chép địa chỉ",
+    "loading": "Đang tải các quy tắc chuyển tiếp cổng...",
+    "empty": "Không có quy tắc chuyển tiếp cổng nào. Hãy bắt đầu một quy tắc từ pod, service hoặc deployment."
   },
   "logs": {
     "container": "Container",

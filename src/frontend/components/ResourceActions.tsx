@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ArrowRightLeft,
   Ban,
   CirclePlay,
   FileText,
@@ -30,6 +31,7 @@ import { useCluster } from "../cluster-context";
 import { getErrorMessage } from "../error-message";
 import { supports } from "../kinds";
 import { useKubernetesApi } from "../kubernetes-api";
+import { ForwardForm, firstPort, localPortFor } from "./PortForwards";
 import type { ResourceAction, ResourceSummary } from "../types";
 
 type FormKind = "scale" | "setImage" | "drain";
@@ -54,6 +56,7 @@ export function ResourceActions({
   const { sessionId, context, readOnly, open } = useCluster();
   const [busy, setBusy] = React.useState<string | null>(null);
   const [form, setForm] = React.useState<FormKind | null>(null);
+  const [forwarding, setForwarding] = React.useState(false);
   const ref = { kind: row.kind, name: row.name, namespace: row.namespace };
   const kindLabel = t(`kinds.${row.kind}.one`);
 
@@ -140,6 +143,20 @@ export function ResourceActions({
         onClick: () => open(ref, "console"),
       });
     }
+  }
+  if (
+    (row.kind === "pods" ||
+      row.kind === "services" ||
+      row.kind === "deployments") &&
+    row.namespace
+  ) {
+    buttons.push({
+      id: "forward",
+      icon: <ArrowRightLeft />,
+      label: t("forwards.action"),
+      onClick: () => setForwarding(true),
+      write: true,
+    });
   }
   if (supports(row.kind, "scale")) {
     buttons.push({
@@ -261,6 +278,20 @@ export function ResourceActions({
           </Button>
         ))}
       </div>
+      {forwarding && row.namespace && (
+        <ForwardForm
+          fixedTarget
+          initial={{
+            kind: row.kind as "pods" | "services" | "deployments",
+            name: row.name,
+            namespace: row.namespace,
+            remotePort: firstPort(row.fields.ports) ?? 80,
+            localPort: localPortFor(firstPort(row.fields.ports) ?? 80),
+          }}
+          onClose={() => setForwarding(false)}
+          onStarted={onChanged}
+        />
+      )}
       {form && (
         <ActionForm
           form={form}

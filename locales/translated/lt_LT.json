@@ -111,7 +111,9 @@
     "network": "Tinklas",
     "config": "Konfigūracija",
     "cluster": "Klasteris",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Pritaikytas",
+    "forwards": "Prievado persiuntimai"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Pašalinti „{{name}}“?",
     "uninstallText": "Helm ištrina visus šio leidimo išteklius.",
     "uninstalled": "„{{name}}“ pašalinta"
+  },
+  "custom": {
+    "type": "Pritaikytas išteklio tipas",
+    "loadingTypes": "Įkeliami pritaikyti išteklių tipai...",
+    "noTypes": "Šiame klasteriuje nėra pritaikytų išteklių apibrėžimų",
+    "clusterScoped": "Viso klasterio mastu, ne vardų erdvėje",
+    "yaml": "Peržiūrėti ir redaguoti YAML"
+  },
+  "forwards": {
+    "action": "Prievado persiuntimas",
+    "new": "Naujas prievado persiuntimas",
+    "titleFor": "Prievado persiuntimas į {{name}}",
+    "kind": "Persiųsti į",
+    "remotePort": "Prievadas klasteriuje",
+    "localPort": "Prievadas kompiuteryje",
+    "localPortHint": "kubectl klausosi šio prievado kompiuteryje. Prievadams žemesniems nei 1024 reikia root teisių.",
+    "address": "Klausytis adresu",
+    "addressLocal": "Tik pats kompiuteris (127.0.0.1)",
+    "addressAll": "Visi tinklo sąsajos (0.0.0.0)",
+    "addressAllHint": "Bet kas, kas gali pasiekti kompiuterį, gali pasiekti šį prievadą. Naudokite ugniasienę arba palikite vietinį ir pasiekite per tunelį.",
+    "start": "Pradėti",
+    "started": "Persiunčiama adresu {{address}}",
+    "hint": "Persiuntimai veikia fone kompiuteryje ir tęsiasi uždarius Termix, kol juos sustabdysite arba podas bus pašalintas.",
+    "ports": "Nuo kompiuterio į klasterį",
+    "running": "Vykdoma",
+    "stopped": "Sustabdyta",
+    "stop": "Sustabdyti",
+    "stopTitle": "Sustabdyti prievado persiuntimą į {{name}}?",
+    "copy": "Kopijuoti adresą",
+    "copied": "Adresas nukopijuotas",
+    "loading": "Įkeliami prievadų persiuntimai...",
+    "empty": "Nėra prievadų persiuntimų. Pradėkite vieną iš podo, paslaugos ar diegimo."
   },
   "logs": {
     "container": "Konteineris",

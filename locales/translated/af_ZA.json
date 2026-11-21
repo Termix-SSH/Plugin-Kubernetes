@@ -111,7 +111,9 @@
     "network": "Netwerk",
     "config": "Konfig",
     "cluster": "Kluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Aangepas",
+    "forwards": "Poortvorentoevoerings"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Deïnstalleer {{name}}?",
     "uninstallText": "Helm verwyder elke hulpbron van hierdie uitgawe.",
     "uninstalled": "Het {{name}} deïnstalleer"
+  },
+  "custom": {
+    "type": "Aangepaste hulpbrontipe",
+    "loadingTypes": "Laai aangepaste hulpbrontipes...",
+    "noTypes": "Hierdie kluster het geen aangepaste hulpbrondedefinisies nie",
+    "clusterScoped": "Klusterwyd, nie in 'n naamruimte nie",
+    "yaml": "Beskou en redigeer YAML"
+  },
+  "forwards": {
+    "action": "Poortvorentoevoering",
+    "new": "Nuwe poortvorentoevoering",
+    "titleFor": "Poortvorentoevoering na {{name}}",
+    "kind": "Vorentoevoer na",
+    "remotePort": "Poort in die kluster",
+    "localPort": "Poort op die gasheer",
+    "localPortHint": "kubectl luister op hierdie poort op die gasheer. Porte onder 1024 benodig root-toegang.",
+    "address": "Luister op",
+    "addressLocal": "Slegs die gasheer self (127.0.0.1)",
+    "addressAll": "Elke netwerkinterface (0.0.0.0)",
+    "addressAllHint": "Enigeen wat die gasheer kan bereik, kan hierdie poort bereik. Gebruik 'n vuurmuur of hou dit plaaslik en bereik dit met 'n tunnel.",
+    "start": "Begin",
+    "started": "Vorentoevoer op {{address}}",
+    "hint": "Vorentoevoerings loop in die agtergrond op die gasheer en bly loop nadat jy Termix sluit, totdat jy hulle stop of die pod verdwyn.",
+    "ports": "Gasheer na kluster",
+    "running": "Besig",
+    "stopped": "Gestop",
+    "stop": "Stop",
+    "stopTitle": "Stop die poortvorentoevoering na {{name}}?",
+    "copy": "Kopieer adres",
+    "copied": "Adres gekopieer",
+    "loading": "Laai poortvorentoevoerings...",
+    "empty": "Geen poortvorentoevoerings nie. Begin een vanaf 'n pod, diens of implementasie."
   },
   "logs": {
     "container": "Houer",

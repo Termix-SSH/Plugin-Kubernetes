@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+
+- Custom resources: pick any CRD in the cluster to list its objects with their status, view and edit their YAML, and delete them
+- Port forwards: forward a pod, service or deployment port to the host from its row, see which forwards run, copy their address and stop them. Forwards keep running in the background on the host
+
 ## 1.1.1
 
 ### Changed

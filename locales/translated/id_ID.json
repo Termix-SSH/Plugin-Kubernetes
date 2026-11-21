@@ -111,7 +111,9 @@
     "network": "Jaringan",
     "config": "Konfigurasi",
     "cluster": "Kluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Kustom",
+    "forwards": "Penerusan port"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Copot instal {{name}}?",
     "uninstallText": "Helm menghapus setiap sumber daya dari rilis ini.",
     "uninstalled": "Telah mencopot instal {{name}}"
+  },
+  "custom": {
+    "type": "Tipe sumber daya kustom",
+    "loadingTypes": "Memuat tipe sumber daya kustom...",
+    "noTypes": "Kluster ini tidak memiliki definisi sumber daya kustom",
+    "clusterScoped": "Seluruh kluster, tidak dalam namespace",
+    "yaml": "Lihat dan edit YAML"
+  },
+  "forwards": {
+    "action": "Teruskan port",
+    "new": "Penerusan port baru",
+    "titleFor": "Teruskan port ke {{name}}",
+    "kind": "Teruskan ke",
+    "remotePort": "Port di kluster",
+    "localPort": "Port di host",
+    "localPortHint": "kubectl mendengarkan port ini di host. Port di bawah 1024 memerlukan root.",
+    "address": "Dengarkan di",
+    "addressLocal": "Hanya host itu sendiri (127.0.0.1)",
+    "addressAll": "Setiap antarmuka jaringan (0.0.0.0)",
+    "addressAllHint": "Siapa pun yang dapat menjangkau host dapat menjangkau port ini. Gunakan firewall atau biarkan lokal dan jangkau dengan terowongan.",
+    "start": "Mulai",
+    "started": "Meneruskan di {{address}}",
+    "hint": "Penerusan berjalan di latar belakang di host dan tetap berjalan setelah Anda menutup Termix, hingga Anda menghentikannya atau pod hilang.",
+    "ports": "Host ke kluster",
+    "running": "Berjalan",
+    "stopped": "Berhenti",
+    "stop": "Hentikan",
+    "stopTitle": "Hentikan penerusan port ke {{name}}?",
+    "copy": "Salin alamat",
+    "copied": "Alamat disalin",
+    "loading": "Memuat penerusan port...",
+    "empty": "Tidak ada penerusan port. Mulai satu dari pod, layanan, atau deployment."
   },
   "logs": {
     "container": "Kontainer",

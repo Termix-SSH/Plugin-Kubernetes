@@ -111,7 +111,9 @@
     "network": "Network",
     "config": "Config",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Custom",
+    "forwards": "Port forwards"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Uninstall {{name}}?",
     "uninstallText": "Helm deletes every resource of this release.",
     "uninstalled": "Uninstalled {{name}}"
+  },
+  "custom": {
+    "type": "Custom resource type",
+    "loadingTypes": "Loading custom resource types...",
+    "noTypes": "This cluster has no custom resource definitions",
+    "clusterScoped": "Cluster wide, not in a namespace",
+    "yaml": "View and edit YAML"
+  },
+  "forwards": {
+    "action": "Port forward",
+    "new": "New port forward",
+    "titleFor": "Port forward to {{name}}",
+    "kind": "Forward to",
+    "remotePort": "Port in the cluster",
+    "localPort": "Port on the host",
+    "localPortHint": "kubectl listens on this port on the host. Ports under 1024 need root.",
+    "address": "Listen on",
+    "addressLocal": "Only the host itself (127.0.0.1)",
+    "addressAll": "Every network interface (0.0.0.0)",
+    "addressAllHint": "Anyone who can reach the host can reach this port. Use a firewall or keep it local and reach it with a tunnel.",
+    "start": "Start",
+    "started": "Forwarding on {{address}}",
+    "hint": "Forwards run in the background on the host and keep running after you close Termix, until you stop them or the pod goes away.",
+    "ports": "Host to cluster",
+    "running": "Running",
+    "stopped": "Stopped",
+    "stop": "Stop",
+    "stopTitle": "Stop the port forward to {{name}}?",
+    "copy": "Copy address",
+    "copied": "Address copied",
+    "loading": "Loading port forwards...",
+    "empty": "No port forwards. Start one from a pod, service or deployment."
   },
   "logs": {
     "container": "Container",

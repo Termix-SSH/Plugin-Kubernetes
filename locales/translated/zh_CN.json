@@ -111,7 +111,9 @@
     "network": "网络",
     "config": "配置",
     "cluster": "集群",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "自定义",
+    "forwards": "端口转发"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "是否卸载 {{name}}？",
     "uninstallText": "Helm 将删除此发布的所有资源。",
     "uninstalled": "已卸载 {{name}}"
+  },
+  "custom": {
+    "type": "自定义资源类型",
+    "loadingTypes": "正在加载自定义资源类型...",
+    "noTypes": "此集群没有自定义资源定义",
+    "clusterScoped": "集群范围，不在命名空间中",
+    "yaml": "查看和编辑 YAML"
+  },
+  "forwards": {
+    "action": "端口转发",
+    "new": "新建端口转发",
+    "titleFor": "转发到 {{name}}",
+    "kind": "转发目标",
+    "remotePort": "集群中的端口",
+    "localPort": "主机上的端口",
+    "localPortHint": "kubectl 将在主机的此端口上监听。1024 以下的端口需要 root 权限。",
+    "address": "监听地址",
+    "addressLocal": "仅主机自身 (127.0.0.1)",
+    "addressAll": "所有网络接口 (0.0.0.0)",
+    "addressAllHint": "任何能访问主机的用户都能访问此端口。请使用防火墙，或保持本地监听并通过隧道访问。",
+    "start": "启动",
+    "started": "正在 {{address}} 上转发",
+    "hint": "转发任务在主机后台运行，即使关闭 Termix 也会继续，直到您停止它们或 Pod 消失。",
+    "ports": "主机到集群",
+    "running": "运行中",
+    "stopped": "已停止",
+    "stop": "停止",
+    "stopTitle": "停止到 {{name}} 的端口转发？",
+    "copy": "复制地址",
+    "copied": "地址已复制",
+    "loading": "正在加载端口转发...",
+    "empty": "没有端口转发。可以从 Pod、服务或部署启动一个。"
   },
   "logs": {
     "container": "容器",

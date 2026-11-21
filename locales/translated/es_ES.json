@@ -111,7 +111,9 @@
     "network": "Red",
     "config": "Config",
     "cluster": "Clúster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Personalizado",
+    "forwards": "Reenvíos de puerto"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "¿Desinstalar {{name}}?",
     "uninstallText": "Helm elimina todos los recursos de este lanzamiento.",
     "uninstalled": "Se desinstaló {{name}}"
+  },
+  "custom": {
+    "type": "Tipo de recurso personalizado",
+    "loadingTypes": "Cargando tipos de recursos personalizados...",
+    "noTypes": "Este clúster no tiene definiciones de recursos personalizados",
+    "clusterScoped": "A nivel de clúster, no en un espacio de nombres",
+    "yaml": "Ver y editar YAML"
+  },
+  "forwards": {
+    "action": "Reenvío de puerto",
+    "new": "Nuevo reenvío de puerto",
+    "titleFor": "Reenvío de puerto a {{name}}",
+    "kind": "Reenviar a",
+    "remotePort": "Puerto en el clúster",
+    "localPort": "Puerto en el host",
+    "localPortHint": "kubectl escucha en este puerto en el host. Los puertos por debajo de 1024 requieren root.",
+    "address": "Escuchar en",
+    "addressLocal": "Solo el propio host (127.0.0.1)",
+    "addressAll": "Todas las interfaces de red (0.0.0.0)",
+    "addressAllHint": "Cualquier persona que pueda acceder al host puede llegar a este puerto. Usa un firewall o manténlo local y accede mediante un túnel.",
+    "start": "Iniciar",
+    "started": "Reenviando en {{address}}",
+    "hint": "Los reenvíos se ejecutan en segundo plano en el host y continúan funcionando después de cerrar Termix, hasta que los detengas o el pod desaparezca.",
+    "ports": "Host a clúster",
+    "running": "En ejecución",
+    "stopped": "Detenido",
+    "stop": "Detener",
+    "stopTitle": "¿Detener el reenvío de puerto a {{name}}?",
+    "copy": "Copiar dirección",
+    "copied": "Dirección copiada",
+    "loading": "Cargando reenvíos de puerto...",
+    "empty": "No hay reenvíos de puerto. Inicia uno desde un pod, servicio o despliegue."
   },
   "logs": {
     "container": "Contenedor",

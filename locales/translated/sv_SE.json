@@ -111,7 +111,9 @@
     "network": "Nätverk",
     "config": "Konfiguration",
     "cluster": "Kluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Anpassad",
+    "forwards": "Portvidarebefordringar"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Avinstallera {{name}}?",
     "uninstallText": "Helm tar bort alla resurser för denna release.",
     "uninstalled": "Avinstallerade {{name}}"
+  },
+  "custom": {
+    "type": "Anpassad resurstyp",
+    "loadingTypes": "Laddar anpassade resurstyper...",
+    "noTypes": "Den här klustret har inga anpassade resursdefinitioner",
+    "clusterScoped": "Klusteromfattande, inte i ett namnområde",
+    "yaml": "Visa och redigera YAML"
+  },
+  "forwards": {
+    "action": "Portvidarebefordring",
+    "new": "Ny portvidarebefordring",
+    "titleFor": "Portvidarebefordring till {{name}}",
+    "kind": "Vidarebefordra till",
+    "remotePort": "Port i klustret",
+    "localPort": "Port på värdmaskinen",
+    "localPortHint": "kubectl lyssnar på denna port på värdmaskinen. Portar under 1024 kräver root-åtkomst.",
+    "address": "Lyssna på",
+    "addressLocal": "Endast värdmaskinen själv (127.0.0.1)",
+    "addressAll": "Alla nätverksgränssnitt (0.0.0.0)",
+    "addressAllHint": "Vem som helst som kan nå värdmaskinen kan nå denna port. Använd en brandvägg eller behåll den lokalt och nå den via en tunnel.",
+    "start": "Starta",
+    "started": "Vidarebefordrar på {{address}}",
+    "hint": "Vidarebefordringar körs i bakgrunden på värdmaskinen och fortsätter att köras efter att du stänger Termix, tills du stoppar dem eller podden försvinner.",
+    "ports": "Värd till kluster",
+    "running": "Kör",
+    "stopped": "Stoppad",
+    "stop": "Stoppa",
+    "stopTitle": "Vill du stoppa portvidarebefordringen till {{name}}?",
+    "copy": "Kopiera adress",
+    "copied": "Adressen har kopierats",
+    "loading": "Laddar portvidarebefordringar...",
+    "empty": "Inga portvidarebefordringar. Starta en från en pod, tjänst eller deployment."
   },
   "logs": {
     "container": "Behållare",

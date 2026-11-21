@@ -111,7 +111,9 @@
     "network": "Netwerk",
     "config": "Configuratie",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Aangepast",
+    "forwards": "Poortdoorsturingen"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "{{name}} verwijderen?",
     "uninstallText": "Helm verwijdert alle resources van deze release.",
     "uninstalled": "{{name}} verwijderd"
+  },
+  "custom": {
+    "type": "Aangepaste brontype",
+    "loadingTypes": "Aangepaste brontypen laden...",
+    "noTypes": "Deze cluster heeft geen aangepaste brondefinities",
+    "clusterScoped": "Clusterbreed, niet in een namespace",
+    "yaml": "YAML bekijken en bewerken"
+  },
+  "forwards": {
+    "action": "Poortdoorsturing",
+    "new": "Nieuwe poortdoorsturing",
+    "titleFor": "Poortdoorsturing naar {{name}}",
+    "kind": "Doorsturen naar",
+    "remotePort": "Poort in de cluster",
+    "localPort": "Poort op de host",
+    "localPortHint": "kubectl luistert op deze poort op de host. Poorten onder 1024 vereisen root-toegang.",
+    "address": "Luisteren op",
+    "addressLocal": "Alleen de host zelf (127.0.0.1)",
+    "addressAll": "Elk netwerkinterface (0.0.0.0)",
+    "addressAllHint": "Iedereen die de host kan bereiken, kan deze poort bereiken. Gebruik een firewall of houd het lokaal en bereik het via een tunnel.",
+    "start": "Starten",
+    "started": "Doorsturen op {{address}}",
+    "hint": "Doorsturingen draaien op de achtergrond op de host en blijven actief nadat je Termix sluit, tot je ze stopt of de pod verdwijnt.",
+    "ports": "Host naar cluster",
+    "running": "Actief",
+    "stopped": "Gestopt",
+    "stop": "Stoppen",
+    "stopTitle": "Poortdoorsturing naar {{name}} stoppen?",
+    "copy": "Adres kopiëren",
+    "copied": "Adres gekopieerd",
+    "loading": "Poortdoorsturingen laden...",
+    "empty": "Geen poortdoorsturingen. Start er een vanuit een pod, service of deployment."
   },
   "logs": {
     "container": "Container",

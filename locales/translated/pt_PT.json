@@ -111,7 +111,9 @@
     "network": "Rede",
     "config": "Config",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Personalizado",
+    "forwards": "Encaminhamentos de porta"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Desinstalar {{name}}?",
     "uninstallText": "O Helm elimina todos os recursos desta versão.",
     "uninstalled": "{{name}} desinstalado"
+  },
+  "custom": {
+    "type": "Tipo de recurso personalizado",
+    "loadingTypes": "A carregar tipos de recurso personalizados...",
+    "noTypes": "Este cluster não tem definições de recursos personalizados",
+    "clusterScoped": "Abrangência do cluster, não num namespace",
+    "yaml": "Ver e editar YAML"
+  },
+  "forwards": {
+    "action": "Encaminhamento de porta",
+    "new": "Novo encaminhamento de porta",
+    "titleFor": "Encaminhamento de porta para {{name}}",
+    "kind": "Encaminhar para",
+    "remotePort": "Porta no cluster",
+    "localPort": "Porta no host",
+    "localPortHint": "O kubectl escuta nesta porta no host. Portas abaixo de 1024 requerem root.",
+    "address": "Escutar em",
+    "addressLocal": "Apenas o próprio host (127.0.0.1)",
+    "addressAll": "Todas as interfaces de rede (0.0.0.0)",
+    "addressAllHint": "Qualquer pessoa que consiga aceder ao host pode aceder a esta porta. Utilize um firewall ou mantenha-a local e aceda através de um túnel.",
+    "start": "Iniciar",
+    "started": "A encaminhar em {{address}}",
+    "hint": "Os encaminhamentos executam-se em segundo plano no host e continuam a funcionar após fechar o Termix, até os parar ou o pod ser removido.",
+    "ports": "Host para cluster",
+    "running": "Em execução",
+    "stopped": "Parado",
+    "stop": "Parar",
+    "stopTitle": "Parar o encaminhamento de porta para {{name}}?",
+    "copy": "Copiar endereço",
+    "copied": "Endereço copiado",
+    "loading": "A carregar encaminhamentos de porta...",
+    "empty": "Sem encaminhamentos de porta. Inicie um a partir de um pod, serviço ou deployment."
   },
   "logs": {
     "container": "Contentor",

@@ -111,7 +111,9 @@
     "network": "Síť",
     "config": "Konfigurace",
     "cluster": "Cluster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Vlastní",
+    "forwards": "Přeposílání portů"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Odinstalovat {{name}}?",
     "uninstallText": "Helm odstraní všechny zdroje této instalace.",
     "uninstalled": "Odinstalováno {{name}}"
+  },
+  "custom": {
+    "type": "Typ vlastního zdroje",
+    "loadingTypes": "Načítání typů vlastních zdrojů...",
+    "noTypes": "Tento cluster nemá definice vlastních zdrojů",
+    "clusterScoped": "Celý cluster, ne v namespace",
+    "yaml": "Zobrazit a upravit YAML"
+  },
+  "forwards": {
+    "action": "Přeposlat port",
+    "new": "Nové přeposílání portu",
+    "titleFor": "Přeposílání portu do {{name}}",
+    "kind": "Přeposlat do",
+    "remotePort": "Port v clusteru",
+    "localPort": "Port na hostiteli",
+    "localPortHint": "kubectl naslouchá na tomto portu na hostiteli. Porty pod 1024 vyžadují roota.",
+    "address": "Naslouchat na",
+    "addressLocal": "Pouze samotný hostitel (127.0.0.1)",
+    "addressAll": "Všechny síťové rozhraní (0.0.0.0)",
+    "addressAllHint": "Kdokoli, kdo se může dostat k hostiteli, se může dostat k tomuto portu. Použijte firewall nebo nechte lokální a připojte se pomocí tunelu.",
+    "start": "Spustit",
+    "started": "Přeposílání na {{address}}",
+    "hint": "Přeposílání běží na pozadí na hostiteli a pokračuje i po zavření Termixu, dokud je nezastavíte nebo až pod zmizí.",
+    "ports": "Hostitel do clusteru",
+    "running": "Běží",
+    "stopped": "Zastaveno",
+    "stop": "Zastavit",
+    "stopTitle": "Zastavit přeposílání portu do {{name}}?",
+    "copy": "Kopírovat adresu",
+    "copied": "Adresa zkopírována",
+    "loading": "Načítání přeposílání portů...",
+    "empty": "Žádná přeposílání portů. Spusťte jedno z podu, služby nebo deploymentu."
   },
   "logs": {
     "container": "Kontejner",

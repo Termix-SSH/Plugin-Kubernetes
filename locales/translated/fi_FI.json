@@ -111,7 +111,9 @@
     "network": "Verkko",
     "config": "Asetukset",
     "cluster": "Klusteri",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Mukautettu",
+    "forwards": "Portin välitykset"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Poistetaanko {{name}} asennus?",
     "uninstallText": "Helm poistaa tämän julkaisun kaikki resurssit.",
     "uninstalled": "Poistettu {{name}} asennus"
+  },
+  "custom": {
+    "type": "Mukautetun resurssin tyyppi",
+    "loadingTypes": "Ladataan mukautettuja resurssityyppejä...",
+    "noTypes": "Tässä klusterissa ei ole mukautettuja resurssimääritelmiä",
+    "clusterScoped": "Koko klusterin laajuinen, ei nimetilassa",
+    "yaml": "Näytä ja muokkaa YAML-tiedostoa"
+  },
+  "forwards": {
+    "action": "Portin välitys",
+    "new": "Uusi portin välitys",
+    "titleFor": "Portin välitys kohteeseen {{name}}",
+    "kind": "Välitä kohteeseen",
+    "remotePort": "Portti klusterissa",
+    "localPort": "Portti isäntäkonessa",
+    "localPortHint": "kubectl kuuntelee tätä porttia isäntäkonessa. Portit alle 1024 vaativat root-oikeudet.",
+    "address": "Kuuntele osoitteessa",
+    "addressLocal": "Vain isäntäkone itse (127.0.0.1)",
+    "addressAll": "Kaikki verkkoliitännät (0.0.0.0)",
+    "addressAllHint": "Kuka tahansa, joka pääsee isäntäkoneeseen, pääsee tähän porttiin. Käytä palomuuria tai pidä se paikallisena ja käytä tunnelia.",
+    "start": "Käynnistä",
+    "started": "Välitetään osoitteessa {{address}}",
+    "hint": "Välitykset käyvät taustalla isäntäkonessa ja jatkavat toimintaa, vaikka Termix suljetaan, kunnes ne pysäytetään tai pod häviää.",
+    "ports": "Isäntäkonesta klusteriin",
+    "running": "Käynnissä",
+    "stopped": "Pysäytetty",
+    "stop": "Pysäytä",
+    "stopTitle": "Pysäytetäänkö portin välitys kohteeseen {{name}}?",
+    "copy": "Kopioi osoite",
+    "copied": "Osoite kopioitu",
+    "loading": "Ladataan portin välityksiä...",
+    "empty": "Ei portin välityksiä. Käynnistä yksi podista, palvelusta tai deploymentista."
   },
   "logs": {
     "container": "Kontti",

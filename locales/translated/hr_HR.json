@@ -111,7 +111,9 @@
     "network": "Mreža",
     "config": "Konfiguracija",
     "cluster": "Klaster",
-    "helm": "Helm"
+    "helm": "Helm",
+    "custom": "Prilagođeno",
+    "forwards": "Preusmjeravanje portova"
   },
   "kinds": {
     "pods": {
@@ -403,6 +405,38 @@
     "uninstallTitle": "Deinstalirati {{name}}?",
     "uninstallText": "Helm briše sve resurse ove verzije.",
     "uninstalled": "Deinstalirano {{name}}"
+  },
+  "custom": {
+    "type": "Vrsta prilagođenog resursa",
+    "loadingTypes": "Učitavanje vrsta prilagođenih resursa...",
+    "noTypes": "Ovaj klaster nema definicija prilagođenih resursa",
+    "clusterScoped": "Na razini klastera, ne u imenskom prostoru",
+    "yaml": "Pregled i uređivanje YAML-a"
+  },
+  "forwards": {
+    "action": "Preusmjeravanje porta",
+    "new": "Novo preusmjeravanje porta",
+    "titleFor": "Preusmjeravanje porta na {{name}}",
+    "kind": "Proslijedi na",
+    "remotePort": "Port u klasteru",
+    "localPort": "Port na hostu",
+    "localPortHint": "kubectl sluša na ovom portu na hostu. Portovi ispod 1024 zahtijevaju root.",
+    "address": "Slušaj na",
+    "addressLocal": "Samo sam domaćin (127.0.0.1)",
+    "addressAll": "Svako mrežno sučelje (0.0.0.0)",
+    "addressAllHint": "Svatko tko može pristupiti hostu može pristupiti ovom portu. Koristite firewall ili ga zadržite lokalno i pristupite mu putem tunela.",
+    "start": "Započni",
+    "started": "Usmjeravanje na {{address}}",
+    "hint": "Preusmjeravanja se izvršavaju u pozadini na hostu i nastavljaju raditi nakon što zatvorite Termix, dok ih ne zaustavite ili dok kontejner ne bude uklonjen.",
+    "ports": "Host do klastera",
+    "running": "Pokrenuto",
+    "stopped": "Zaustavljeno",
+    "stop": "Zaustavi",
+    "stopTitle": "Zaustaviti preusmjeravanje porta prema {{name}}?",
+    "copy": "Kopiraj adresu",
+    "copied": "Adresa kopirana",
+    "loading": "Učitavanje preusmjeravanja portova...",
+    "empty": "Nema preusmjeravanja portova. Pokrenite jedno iz kontejnera, usluge ili rasporeda."
   },
   "logs": {
     "container": "Kontejner",
